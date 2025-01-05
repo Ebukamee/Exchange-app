@@ -1,0 +1,140 @@
+import React, { useState } from "react";
+import {
+  Box,
+  Flex,
+  Heading,
+  VStack,
+  HStack,
+  IconButton,
+  Button,
+  Image,
+  Text,
+  Link,
+} from "@chakra-ui/react";
+// import { Link } from "react-router-dom";
+import { FaBars, FaTimes } from "react-icons/fa";
+import HeroBg from "../assets/images/hero-bg.svg";
+
+export default function Nav() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  return (
+    <Box as="header" bg="white" px={6} py={4} w="100%">
+        <Image src={HeroBg} position="absolute" top="0" right="0" zIndex="1" />
+      {/* Desktop Navigation */}
+      <Flex
+        justify="space-between"
+        align="center"
+        display={{ base: "none", md: "flex" }}
+        
+      >
+        {/* Logo */}
+        <Heading as="h2" size="3xl" color="teal.500">
+          BlixExchange
+        </Heading>
+
+        {/* Navigation Links */}
+        <HStack spacing={20}>
+          <Link to="/">
+            <Text fontSize="md" fontWeight="small" mx="10px" color='gray.500'>
+              Home
+            </Text>
+          </Link>
+          <Link to="/about">
+            <Text fontSize="md" fontWeight="small" mx="10px" color='gray.500'>
+              About
+            </Text>
+          </Link>
+          <Link to="/rates">
+            <Text fontSize="md" fontWeight="small" mx="10px" color='gray.500'>
+              Rates
+            </Text>
+          </Link>
+          <Link to="/blog">
+            <Text fontSize="md" fontWeight="small" mx="10px"color='gray.500'>
+              Blog
+            </Text>
+          </Link>
+        </HStack>
+
+        {/* Button Area */}
+        <Flex gap={5}>
+          <Button
+            color="blue.500"
+            bg="white"
+            borderColor="blue.500"
+            variant="solid"
+          >
+            Login
+          </Button>
+          <Button color="white" bg="blue.500" variant="solid">
+            Signup
+          </Button>
+        </Flex>
+      </Flex>
+
+      {/* Mobile Navigation */}
+      <Flex
+        justify="space-between"
+        align="center"
+        display={{ base: "flex", md: "none" }}
+      >
+        {/* Logo */}
+        <Heading as="h1" size="md" color="teal.500">
+          BlixExchange
+        </Heading>
+
+        {/* Menu Button */}
+        <IconButton
+          aria-label="Open Menu"
+          icon={isMenuOpen ? <FaTimes /> : <FaBars />}
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          variant="outline"
+          color="black" 
+          zIndex='2'
+        />
+      </Flex>
+
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <Box bg="white" p={4} shadow="md" rounded="lg" mt={2} w="100%" display={{ base: "flex", md: "none" }}>
+          <VStack spacing={4} align="start">
+            <Link to="/">
+              <Text fontSize="md" fontWeight="small">
+                Home
+              </Text>
+            </Link>
+            <Link to="/about">
+              <Text fontSize="md" fontWeight="small">
+                About Us
+              </Text>
+            </Link>
+            <Link to="/contact">
+              <Text fontSize="md" fontWeight="small">
+                Contact
+              </Text>
+            </Link>
+            <Link to="/blog">
+              <Text fontSize="md" fontWeight="small">
+                Blog
+              </Text>
+            </Link>
+            <Flex gap={5} my={5}>
+              <Button
+                color="blue.500"
+                bg="white"
+                borderColor="blue.500"
+                variant="solid"
+              >
+                Login
+              </Button>
+              <Button color="white" bg="blue.500" variant="solid">
+                Signup
+              </Button>
+            </Flex>
+          </VStack>
+        </Box>
+      )}
+    </Box>
+  );
+}
