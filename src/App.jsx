@@ -4,6 +4,8 @@ import viteLogo from '/vite.svg'
 import Nav from './components/nav'
 import Hero from './components/Hero'
 import FeaturesSection from './components/feature'
+import Other from './components/othersection'
+import FAQ from './components/FAQ'
 import './App.css'
 
 function App() {
@@ -14,6 +16,8 @@ function App() {
     <Nav />
     <Hero />
     <FeaturesSection />
+    <Other />
+    <FAQ />
       <div>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />

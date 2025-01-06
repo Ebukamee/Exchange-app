@@ -13,14 +13,13 @@ import {
 } from "@chakra-ui/react";
 // import { Link } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
-import HeroBg from "../assets/images/hero-bg.svg";
+import { Blue } from "../assets/Colors";
 
 export default function Nav() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <Box as="header" bg="white" px={6} py={4} w="100%">
-        <Image src={HeroBg} position="absolute" top="0" right="0" zIndex="1" />
+    <Box as="header" bg="white" px={6} py={4} w="100%" display="">
       {/* Desktop Navigation */}
       <Flex
         justify="space-between"
@@ -60,14 +59,14 @@ export default function Nav() {
         {/* Button Area */}
         <Flex gap={5}>
           <Button
-            color="blue.500"
+            color={Blue.p}
             bg="white"
-            borderColor="blue.500"
+            // borderColor="blue.500"
             variant="solid"
           >
             Login
           </Button>
-          <Button color="white" bg="blue.500" variant="solid">
+          <Button color="white" bg={Blue.p} variant="solid">
             Signup
           </Button>
         </Flex>
@@ -91,7 +90,7 @@ export default function Nav() {
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           variant="outline"
           color="black" 
-          zIndex='2'
+          zIndex='3'
         />
       </Flex>
 
@@ -121,14 +120,13 @@ export default function Nav() {
             </Link>
             <Flex gap={5} my={5}>
               <Button
-                color="blue.500"
+                color={Blue.p}
                 bg="white"
-                borderColor="blue.500"
                 variant="solid"
               >
                 Login
               </Button>
-              <Button color="white" bg="blue.500" variant="solid">
+              <Button color="white" bg={Blue.p} variant="solid">
                 Signup
               </Button>
             </Flex>
