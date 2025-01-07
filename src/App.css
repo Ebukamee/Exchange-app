@@ -11,4 +11,7 @@
   font-optical-sizing: auto;
   font-weight: 700;
  }
+ .faq {
+  background-image: url('./assets/images/bg.svg');
+ }
 

@@ -6,6 +6,7 @@ import Hero from './components/Hero'
 import FeaturesSection from './components/feature'
 import Other from './components/othersection'
 import FAQ from './components/FAQ'
+import Footer from './components/Footer'
 import './App.css'
 
 function App() {
@@ -18,7 +19,8 @@ function App() {
     <FeaturesSection />
     <Other />
     <FAQ />
-      <div>
+    <Footer />
+      {/* <div>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
@@ -37,7 +39,7 @@ function App() {
       </div>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
-      </p>
+      </p> */}
     </>
   )
 }
