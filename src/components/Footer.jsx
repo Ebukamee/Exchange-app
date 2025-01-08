@@ -5,7 +5,7 @@ import IG from '../assets/images/ig.svg';
 
 export default function Footer() {
   return (
-    <Box bg="blue.800" py={16} px={16} mt={20} color='white'>
+    <Box bg="blue.900" py={16} px={16} mt={20} color='white'>
       <Grid
         templateColumns={{ base: "1fr", md: "2fr 1fr 1fr 1fr" }}
         gap={8}
