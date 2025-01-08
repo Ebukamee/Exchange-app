@@ -14,4 +14,28 @@
  .faq {
   background-image: url('./assets/images/bg.svg');
  }
+ 
+ /* Auth Nav styling */
+
+.authNav {
+    display: flex;
+    flex-direction: row;
+    /* justify-content: space-between; */
+}
+.auth,.auth_blue {
+    text-decoration: none;
+    font-weight: 600;
+    padding: 5% 0;
+    border-bottom: 5px solid rgba(214,209,248,0.2);
+    width: 50%;
+}
+.auth_blue {
+    border-bottom: 5px solid rgba(83, 82, 236, .9);
+}
+#reg {
+    text-align: left;
+}
+#log {
+    text-align: right;
+}
 
