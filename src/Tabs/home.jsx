@@ -7,14 +7,6 @@ import Bitcoin from '../assets/images/bitcoin.png'
 export default function Home() {
   return (
     <Box p={10} color="gray.800">
-      <Box mb={10}>
-        <Text>
-          <span style={{ fontSize: "30px", fontWeight: "600" }}>
-            Welcome 👋🏼,{" "}
-          </span>
-          Chukwuebuka
-        </Text>
-      </Box>
       <Box bg={Blue.p} color="white" p={7} rounded="md" mb={10}>
         <Flex justifyContent='space-between'fontSize="12px">
           <Text color="gray.200">Total Trasanction Value</Text>

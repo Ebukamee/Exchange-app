@@ -1,26 +1,84 @@
-import { Tabs,Image } from "@chakra-ui/react";
-import home from '../assets/images/home.svg'
-import History from '../assets/images/history.svg'
-import Contact from '../assets/images/chat.svg'
-import Profile from '../assets/images/profile.svg'
+import { Tabs, Image, Box, Text } from "@chakra-ui/react";
+import home from "../assets/images/home.svg";
+import history from "../assets/images/history.svg";
+import contact from "../assets/images/chat.svg";
+import profile from "../assets/images/profile.svg";
 import Home from "../Tabs/home";
+import History from "../Tabs/History";
 
 export default function Dashboard() {
   return (
-    <Tabs.Root defaultValue='home' w="100%" variant="enclosed">
-      <Tabs.Content value="home">
+    <Tabs.Root defaultValue="home" w="100%" variant="enclosed">
+      <Box m={10} mb={0}>
+        <Text>
+          <span style={{ fontSize: "30px", fontWeight: "600" }}>
+            Welcome 👋🏼,{" "}
+          </span>
+          Chukwuebuka
+        </Text>
+      </Box>
+      <Tabs.Content
+        value="home"
+        _open={{
+          animationName: "fade-in, scale-in",
+          animationDuration: "500ms",
+        }}
+        _closed={{
+          animationName: "fade-out, scale-out",
+          animationDuration: "500ms",
+        }}
+      >
         <Home />
       </Tabs.Content>
-      <Tabs.Content value="history">Transaction History</Tabs.Content>
-      <Tabs.Content value="chat">Contact</Tabs.Content>
+      <Tabs.Content
+        value="history"
+        _open={{
+          animationName: "fade-in, scale-in",
+          animationDuration: "500ms",
+        }}
+        _closed={{
+          animationName: "fade-out, scale-out",
+          animationDuration: "500ms",
+        }}
+      >
+        {" "}
+        <History />
+      </Tabs.Content>
+      <Tabs.Content
+        value="chat"
+        _open={{
+          animationName: "fade-in, scale-in",
+          animationDuration: "500ms",
+        }}
+        _closed={{
+          animationName: "fade-out, scale-out",
+          animationDuration: "500ms",
+        }}
+      >
+        <History />
+      </Tabs.Content>
       <Tabs.Content value="profile">Profile</Tabs.Content>
-      <Tabs.List  display="flex" w="100%" justifyContent="space-between" bg="bg.muted" color="white" py={3}>
-        <Tabs.Trigger value="home"> 
-            <Image src={home} alt='home' />
+      <Tabs.List
+        display="flex"
+        w="100%"
+        justifyContent="space-between"
+        bg="#fafaff"
+        color="white"
+        py={3}
+      >
+        <Tabs.Trigger value="home">
+          <Image src={home} alt="home" />
         </Tabs.Trigger>
-        <Tabs.Trigger value="history"> <Image src={History} alt='history' /></Tabs.Trigger>
-        <Tabs.Trigger value="chat"><Image src={Contact} alt='home' /> </Tabs.Trigger>
-        <Tabs.Trigger value="profile"><Image src={Profile} alt='profile' /></Tabs.Trigger>
+        <Tabs.Trigger value="history">
+          {" "}
+          <Image src={history} alt="history" />
+        </Tabs.Trigger>
+        <Tabs.Trigger value="chat">
+          <Image src={contact} alt="home" />{" "}
+        </Tabs.Trigger>
+        <Tabs.Trigger value="profile">
+          <Image src={profile} alt="profile" />
+        </Tabs.Trigger>
       </Tabs.List>
     </Tabs.Root>
   );
