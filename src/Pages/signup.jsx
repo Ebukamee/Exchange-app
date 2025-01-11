@@ -11,7 +11,7 @@ export default function Signup() {
             <Heading as='p' fontSize='3xl' fontWeight='bold' m={10} textAlign='center'>Create Account</Heading>
             <Box>
                 <FormControl isRequired my={20}>
-                    <FormLabel m={3}>Email Address</FormLabel>
+                    <FormLabel m={3}>Full Name</FormLabel>
                     <Input type="text" name='name' placeholder='Enter Full Name' outline='none' />
                 </FormControl>
                 <FormControl isRequired my={20}>
