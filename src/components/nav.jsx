@@ -7,7 +7,7 @@ import {
   HStack,
   IconButton,
   Button,
-  Image,
+//   Image,
   Text,
   Link,
 } from "@chakra-ui/react";

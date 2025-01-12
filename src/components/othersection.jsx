@@ -4,9 +4,9 @@ import {
   Heading,
   Text,
   VStack,
-  HStack,
+//   HStack,
   Icon,
-  Button,
+//   Button,
   Grid,
 } from "@chakra-ui/react";
 import Check from "../assets/images/check-circle-solid.svg";
