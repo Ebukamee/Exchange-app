@@ -1,29 +1,76 @@
+import { useState } from "react";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import AuthNav from "../components/AuthNav";
-import { Box, Button, Checkbox, Flex, Heading, Input, Text } from "@chakra-ui/react";
-import { Form } from "react-router-dom";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Input,
+  Text,
+} from "@chakra-ui/react";
+// import { Form } from "react-router-dom";
 import { Blue } from "../assets/Colors";
+import useAuthStore from "../Store/userStore";
+import { toaster } from "../components/ui/toaster";
 
 export default function Login() {
-    return (
-        <Box mx='auto' my={10} w='90%' maxW='500px'>
-        <AuthNav />
-        <Heading as='p' fontSize='3xl' fontWeight='bold' m={10} textAlign='center'>Welcome Back</Heading>
-        <Box>
-            <FormControl isRequired my={20}>
-                <FormLabel m={3}>Email Address</FormLabel>
-                <Input type="email" name='email' placeholder='Enter Email Address' outline='none'/>
-            </FormControl>
-            <FormControl isRequired my={20}>
-                <FormLabel m={3}>Password</FormLabel>
-                <Input type="password" name='password' placeholder='Enter Password' outline='none' />
-            </FormControl>
-            <Flex mb={5}>
-               <Text color={Blue.p} textDecoration='underline' fontSize='sm'>Forgot Password?</Text>
-            </Flex>
-            <Button bg={Blue.p} w='100%'>Login</Button>
+  const { login } = useAuthStore();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-        </Box>
-        </Box>
-    )
+  const handleSubmit = async (e) => {
+    try {
+        await login(email, password);
+        alert('Done')
+    } catch (error) {
+        alert(error.message);
+    }
+  }
+  return (
+    <Box mx="auto" my={10} w="90%" maxW="500px">
+      <AuthNav />
+      <Heading
+        as="p"
+        fontSize="3xl"
+        fontWeight="bold"
+        m={10}
+        textAlign="center"
+      >
+        Welcome Back
+      </Heading>
+      <Box>
+        <FormControl isRequired my={20}>
+          <FormLabel m={3}>Email Address</FormLabel>
+          <Input
+            type="email"
+            name="email"
+            placeholder="Enter Email Address"
+            outline="none"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </FormControl>
+        <FormControl isRequired my={20}>
+          <FormLabel m={3}>Password</FormLabel>
+          <Input
+            type="password"
+            name="password"
+            placeholder="Enter Password"
+            outline="none"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </FormControl>
+        <Flex mb={5}>
+          <Text color={Blue.p} textDecoration="underline" fontSize="sm">
+            Forgot Password?
+          </Text>
+        </Flex>
+        <Button bg={Blue.p} w="100%" onClick={handleSubmit}>
+          Login
+        </Button>
+      </Box>
+    </Box>
+  );
 }

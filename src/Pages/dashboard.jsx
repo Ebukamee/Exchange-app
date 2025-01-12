@@ -5,16 +5,23 @@ import contact from "../assets/images/chat.svg";
 import profile from "../assets/images/profile.svg";
 import Home from "../Tabs/home";
 import History from "../Tabs/History";
+import ProfilePage from "../Tabs/Profile";
+import useAuthStore from "../Store/userStore";
+import { useEffect } from "react";
 
 export default function Dashboard() {
+    const user = useAuthStore((state) => state.user)
+    useEffect(() => {
+        console.log(user);
+      }, []);
   return (
-    <Tabs.Root defaultValue="home" w="100%" variant="enclosed">
+    <Tabs.Root defaultValue="home" w="100%" h="100vh" variant="enclosed">
       <Box m={10} mb={0}>
         <Text>
           <span style={{ fontSize: "30px", fontWeight: "600" }}>
             Welcome 👋🏼,{" "}
           </span>
-          Chukwuebuka
+          {/* {user} */}
         </Text>
       </Box>
       <Tabs.Content
@@ -57,10 +64,14 @@ export default function Dashboard() {
       >
         <History />
       </Tabs.Content>
-      <Tabs.Content value="profile">Profile</Tabs.Content>
+      <Tabs.Content value="profile">
+        <ProfilePage />
+      </Tabs.Content>
       <Tabs.List
         display="flex"
         w="100%"
+        position="sticky"
+        bottom="0"
         justifyContent="space-between"
         bg="#fafaff"
         color="white"

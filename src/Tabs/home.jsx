@@ -20,7 +20,7 @@ export default function Home() {
         </Heading>
       </Box>
       <Container maxW='700px'>
-        <Text fontSize='sm' color='gray.700' >
+        <Text fontSize='sm' color='gray.700' fontWeight='500' >
             Quick Actions
         </Text>
         <Box my={5} p={5} rounded='lg' bg="orange.100" maxW='700px'>
