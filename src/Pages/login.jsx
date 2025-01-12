@@ -1,14 +1,7 @@
 import { useState } from "react";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import AuthNav from "../components/AuthNav";
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  Input,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Input, Text } from "@chakra-ui/react";
 // import { Form } from "react-router-dom";
 import { Blue } from "../assets/Colors";
 import useAuthStore from "../Store/userStore";
@@ -18,15 +11,34 @@ export default function Login() {
   const { login } = useAuthStore();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const [loading, setLoading] = useState(false);
+  const toast = (type,message,title) => {
+    toaster.create({
+        title:title,
+        description: message,
+        type: type,
+        
+      });
+  };
   const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    toast('loading','Please Wait','Logging In');
     try {
-        await login(email, password);
-        alert('Done')
+      await login(email, password);
+      setLoading(false);
+      if (!loading) {
+        toaster.dismiss();
+      }
+      toast('success','Log in successful','Success');
     } catch (error) {
-        alert(error.message);
+      setLoading(false);
+      if (!loading) {
+        toaster.dismiss();
+      }
+      toast('error',error.message,'An Error Occured');
     }
-  }
+  };
   return (
     <Box mx="auto" my={10} w="90%" maxW="500px">
       <AuthNav />

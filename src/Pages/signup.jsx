@@ -4,6 +4,7 @@ import AuthNav from "../components/AuthNav";
 import { Box, Button, Heading, Input } from "@chakra-ui/react";
 import { Blue } from "../assets/Colors";
 import useAuthStore from "../Store/userStore";
+import { toaster } from "../components/ui/toaster";
 
 export default function Signup() {
     const { signup } = useAuthStore();
@@ -11,19 +12,42 @@ export default function Signup() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-
+    const [loading, setLoading] = useState(false);
+ const toast = (type,message,title) => {
+    toaster.create({
+        title:title,
+        description: message,
+        type: type,
+        
+      });
+  };
     const handleSignup = async (e) => {
         e.preventDefault();
+        setLoading(true);
+        toast('loading','Please Wait','Logging In');
         if (password !== confirmPassword) {
-            alert("Passwords do not match!");
+            setLoading(false);
+
+             if (!loading) {
+                    toaster.dismiss();
+                  }
+                  toast('error',"Password must be the same",'An Error Occured');
             return;
         }
         try {
-            await signup(email, password, fullname);
-            alert('Done')
-        } catch (error) {
-            alert(error.message);
-        }
+             await signup(email, password,fullname);
+             setLoading(false);
+             if (!loading) {
+               toaster.dismiss();
+             }
+             toast('success','Log in successful','Success');
+           } catch (error) {
+             setLoading(false);
+             if (!loading) {
+               toaster.dismiss();
+             }
+             toast('error',error.message,'An Error Occured');
+           }
     };
 
     return (
@@ -37,7 +61,6 @@ export default function Signup() {
                     <FormLabel m={3}>Full Name</FormLabel>
                     <Input
                         type="text"
-                        focusBorderColor="transparent"
                         name="name"
                         placeholder="Enter Full Name"
                         value={fullname}

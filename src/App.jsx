@@ -8,6 +8,7 @@ import './App.css'
 import About from './Pages/About'
 import RateCalculator from './Pages/Rates'
 import Dashboard from './Pages/dashboard'
+import { Toaster } from './components/ui/toaster'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -29,6 +30,7 @@ function App() {
       <Route path='/profile' element={<Profile />} />
       <Route path='/:id' element={<Profile />} /> */}
    </Routes>
+   <Toaster />
     </>
   )
 }
