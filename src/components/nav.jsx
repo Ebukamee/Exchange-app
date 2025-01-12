@@ -7,11 +7,10 @@ import {
   HStack,
   IconButton,
   Button,
-//   Image,
+  //   Image,
   Text,
-  Link,
 } from "@chakra-ui/react";
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { Blue } from "../assets/Colors";
 
@@ -25,7 +24,6 @@ export default function Nav() {
         justify="space-between"
         align="center"
         display={{ base: "none", md: "flex" }}
-        
       >
         {/* Logo */}
         <Heading as="h2" size="3xl" color="teal.500">
@@ -35,40 +33,43 @@ export default function Nav() {
         {/* Navigation Links */}
         <HStack spacing={20}>
           <Link to="/">
-            <Text fontSize="md" fontWeight="small" mx="10px" color='gray.500'>
+            <Text fontSize="md" fontWeight="small" mx="10px" color="gray.500">
               Home
             </Text>
           </Link>
           <Link to="/about">
-            <Text fontSize="md" fontWeight="small" mx="10px" color='gray.500'>
+            <Text fontSize="md" fontWeight="small" mx="10px" color="gray.500">
               About
             </Text>
           </Link>
-          <Link to="/rates">
-            <Text fontSize="md" fontWeight="small" mx="10px" color='gray.500'>
+          <Link to="/giftcard-rates">
+            <Text fontSize="md" fontWeight="small" mx="10px" color="gray.500">
               Rates
             </Text>
           </Link>
           <Link to="/blog">
-            <Text fontSize="md" fontWeight="small" mx="10px"color='gray.500'>
+            <Text fontSize="md" fontWeight="small" mx="10px" color="gray.500">
               Blog
             </Text>
           </Link>
         </HStack>
 
-        {/* Button Area */}
         <Flex gap={5}>
-          <Button
-            color={Blue.p}
-            bg="white"
-            // borderColor="blue.500"
-            variant="solid"
-          >
-            Login
-          </Button>
-          <Button color="white" bg={Blue.p} variant="solid">
-            Signup
-          </Button>
+          <Link to="/login">
+            <Button
+              color={Blue.p}
+              bg="white"
+              // borderColor="blue.500"
+              variant="solid"
+            >
+              Login
+            </Button>
+          </Link>
+          <Link to="/signup">
+            <Button color="white" bg={Blue.p} variant="solid">
+              Signup
+            </Button>
+          </Link>
         </Flex>
       </Flex>
 
@@ -89,14 +90,22 @@ export default function Nav() {
           icon={isMenuOpen ? <FaTimes /> : <FaBars />}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           variant="outline"
-          color="black" 
-          zIndex='3'
+          color="black"
+          zIndex="3"
         />
       </Flex>
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <Box bg="white" p={4} shadow="md" rounded="lg" mt={2} w="100%" display={{ base: "flex", md: "none" }}>
+        <Box
+          bg="white"
+          p={4}
+          shadow="md"
+          rounded="lg"
+          mt={2}
+          w="100%"
+          display={{ base: "flex", md: "none" }}
+        >
           <VStack spacing={4} align="start">
             <Link to="/">
               <Text fontSize="md" fontWeight="small">
@@ -119,11 +128,7 @@ export default function Nav() {
               </Text>
             </Link>
             <Flex gap={5} my={5}>
-              <Button
-                color={Blue.p}
-                bg="white"
-                variant="solid"
-              >
+              <Button color={Blue.p} bg="white" variant="solid">
                 Login
               </Button>
               <Button color="white" bg={Blue.p} variant="solid">

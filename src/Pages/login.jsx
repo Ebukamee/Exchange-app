@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import AuthNav from "../components/AuthNav";
 import { Box, Button, Flex, Heading, Input, Text } from "@chakra-ui/react";
-// import { Form } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Blue } from "../assets/Colors";
 import useAuthStore from "../Store/userStore";
 import { toaster } from "../components/ui/toaster";
@@ -12,31 +12,34 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const toast = (type,message,title) => {
+  const Navigate = useNavigate();
+  const toast = (type, message, title) => {
     toaster.create({
-        title:title,
-        description: message,
-        type: type,
-        
-      });
+      title: title,
+      description: message,
+      type: type,
+    });
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    toast('loading','Please Wait','Logging In');
+    toast("loading", "Please Wait", "Logging In");
     try {
       await login(email, password);
       setLoading(false);
       if (!loading) {
         toaster.dismiss();
       }
-      toast('success','Log in successful','Success');
+      toast("success", "Log in successful", "Success");
+      setTimeout(() => {
+        Navigate("/dashboard");
+      }, 1000);
     } catch (error) {
       setLoading(false);
       if (!loading) {
         toaster.dismiss();
       }
-      toast('error',error.message,'An Error Occured');
+      toast("error", error.message, "An Error Occured");
     }
   };
   return (
