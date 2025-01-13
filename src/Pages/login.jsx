@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import AuthNav from "../components/AuthNav";
 import { Box, Button, Flex, Heading, Input, Text } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Blue } from "../assets/Colors";
 import useAuthStore from "../Store/userStore";
 import { toaster } from "../components/ui/toaster";
@@ -78,9 +78,11 @@ export default function Login() {
           />
         </FormControl>
         <Flex mb={5}>
+          <Link to='/forgot-password'>
           <Text color={Blue.p} textDecoration="underline" fontSize="sm">
             Forgot Password?
           </Text>
+        </Link>
         </Flex>
         <Button bg={Blue.p} w="100%" onClick={handleSubmit}>
           Login

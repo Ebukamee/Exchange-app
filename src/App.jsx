@@ -10,6 +10,8 @@ import RateCalculator from './Pages/Rates'
 import Dashboard from './Pages/dashboard'
 import { Toaster } from './components/ui/toaster'
 import VerifyEmail from './Pages/verify-email'
+import UpdatePassword from './Pages/update-Password'
+import BankDetails from './Pages/BankDetails'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -25,6 +27,9 @@ function App() {
       <Route path='/signup' element={<Signup />} />
       <Route path='/dashboard' element={<Dashboard />} />
       <Route path='/verify-email' element={<VerifyEmail />} />
+      <Route path='/forgot-password' element={<UpdatePassword />} />
+      <Route path='/bank-details' element={<BankDetails />} />
+
       { /*<Route path='/create' element={<CreateProjectForm />} />
       <Route path='/post/:id' element={<BlogDetail />} />
       <Route path='/blog' element={<Bloglist />} />
