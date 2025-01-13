@@ -9,6 +9,7 @@ import About from './Pages/About'
 import RateCalculator from './Pages/Rates'
 import Dashboard from './Pages/dashboard'
 import { Toaster } from './components/ui/toaster'
+import VerifyEmail from './Pages/verify-email'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -23,6 +24,7 @@ function App() {
        <Route path='/login' element={<Login />} />
       <Route path='/signup' element={<Signup />} />
       <Route path='/dashboard' element={<Dashboard />} />
+      <Route path='/verify-email' element={<VerifyEmail />} />
       { /*<Route path='/create' element={<CreateProjectForm />} />
       <Route path='/post/:id' element={<BlogDetail />} />
       <Route path='/blog' element={<Bloglist />} />

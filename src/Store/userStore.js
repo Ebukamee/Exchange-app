@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { auth } from "../firesbase/firebase";
 
-import { createUserWithEmailAndPassword,signInWithEmailAndPassword,updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword,sendEmailVerification,signInWithEmailAndPassword,updateProfile } from "firebase/auth";
 
 const useAuthStore = create((set)=>({
     user:null,
@@ -15,6 +15,7 @@ const useAuthStore = create((set)=>({
           if (res) {
             await updateProfile(res.user, { displayName: name });
             set({ user: res.user });
+            await sendEmailVerification(res.user,res.user.email);
             console.log("Signup successful");
           }
         } catch (error) {
