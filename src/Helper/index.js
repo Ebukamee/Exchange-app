@@ -10,7 +10,7 @@ import { toaster } from "../components/ui/toaster";
 
   export const err = (s) => {
     let substr = s.substring(22,s.length - 2) + s.charAt(s.length-1);
-    if(s="Firebase: Password should be at least 6 characters (auth/weak-password).") {
+    if(s=="Firebase: Password should be at least 6 characters (auth/weak-password).") {
         return "Password Should be at least 6 characters";
     }
     
