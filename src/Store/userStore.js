@@ -39,6 +39,10 @@ const useAuthStore = create((set)=>({
         }
       }
 }))
-
+// onAuthStateChanged(auth, (user) => {
+//   const authStore = useAuthStore.getState();
+//   authStore.setAuthIsReady(true);
+//   authStore.setUser(user);
+// });
 
 export default useAuthStore;
