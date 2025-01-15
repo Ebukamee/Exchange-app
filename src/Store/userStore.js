@@ -15,7 +15,7 @@ const useAuthStore = create((set)=>({
           if (res) {
             await updateProfile(res.user, { displayName: name });
             set({ user: res.user });
-            await sendEmailVerification(res.user,res.user.email);
+            await sendEmailVerification(auth.currentUser);
             console.log("Signup successful");
           }
         } catch (error) {
@@ -29,6 +29,13 @@ const useAuthStore = create((set)=>({
         }
         catch(error) {
             throw new Error(error.message)
+        }
+      },
+      sendVerificationMail : () => {
+        try {
+          sendEmailVerification(auth.currentUser)
+        } catch (error) {
+          throw new Error(error.message)
         }
       }
 }))

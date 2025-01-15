@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Blue } from "../assets/Colors";
 import useAuthStore from "../Store/userStore";
 import { toaster } from "../components/ui/toaster";
+import { toast, err} from "../Helper";
 
 export default function Login() {
   const { login } = useAuthStore();
@@ -13,13 +14,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const Navigate = useNavigate();
-  const toast = (type, message, title) => {
-    toaster.create({
-      title: title,
-      description: message,
-      type: type,
-    });
-  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -32,6 +27,7 @@ export default function Login() {
       }
       toast("success", "Log in successful", "Success");
       setTimeout(() => {
+
         Navigate("/dashboard");
       }, 1000);
     } catch (error) {
@@ -39,7 +35,7 @@ export default function Login() {
       if (!loading) {
         toaster.dismiss();
       }
-      toast("error", error.message, "An Error Occured");
+      toast("error", err(error.message), "An Error Occured");
     }
   };
   return (
