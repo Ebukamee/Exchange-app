@@ -1,14 +1,18 @@
 import { create } from "zustand";
 import { auth } from "../firesbase/firebase";
 
-import { createUserWithEmailAndPassword,sendEmailVerification,signInWithEmailAndPassword,updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword,sendEmailVerification,signInWithEmailAndPassword,updateProfile,onAuthStateChanged,updateEmail } from "firebase/auth";
 
 const useAuthStore = create((set)=>({
     user:null,
     authisReady:false,
     setUser: (user) => set({ user }),
     setAuthIsReady: (ready) => set({ authIsReady: ready }),
-
+    subscribeToAuthChanges: () => {
+      onAuthStateChanged(auth, (user) => {
+        set({ user, authIsReady: true });
+      });
+    },
     signup: async (email, password, name) => {
         try {
           const res = await createUserWithEmailAndPassword(auth, email, password);
@@ -37,12 +41,16 @@ const useAuthStore = create((set)=>({
         } catch (error) {
           throw new Error(error.message)
         }
-      }
+      },
+      ProfileUpdate : (user,name,email) => {
+        try {
+          updateProfile(user,{displayName:name});
+            updateEmail(user,email);
+        } catch (error) {
+          throw new Error(error)
+        }
+      },
 }))
-// onAuthStateChanged(auth, (user) => {
-//   const authStore = useAuthStore.getState();
-//   authStore.setAuthIsReady(true);
-//   authStore.setUser(user);
-// });
+
 
 export default useAuthStore;

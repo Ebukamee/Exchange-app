@@ -27,7 +27,6 @@ export default function Login() {
       }
       toast("success", "Log in successful", "Success");
       setTimeout(() => {
-
         Navigate("/dashboard");
       }, 1000);
     } catch (error) {

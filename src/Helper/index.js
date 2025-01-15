@@ -16,3 +16,7 @@ import { toaster } from "../components/ui/toaster";
     
    return substr.charAt(0).toUpperCase() + substr.slice(1);
   }
+  export const cut = (s) =>  {
+    let index=s.indexOf(' ');
+    return s.substring(0,index);
+  }

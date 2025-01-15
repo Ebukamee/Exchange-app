@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { useEffect } from 'react'
+import { auth } from './firesbase/firebase'
+import useAuthStore from './Store/userStore'
 import { Route } from 'react-router-dom'
 import { Routes } from 'react-router-dom'
 import Home from './Pages/Home'
@@ -14,8 +16,14 @@ import UpdatePassword from './Pages/update-Password'
 import BankDetails from './Pages/BankDetails'
 
 function App() {
-  const [count, setCount] = useState(0)
+const {  user,subscribeToAuthChanges } = useAuthStore();
+useEffect(() => {
+ subscribeToAuthChanges()
 
+}, [subscribeToAuthChanges]);
+if(!user) {
+  return;
+}
   return (
 
     <>

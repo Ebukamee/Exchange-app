@@ -8,6 +8,7 @@ import History from "../Tabs/History";
 import ProfilePage from "../Tabs/Profile";
 import useAuthStore from "../Store/userStore";
 import { useEffect } from "react";
+import { cut } from "../Helper";
 
 export default function Dashboard() {
     const user = useAuthStore((state) => state.user)
@@ -19,7 +20,7 @@ export default function Dashboard() {
       <Box m={10} mb={0}>
         <Text>
           <span style={{ fontSize: "30px", fontWeight: "600" }}>
-            Welcome 👋🏼,{" "}
+            Welcome 👋🏼, {user.displayName}
           </span>
           {/* {user} */}
         </Text>
