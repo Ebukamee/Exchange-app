@@ -9,18 +9,24 @@ import ProfilePage from "../Tabs/Profile";
 import useAuthStore from "../Store/userStore";
 import { useEffect } from "react";
 import { cut } from "../Helper";
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
-    const user = useAuthStore((state) => state.user)
-    useEffect(() => {
-        console.log(user);
-      }, []);
+  const Nav = useNavigate();
+  const user = useAuthStore((state) => state.user);
+ 
+  // useEffect(() => {
+  //   if (user && user.emailVerified == false) {
+  //     Nav("/verify-email");
+  //     console.log('cool')
+  //   }
+  // }, []);
   return (
     <Tabs.Root defaultValue="home" w="100%" h="100vh" variant="enclosed">
       <Box m={10} mb={0}>
         <Text>
           <span style={{ fontSize: "30px", fontWeight: "600" }}>
-            Welcome 👋🏼, {user.displayName}
+            Welcome 👋🏼, {cut(user.displayName)}
           </span>
           {/* {user} */}
         </Text>

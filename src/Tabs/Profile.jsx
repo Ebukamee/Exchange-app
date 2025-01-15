@@ -7,6 +7,7 @@ import {
   Text,
   VStack,
   Alert,
+  Flex,
 } from "@chakra-ui/react";
 
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
@@ -14,11 +15,14 @@ import { Blue } from "../assets/Colors";
 import useAuthStore from "../Store/userStore";
 import { toast } from "../Helper";
 import { toaster } from "../components/ui/toaster";
+import { updatePassword } from "firebase/auth";
 
 const ProfilePage = () => {
   const user = useAuthStore((state) => state.user);
   const { ProfileUpdate } = useAuthStore();
   const [name, setName] = useState(user.displayName);
+  const [New,setNew] = useState('');
+  const [confirm,setConfirm] = useState('');
   const [email, setEmail] = useState(user.email);
   const [loading, setLoading] = useState(false);
   async function UpdateProfile() {
@@ -39,6 +43,24 @@ const ProfilePage = () => {
       toast("error", error.message, "An Error Occured");
       console.log(error)
     }
+  }
+  const PasswordUpdate = () => {
+    if(New == confirm) {
+      
+    try {
+      updatePassword(user,New)
+      toast('success','Password Updated','')
+      setNew('');
+      setConfirm('')
+    } catch (error) {
+      toast('error',error.message,'Error')
+      setNew('');
+      setConfirm('')
+    }
+  }
+  else {
+    toast('error','Password must be the same','Error')
+  }
   }
   // const [profile, setProfile] = useState({ name: "", email: "" });
   // const [passwords, setPasswords] = useState({
@@ -120,23 +142,13 @@ const ProfilePage = () => {
           <Text mb={4}>
             Ensure your account is using a strong password to stay secure.
           </Text>
-          <FormControl id="currentPassword" mb={4}>
-            <FormLabel>Current Password</FormLabel>
-            <Input
-              type="password"
-              name="currentPassword"
-              // value={passwords.currentPassword}
-              // onChange={handlePasswordChange}
-              placeholder="Enter current password"
-            />
-          </FormControl>
           <FormControl id="newPassword" mb={4}>
             <FormLabel>New Password</FormLabel>
             <Input
               type="password"
               name="newPassword"
-              // value={passwords.newPassword}
-              // onChange={handlePasswordChange}
+              value={New}
+              onChange={(e) => setNew(e.target.value)}
               placeholder="Enter new password"
             />
           </FormControl>
@@ -145,15 +157,15 @@ const ProfilePage = () => {
             <Input
               type="password"
               name="confirmPassword"
-              // value={passwords.confirmPassword}
-              // onChange={handlePasswordChange}
+              value={confirm}
+              onChange={(e) => setConfirm(e.target.value)}
               placeholder="Confirm new password"
             />
           </FormControl>
           <Button
             bg={Blue.p}
             my={2}
-            // onClick={updatePassword}
+            onClick={PasswordUpdate}
           >
             Save
           </Button>
@@ -205,13 +217,24 @@ const ProfilePage = () => {
         {/* Delete Account */}
         <Box borderWidth={1} borderRadius="md" boxShadow="lg" p={5} my={5}>
           <Heading as="h2" size="lg" mb={4} color="red.600">
-            Delete Account
+            Manage Account
           </Heading>
           {/* <Alert status="error" mb={4}> */}
           {/* <AlertIcon /> */}
-          Once your account is deleted, all its resources and data will be
+          Logout an Delete your Account. Once your account is deleted, all its resources and data will be
           permanently deleted.
           {/* </Alert> */}
+          <Flex justifyContent='space-between' maxW='500px'>
+          <Button
+            bg="white"
+            borderColor={Blue.p}
+            display="block"
+            color={Blue.p}
+            my={2}
+            // onClick={deleteAccount}
+          >
+            Logout
+          </Button>
           <Button
             bg="red.700"
             display="block"
@@ -220,6 +243,7 @@ const ProfilePage = () => {
           >
             Delete Account
           </Button>
+          </Flex>
         </Box>
       </VStack>
     </Box>

@@ -50,6 +50,7 @@ const useAuthStore = create((set)=>({
           throw new Error(error)
         }
       },
+
 }))
 
 
