@@ -10,11 +10,12 @@ import {
   //   Image,
   Text,
 } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { Blue } from "../assets/Colors";
 
 export default function Nav() {
+  let Nav = useNavigate()
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -59,14 +60,14 @@ export default function Nav() {
             <Button
               color={Blue.p}
               bg="white"
-              // borderColor="blue.500"
+              onClick={() => { Nav('/login')}}
               variant="solid"
             >
               Login
             </Button>
           </Link>
           <Link to="/signup">
-            <Button color="white" bg={Blue.p} variant="solid">
+            <Button color="white" bg={Blue.p} variant="solid" onClick={() => { Nav('/signup')}}>
               Signup
             </Button>
           </Link>
@@ -128,10 +129,10 @@ export default function Nav() {
               </Text>
             </Link>
             <Flex gap={5} my={5}>
-              <Button color={Blue.p} bg="white" variant="solid">
+              <Button color={Blue.p} bg="white" variant="solid" onClick={() => { Nav('/login')}}>
                 Login
               </Button>
-              <Button color="white" bg={Blue.p} variant="solid">
+              <Button color="white" bg={Blue.p} variant="solid" onClick={() => { Nav('/signup')}}>
                 Signup
               </Button>
             </Flex>

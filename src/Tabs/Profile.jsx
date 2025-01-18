@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import {
   Box,
   Button,
@@ -19,12 +19,28 @@ import { updatePassword } from "firebase/auth";
 
 const ProfilePage = () => {
   const user = useAuthStore((state) => state.user);
+  const details = useAuthStore((state) => state.BankDetails);
+  const { getBankDetails,updateProfileBankDetails,logout } = useAuthStore()
+  useEffect(()=> {
+    getBankDetails(user.uid);
+
+  },[user])
   const { ProfileUpdate } = useAuthStore();
   const [name, setName] = useState(user.displayName);
   const [New,setNew] = useState('');
   const [confirm,setConfirm] = useState('');
   const [email, setEmail] = useState(user.email);
   const [loading, setLoading] = useState(false);
+  const [Bank, setBank] = useState('');
+  const [Acctname, setAcctName] = useState('');
+  const [No, setNumber] = useState('');
+  useEffect(() => {
+    if (details) {
+      setBank(details.BankName || '');
+      setAcctName(details.AccountName || '');
+      setNumber(details.AccountNumber || '');
+    }
+  }, [details]);
   async function UpdateProfile() {
     setLoading(true);
     toast("loading", "Please Wait", "Updating Profile....");
@@ -44,6 +60,27 @@ const ProfilePage = () => {
       console.log(error)
     }
   }
+  const LogOut = async () => {
+
+  }
+  const UploadDetails = async () => {
+    setLoading(true);
+    toast("loading", "Please Wait", "Adding Bank Details");
+    try {
+      await updateProfileBankDetails(Bank, Acctname, No, user.uid);
+      setLoading(false);
+      if (!loading) {
+        toaster.dismiss();
+      }
+      toast("success", "Uploaded successful", "Success");
+    } catch (error) {
+      setLoading(false);
+      if (!loading) {
+        toaster.dismiss();
+      }
+      toast("error", error.message, "An Error Occured");
+    }
+  };
   const PasswordUpdate = () => {
     if(New == confirm) {
       
@@ -110,7 +147,7 @@ const ProfilePage = () => {
             <Input
               type="text"
               name="name"
-              value={name}
+              defaultValue={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter your name"
             />
@@ -120,7 +157,7 @@ const ProfilePage = () => {
             <Input
               type="email"
               name="email"
-              value={email}
+              defaultValue={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
             />
@@ -147,7 +184,7 @@ const ProfilePage = () => {
             <Input
               type="password"
               name="newPassword"
-              value={New}
+              defaultValue={New}
               onChange={(e) => setNew(e.target.value)}
               placeholder="Enter new password"
             />
@@ -157,7 +194,7 @@ const ProfilePage = () => {
             <Input
               type="password"
               name="confirmPassword"
-              value={confirm}
+              defaultValue={confirm}
               onChange={(e) => setConfirm(e.target.value)}
               placeholder="Confirm new password"
             />
@@ -185,6 +222,8 @@ const ProfilePage = () => {
               name="bank"
               placeholder="Enter Bank Name"
               outline="none"
+              defaultValue={Bank}
+              onChange={(e) => setBank(e.target.value)}
             />
           </FormControl>
           <FormControl mb={4}>
@@ -194,6 +233,8 @@ const ProfilePage = () => {
               name="account"
               placeholder="Enter Account Name"
               outline="none"
+              defaultValue={Acctname}
+              onChange={(e) => setAcctName(e.target.value)}
             />
           </FormControl>
           <FormControl mb={4}>
@@ -203,12 +244,14 @@ const ProfilePage = () => {
               name="number"
               placeholder="Enter Account Number"
               outline="none"
+              defaultValue={No}
+              onChange={(e) => setNumber(e.target.value)}
             />
           </FormControl>
           <Button
             bg={Blue.p}
             my={2}
-            // onClick={updatePassword}
+            onClick={UploadDetails}
           >
             Save
           </Button>
@@ -231,7 +274,7 @@ const ProfilePage = () => {
             display="block"
             color={Blue.p}
             my={2}
-            // onClick={deleteAccount}
+            onClick={logout}
           >
             Logout
           </Button>
