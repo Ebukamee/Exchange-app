@@ -82,7 +82,6 @@ const useAuthStore = create((set)=>({
       },
       logout : async () => {
         await signOut(auth);
-        del
         set({user:null})
       }
 

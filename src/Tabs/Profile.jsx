@@ -16,8 +16,10 @@ import useAuthStore from "../Store/userStore";
 import { toast } from "../Helper";
 import { toaster } from "../components/ui/toaster";
 import { updatePassword } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 const ProfilePage = () => {
+  const Nav = useNavigate()
   const user = useAuthStore((state) => state.user);
   const details = useAuthStore((state) => state.BankDetails);
   const { getBankDetails,updateProfileBankDetails,logout } = useAuthStore()
@@ -61,7 +63,8 @@ const ProfilePage = () => {
     }
   }
   const LogOut = async () => {
-
+    await logout()
+    Nav('/')
   }
   const UploadDetails = async () => {
     setLoading(true);
@@ -274,7 +277,7 @@ const ProfilePage = () => {
             display="block"
             color={Blue.p}
             my={2}
-            onClick={logout}
+            onClick={LogOut}
           >
             Logout
           </Button>
