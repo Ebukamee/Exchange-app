@@ -1,4 +1,4 @@
-import { Tabs, Image, Box, Text } from "@chakra-ui/react";
+import { Tabs, Image, Box, Text,Spinner } from "@chakra-ui/react";
 import home from "../assets/images/home.svg";
 import history from "../assets/images/history.svg";
 import contact from "../assets/images/chat.svg";
@@ -7,20 +7,41 @@ import Home from "../Tabs/home";
 import History from "../Tabs/History";
 import ProfilePage from "../Tabs/Profile";
 import useAuthStore from "../Store/userStore";
-import { useEffect } from "react";
-import { cut } from "../Helper";
-import { useNavigate } from "react-router-dom";
+import { useEffect,useState } from "react";
+import { checkBankDetails, cut } from "../Helper";
+import { Blue } from "../assets/Colors";
+import { Navigate } from "react-router-dom";
 
 export default function Dashboard() {
-  const Nav = useNavigate();
   const user = useAuthStore((state) => state.user);
- 
-  // useEffect(() => {
-  //   if (user && user.emailVerified == false) {
-  //     Nav("/verify-email");
-  //     console.log('cool')
-  //   }
-  // }, []);
+  const [isLoading, setIsLoading] = useState(true); 
+
+  useEffect(() => {
+    if (user) {
+      setIsLoading(false);
+    }
+  }, [user]);
+
+  if (isLoading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" h="100vh">
+        <Spinner size='xl' color={Blue.p}  />
+      </Box>
+    );
+  }
+if(!user) {
+  return <Navigate to='/login' />
+}
+if(!checkBankDetails(user.uid)) {
+ return  <Navigate to='/Bank-Details' />
+}
+
+
+  
+// if (user && user.emailVerified==false) {
+//   return <Navigate to='/verify-email' />
+// }
+
   return (
     <Tabs.Root defaultValue="home" w="100%" h="100vh" variant="enclosed">
       <Box m={10} mb={0}>
@@ -88,11 +109,10 @@ export default function Dashboard() {
           <Image src={home} alt="home" />
         </Tabs.Trigger>
         <Tabs.Trigger value="history">
-          {" "}
           <Image src={history} alt="history" />
         </Tabs.Trigger>
         <Tabs.Trigger value="chat">
-          <Image src={contact} alt="home" />{" "}
+          <Image src={contact} alt="home" />
         </Tabs.Trigger>
         <Tabs.Trigger value="profile">
           <Image src={profile} alt="profile" />

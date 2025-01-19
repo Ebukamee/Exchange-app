@@ -6,7 +6,6 @@ import {
   Heading,
   Text,
   VStack,
-  Alert,
   Flex,
 } from "@chakra-ui/react";
 
@@ -16,7 +15,7 @@ import useAuthStore from "../Store/userStore";
 import { toast } from "../Helper";
 import { toaster } from "../components/ui/toaster";
 import { updatePassword } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const ProfilePage = () => {
   const Nav = useNavigate()
@@ -63,8 +62,12 @@ const ProfilePage = () => {
     }
   }
   const LogOut = async () => {
-    await logout()
-    Nav('/')
+    try {
+      await logout();
+      Nav("/"); 
+  } catch (error) {
+      console.error("Logout error in component", error);
+  }
   }
   const UploadDetails = async () => {
     setLoading(true);

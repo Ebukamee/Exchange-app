@@ -2,8 +2,7 @@ import { create } from "zustand";
 import { auth, db } from "../firesbase/firebase";
 
 import { createUserWithEmailAndPassword,sendEmailVerification,signInWithEmailAndPassword,updateProfile,onAuthStateChanged,updateEmail, signOut } from "firebase/auth";
-import {  setDoc,doc,getDoc, updateDoc } from "firebase/firestore";
-import BankDetails from "../Pages/BankDetails";
+import {  setDoc,doc,getDoc, updateDoc } from "firebase/firestore"
 
 const useAuthStore = create((set)=>({
     user:null,
@@ -74,15 +73,19 @@ const useAuthStore = create((set)=>({
         if (documentSnapshot.exists()) {
         
           set({BankDetails:documentSnapshot.data()})
-          console.log(documentSnapshot.data());
         } 
         else {
         return null;
         }
       },
       logout : async () => {
-        await signOut(auth);
-        set({user:null})
+        try {
+          await signOut(auth);
+          set({ user: null });
+        } catch (error) {
+          console.error("Sign-out error:", error);
+        
+        }
       }
 
 }))

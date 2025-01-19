@@ -7,15 +7,14 @@ import {
   HStack,
   IconButton,
   Button,
-  //   Image,
   Text,
 } from "@chakra-ui/react";
-import { Link,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { Blue } from "../assets/Colors";
 
 export default function Nav() {
-  let Nav = useNavigate()
+  let nav = useNavigate()
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -55,22 +54,18 @@ export default function Nav() {
           </Link>
         </HStack>
 
-        <Flex gap={5}>
-          <Link to="/login">
+        <Flex gap={5} zIndex='2'>
             <Button
               color={Blue.p}
               bg="white"
-              onClick={() => { Nav('/login')}}
+              onClick={()=>nav('/login')}
               variant="solid"
             >
               Login
             </Button>
-          </Link>
-          <Link to="/signup">
-            <Button color="white" bg={Blue.p} variant="solid" onClick={() => { Nav('/signup')}}>
+            <Button color="white" bg={Blue.p} variant="solid" onClick={() => { nav('/signup')}}>
               Signup
             </Button>
-          </Link>
         </Flex>
       </Flex>
 
@@ -128,11 +123,11 @@ export default function Nav() {
                 Blog
               </Text>
             </Link>
-            <Flex gap={5} my={5}>
-              <Button color={Blue.p} bg="white" variant="solid" onClick={() => { Nav('/login')}}>
+            <Flex gap={5} my={5} zIndex='2'>
+              <Button color={Blue.p} bg="white" variant="solid" onClick={() => { nav('/login')}}>
                 Login
               </Button>
-              <Button color="white" bg={Blue.p} variant="solid" onClick={() => { Nav('/signup')}}>
+              <Button color="white" bg={Blue.p} variant="solid" onClick={() => { nav('/signup')}}>
                 Signup
               </Button>
             </Flex>

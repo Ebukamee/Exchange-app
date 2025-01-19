@@ -14,6 +14,10 @@ import { Toaster } from './components/ui/toaster'
 import VerifyEmail from './Pages/verify-email'
 import UpdatePassword from './Pages/update-Password'
 import BankDetails from './Pages/BankDetails'
+import { Navigate } from 'react-router-dom'
+
+
+
 
 function App() {
 const {  user,subscribeToAuthChanges } = useAuthStore();
@@ -21,9 +25,7 @@ useEffect(() => {
  subscribeToAuthChanges()
 
 }, [subscribeToAuthChanges]);
-if(!user) {
-  return;
-}
+
   return (
 
     <>

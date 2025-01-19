@@ -13,8 +13,10 @@ import {
 import Bg from "../assets/images/design.svg";
 import HeroBg from "../assets/images/hero-bg.svg";
 import { Blue } from "../assets/Colors";
+import { useNavigate } from "react-router-dom";
 
 export default function Hero() {
+  const nav =useNavigate()
   return (
     <>
     <Image src={HeroBg} position="absolute" top="0" right="0" zIndex="1" />
@@ -41,7 +43,7 @@ export default function Hero() {
         best exchange rates and price . Fast payments in Naira via bank
         transfer. Get the most value of gift cards and cryptocurrency now!
       </Text>
-      <Button color="white" bg={Blue.p} fontSize='lg' variant="solid" my={10} p={7}>
+      <Button color="white" bg={Blue.p} fontSize='lg' variant="solid" my={10} p={7} onClick={()=>nav('/signup')}>
         Get Started
       </Button>
       </Container>

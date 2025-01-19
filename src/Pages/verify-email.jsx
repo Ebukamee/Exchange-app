@@ -1,24 +1,42 @@
-import { Box, Container, Button, Text } from "@chakra-ui/react";
+import { Box, Container, Button, Text, Spinner } from "@chakra-ui/react";
 import { Blue } from "../assets/Colors";
 import useAuthStore from "../Store/userStore";
 import { useState } from "react";
-import { toast } from "../Helper";
+import { checkBankDetails, toast } from "../Helper";
 import { toaster } from "../components/ui/toaster";
-import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useEffect } from "react";
+
 
 export default function VerifyEmail() {
   const { sendVerificationMail } = useAuthStore();
   const [loading, setLoading] = useState(false);
   const user = useAuthStore((state) => state.user);
-const Nav = useNavigate()
- 
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
-    if (user && user.emailVerified) {
-      Nav("/dashboard");
-      console.log('cool')
+    if (user) {
+      setIsLoading(false);
     }
-  }, [])
+  }, [user]);
+
+  if (isLoading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" h="100vh">
+        <Spinner size="xl" color={Blue.p} />
+      </Box>
+    );
+  }
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
+  if (user && user.emailVerified === false) {
+    if (checkBankDetails(user.uid)) {
+      return <Navigate to="/dashboard" />;
+    } else {
+      return <Navigate to="/Bank-Details" />;
+    }
+  }
   const sendMail = async () => {
     setLoading(true);
     toast("loading", "Please Wait", "Sending Verification Mail");
@@ -34,11 +52,11 @@ const Nav = useNavigate()
         "Success"
       );
     } catch (error) {
-        setLoading(false);
-        if (!loading) {
-          toaster.dismiss();
-        }
-        toast("error", error.message, "An Error Occured");
+      setLoading(false);
+      if (!loading) {
+        toaster.dismiss();
+      }
+      toast("error", error.message, "An Error Occured");
     }
   };
   return (
@@ -57,7 +75,9 @@ const Nav = useNavigate()
         <Text color="gray.700" as="p" m={3}>
           Didnt Recieve It?
         </Text>
-        <Button bg={Blue.p} onClick={sendMail}>Resend</Button>
+        <Button bg={Blue.p} onClick={sendMail}>
+          Resend
+        </Button>
       </Container>
     </Box>
   );

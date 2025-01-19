@@ -1,10 +1,11 @@
-import { Box, Heading, Button, Input } from "@chakra-ui/react";
+import { Box, Heading, Button, Input,Spinner } from "@chakra-ui/react";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Blue } from "../assets/Colors";
 import useAuthStore from "../Store/userStore";
 import { toast } from "../Helper";
 import { toaster } from "../components/ui/toaster";
+import { Navigate } from "react-router-dom";
 
 export default function BankDetails() {
   const { user, updateBankDetails } = useAuthStore();
@@ -12,6 +13,24 @@ export default function BankDetails() {
   const [Bank, setBank] = useState("");
   const [Name, setName] = useState("");
   const [No, setNumber] = useState("");
+  const [isLoading, setIsLoading] = useState(true); 
+
+  useEffect(() => {
+    if (user) {
+      setIsLoading(false);
+    }
+  }, [user]);
+
+  if (isLoading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" h="100vh">
+        <Spinner size='xl' color={Blue.p}  />
+      </Box>
+    );
+  }
+if(!user) {
+  return <Navigate to='/login' />
+}
 
   const UploadDetails = async () => {
     setLoading(true);
