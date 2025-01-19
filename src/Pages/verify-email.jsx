@@ -30,7 +30,7 @@ export default function VerifyEmail() {
   if (!user) {
     return <Navigate to="/login" />;
   }
-  if (user && user.emailVerified === false) {
+  if (user && user.emailVerified) {
     if (checkBankDetails(user.uid)) {
       return <Navigate to="/dashboard" />;
     } else {

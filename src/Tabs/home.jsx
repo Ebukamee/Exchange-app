@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 export default function Home() {
   return (
-    <Box p={10} color="gray.800">
+    <Box p={{base:5, md:10}} color="gray.800">
       <Box bg={Blue.p} color="white" p={7} rounded="md" mb={10}>
         <Flex justifyContent="space-between" fontSize="12px">
           <Text color="gray.200">Total Trasanction Value</Text>
