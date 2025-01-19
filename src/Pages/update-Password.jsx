@@ -2,9 +2,24 @@ import { Box,Heading,Button,Input } from "@chakra-ui/react"
 import { FormControl,FormLabel } from "@chakra-ui/form-control"
 import { useState } from "react"
 import { Blue } from "../assets/Colors"
+import { sendPasswordResetEmail } from "firebase/auth"
+import { auth } from "../firesbase/firebase"
+import { toast } from "../Helper"
 
 export default function UpdatePassword() {
 const [email,setEmail] =useState('')
+const sendPasswordResetMail = async  () => {
+  try {
+    await sendPasswordResetEmail(auth,email);
+    toast(
+      "success",
+      "Password Reset Email have been sent to you",
+      "Success"
+    );
+  } catch (error) {
+    toast("error", error.message, "An Error Occured");
+  }
+}
     return (
         <Box mx="auto" my={10} w="90%" maxW="500px">
       <Heading
@@ -30,7 +45,7 @@ const [email,setEmail] =useState('')
         </FormControl>
          
         <Button bg={Blue.p} w="50%"
-        //  onClick={handleSubmit}
+         onClick={sendPasswordResetMail}
         >
           Send Email
         </Button>
