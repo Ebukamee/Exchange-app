@@ -38,9 +38,9 @@ if(!checkBankDetails(user.uid)) {
 
 
   
-// if (user && user.emailVerified==false) {
-//   return <Navigate to='/verify-email' />
-// }
+if (user && user.emailVerified==false) {
+  return <Navigate to='/verify-email' />
+}
 
   return (
     <Tabs.Root defaultValue="home" w="100%" h="100vh" variant="enclosed">
