@@ -32,15 +32,16 @@ export default function Dashboard() {
 if(!user) {
   return <Navigate to='/login' />
 }
-if(!checkBankDetails(user.uid)) {
- return  <Navigate to='/Bank-Details' />
-}
 
 
   
 if (user && user.emailVerified==false) {
   return <Navigate to='/verify-email' />
 }
+console.log(checkBankDetails(user.uid))
+if(!checkBankDetails(user.uid)) {
+  return  <Navigate to='/Bank-Details' />
+ }
 
   return (
     <Tabs.Root defaultValue="home" w="100%" h="100vh" variant="enclosed">
@@ -55,7 +56,7 @@ if (user && user.emailVerified==false) {
       <Tabs.Content
         value="home"
         _open={{
-          animationName: "fade-in, scale-in",
+          animationName: "fly-in, scale-in",
           animationDuration: "500ms",
         }}
         _closed={{

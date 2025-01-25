@@ -14,7 +14,7 @@ import { Toaster } from './components/ui/toaster'
 import VerifyEmail from './Pages/verify-email'
 import UpdatePassword from './Pages/update-Password'
 import BankDetails from './Pages/BankDetails'
-import { Navigate } from 'react-router-dom'
+import GiftCardForm from './Pages/TradeGiftcard'
 
 
 
@@ -39,6 +39,7 @@ useEffect(() => {
       <Route path='/verify-email' element={<VerifyEmail />} />
       <Route path='/forgot-password' element={<UpdatePassword />} />
       <Route path='/bank-details' element={<BankDetails />} />
+      <Route path='/trade-giftcards' element={<GiftCardForm />} />
 
       { /*<Route path='/create' element={<CreateProjectForm />} />
       <Route path='/post/:id' element={<BlogDetail />} />

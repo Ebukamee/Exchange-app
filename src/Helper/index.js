@@ -23,7 +23,10 @@ export const err = (s) => {
 };
 export const cut = (s) => {
   let index = s.indexOf(" ");
-  return s.substring(0, index);
+  if(s.includes(' ')) {
+    return s.substring(0, index);
+  }
+  return s;
 };
 
 export const checkBankDetails = async (id) => {
@@ -31,7 +34,6 @@ export const checkBankDetails = async (id) => {
   try {
     const documentRef = doc(db, "BankDetails", id);
     const documentSnapshot = await getDoc(documentRef); // Await the Promise
-
     if (documentSnapshot.exists()) {
       return true;
     } else {

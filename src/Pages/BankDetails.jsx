@@ -5,7 +5,7 @@ import { Blue } from "../assets/Colors";
 import useAuthStore from "../Store/userStore";
 import { toast } from "../Helper";
 import { toaster } from "../components/ui/toaster";
-import { Navigate } from "react-router-dom";
+import { Navigate,useNavigate } from "react-router-dom";
 
 export default function BankDetails() {
   const { user, updateBankDetails } = useAuthStore();
@@ -14,6 +14,7 @@ export default function BankDetails() {
   const [Name, setName] = useState("");
   const [No, setNumber] = useState("");
   const [isLoading, setIsLoading] = useState(true); 
+  const Nav = useNavigate()
 
   useEffect(() => {
     if (user) {
@@ -42,6 +43,9 @@ if(!user) {
         toaster.dismiss();
       }
       toast("success", "Uploaded successful", "Success");
+      setTimeout(() => {
+        Nav('/dashboard')
+      }, 1000);
     } catch (error) {
       setLoading(false);
       if (!loading) {
