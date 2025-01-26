@@ -9,6 +9,7 @@ import {
   VisuallyHidden,
   Checkbox,
   Flex,
+  Heading
   // useToast,
 } from "@chakra-ui/react";
 import {
@@ -16,7 +17,7 @@ import {
   FormLabel,
   FormErrorMessage,
 } from "@chakra-ui/form-control";
-import { DataListItem, DataListRoot } from "../components/ui/data-list"
+import { DataListItem, DataListRoot } from "../components/ui/data-list";
 import { useState } from "react";
 import {
   DialogBody,
@@ -29,6 +30,7 @@ import {
   DialogTrigger,
   DialogActionTrigger,
 } from "../components/ui/dialog";
+import { Blue } from "../assets/Colors";
 
 const GiftCardForm = () => {
   // const toast = useToast();
@@ -89,12 +91,15 @@ const GiftCardForm = () => {
   };
 
   return (
-    <Box maxW="800px" mx="auto" p={4}>
+    <Box maxW="800px" w='85%' mx="auto" p={4}>
+      <Heading as="h1" size="3xl" my={10} color="teal.500" textAlign='center'>
+        BlixExchange
+      </Heading>
       {/* Gift Card Selection */}
-      <FormControl isInvalid={!formData.giftCard} isRequired mb={4}>
+      <FormControl isInvalid={!formData.giftCard} isRequired mb={10}>
         <FormLabel>Gift Card Name</FormLabel>
         <DialogRoot>
-          <DialogTrigger>
+          <DialogTrigger w="100%">
             <Input
               isReadOnly
               value={formData.giftCard?.name || ""}
@@ -130,97 +135,94 @@ const GiftCardForm = () => {
             </DialogBody>
           </DialogContent>
         </DialogRoot>
-        <FormErrorMessage>Please select a gift card</FormErrorMessage>
       </FormControl>
 
       {/* Category Selection Grid */}
-      <Grid templateColumns="repeat(2, 1fr)" gap={4} mb={4}>
-        <FormControl isInvalid={!formData.category} isRequired>
-          <FormLabel>Category</FormLabel>
-          <DialogRoot>
-            <DialogTrigger>
-              <Input
-                isReadOnly
-                value={formData.category || ""}
-                cursor="pointer"
-                placeholder="Select Category"
-                borderColor={!formData.category ? "red.300" : "gray.200"}
-              />
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Select Category</DialogTitle>
-                <DialogCloseTrigger />
-              </DialogHeader>
-              <DialogBody>
-                <VStack spacing={3}>
-                  {categories.map((category) => (
-                    <DialogActionTrigger key={category} asChild>
+      {/* <Grid templateColumns="repeat(2, 1fr)" gap={4} mb={4}> */}
+      <FormControl isInvalid={!formData.category} isRequired mb={10}>
+        <FormLabel>Category</FormLabel>
+        <DialogRoot>
+          <DialogTrigger w="100%">
+            <Input
+              isReadOnly
+              value={formData.category || ""}
+              cursor="pointer"
+              placeholder="Select Category"
+              borderColor={!formData.category ? "red.300" : "gray.200"}
+            />
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Select Category</DialogTitle>
+              <DialogCloseTrigger />
+            </DialogHeader>
+            <DialogBody>
+              <VStack spacing={3}>
+                {categories.map((category) => (
+                  <DialogActionTrigger key={category} asChild>
+                    <Button
+                      w="100%"
+                      variant="outline"
+                      onClick={() =>
+                        setFormData({
+                          ...formData,
+                          category,
+                          subCategory: null,
+                        })
+                      }
+                    >
+                      {category}
+                    </Button>
+                  </DialogActionTrigger>
+                ))}
+              </VStack>
+            </DialogBody>
+          </DialogContent>
+        </DialogRoot>
+      </FormControl>
+
+      <FormControl isInvalid={!formData.subCategory} isRequired mb={10}>
+        <FormLabel>Sub-category</FormLabel>
+        <DialogRoot>
+          <DialogTrigger w="100%">
+            <Input
+              isReadOnly
+              cursor="pointer"
+              value={formData.subCategory || ""}
+              placeholder="Select Sub-category"
+              borderColor={!formData.subCategory ? "red.300" : "gray.200"}
+            />
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Select Sub-category</DialogTitle>
+              <DialogCloseTrigger />
+            </DialogHeader>
+            <DialogBody>
+              <VStack spacing={3}>
+                {formData.category &&
+                  subCategories[formData.category]?.map((subCat) => (
+                    <DialogActionTrigger key={subCat} asChild>
                       <Button
                         w="100%"
                         variant="outline"
                         onClick={() =>
-                          setFormData({
-                            ...formData,
-                            category,
-                            subCategory: null,
-                          })
+                          setFormData({ ...formData, subCategory: subCat })
                         }
                       >
-                        {category}
+                        {subCat}
                       </Button>
                     </DialogActionTrigger>
                   ))}
-                </VStack>
-              </DialogBody>
-            </DialogContent>
-          </DialogRoot>
-          <FormErrorMessage>Required field</FormErrorMessage>
-        </FormControl>
-
-        <FormControl isInvalid={!formData.subCategory} isRequired>
-          <FormLabel>Sub-category</FormLabel>
-          <DialogRoot>
-            <DialogTrigger>
-              <Input
-                isReadOnly
-                cursor="pointer"
-                value={formData.subCategory || ""}
-                placeholder="Select Sub-category"
-                borderColor={!formData.subCategory ? "red.300" : "gray.200"}
-              />
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Select Sub-category</DialogTitle>
-                <DialogCloseTrigger />
-              </DialogHeader>
-              <DialogBody>
-                <VStack spacing={3}>
-                  {formData.category &&
-                    subCategories[formData.category]?.map((subCat) => (
-                      <DialogActionTrigger key={subCat} asChild>
-                        <Button
-                          w="100%"
-                          variant="outline"
-                          onClick={() =>
-                            setFormData({ ...formData, subCategory: subCat })
-                          }
-                        >
-                          {subCat}
-                        </Button>
-                      </DialogActionTrigger>
-                    ))}
-                </VStack>
-              </DialogBody>
-            </DialogContent>
-          </DialogRoot>
-          <FormErrorMessage>Required field</FormErrorMessage>
-        </FormControl>
-      </Grid>
+              </VStack>
+            </DialogBody>
+          </DialogContent>
+        </DialogRoot>
+      </FormControl>
+      {/* </Grid> */}
 
       {/* Price Input */}
-      <FormControl isInvalid={!formData.price} isRequired mb={4}>
+      <FormControl isInvalid={!formData.price} isRequired mb={10}>
         <FormLabel>Price</FormLabel>
         <Input
           type="number"
@@ -229,22 +231,22 @@ const GiftCardForm = () => {
           min="1"
           placeholder="Enter price"
         />
-        <FormErrorMessage>Enter a valid price</FormErrorMessage>
       </FormControl>
 
       {/* Amount Display */}
-      <FormControl mb={4}>
+      <FormControl mb={10}>
         <FormLabel>Amount</FormLabel>
         <Input
           isReadOnly
-          value={amount ? `¥${amount}` : ""}
+          value={amount ? `₦${amount}` : ""}
           fontWeight="bold"
+          color="green.500"
           placeholder="Calculated amount"
         />
       </FormControl>
 
       {/* Image Upload */}
-      <FormControl isInvalid={!formData.images.length} isRequired mb={4}>
+      <FormControl isInvalid={!formData.images.length} isRequired mb={10}>
         <FormLabel>Upload Gift Card Images</FormLabel>
         <Box
           borderWidth={1}
@@ -273,7 +275,6 @@ const GiftCardForm = () => {
             </Text>
           )}
         </Box>
-        <FormErrorMessage>Please upload at least one image</FormErrorMessage>
       </FormControl>
 
       {/* Terms Checkbox */}
@@ -290,25 +291,13 @@ const GiftCardForm = () => {
       </FormControl>
 
       {/* Summary Dialog */}
-      <DialogRoot trapFocus="false">
+      <DialogRoot >
         <DialogTrigger>
-          <Button
-            colorScheme="blue"
-            w="100%"
-            size="lg"
-            isDisabled={!isFormValid}
-          >
-            Proceed to Summary
+          <Button bg={Blue.p} w="100%" px={10} size="lg" isDisabled={!isFormValid}>
+            Continue
           </Button>
         </DialogTrigger>
-        <DialogContent
-          position="fixed"
-          top="50%"
-          left="50%"
-          transform="translate(-50%, -50%)"
-          boxShadow="xl"
-          borderRadius="xl"
-        >
+        <DialogContent>
           <DialogHeader>
             <DialogTitle textAlign="center">Transaction Summary</DialogTitle>
             <DialogCloseTrigger />
@@ -338,7 +327,7 @@ const GiftCardForm = () => {
                         key={index}
                         src={URL.createObjectURL(image)}
                         alt={`Uploaded Gift Card ${index + 1}`}
-                        w='200px'
+                        w="200px"
                         objectFit="contain"
                         borderRadius="md"
                         display="inline-block"
@@ -373,7 +362,7 @@ const GiftCardForm = () => {
                   label="Amount"
                   value={
                     <Text fontWeight="bold" color="green.600">
-                      ¥{amount || "0"}
+                      ₦{amount || "0"}
                     </Text>
                   }
                 />
@@ -391,7 +380,7 @@ const GiftCardForm = () => {
                 Cancel
               </Button>
             </DialogActionTrigger>
-            <Button colorScheme="green" onClick={handleSubmit}>
+            <Button bg="green" onClick={handleSubmit}>
               Confirm Transaction
             </Button>
           </DialogFooter>
