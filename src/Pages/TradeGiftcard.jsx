@@ -31,9 +31,12 @@ import {
   DialogActionTrigger,
 } from "../components/ui/dialog";
 import { Blue } from "../assets/Colors";
+import TransactionStore from "../Store/TransactionStore";
+import useAuthStore from "../Store/userStore";
 
 const GiftCardForm = () => {
-  // const toast = useToast();
+  const { uploadImages,uploadGiftcard,Images } = TransactionStore();
+  const { user } = useAuthStore()
   const [formData, setFormData] = useState({
     giftCard: null,
     category: null,
@@ -44,6 +47,17 @@ const GiftCardForm = () => {
     acceptedTerms: false,
   });
 
+   const AddGiftcardRecord = async() => {
+     try {
+        await Promise.all([
+            uploadImages(formData.images)
+         ])
+         uploadGiftcard(formData.giftCard,formData.category,user.uid,1000,formData.price,'Nigeria',user.email,Images)
+     } catch (error) {
+        
+     }
+
+   }
   const giftCards = [
     { id: 1, name: "Adidas Gift Card", image: "/adidas.png", rate: 650 },
     { id: 2, name: "Amazon Gift Card", image: "/amazon.png", rate: 700 },
