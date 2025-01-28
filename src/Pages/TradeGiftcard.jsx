@@ -9,7 +9,8 @@ import {
   VisuallyHidden,
   Checkbox,
   Flex,
-  Heading
+  Heading,
+  Textarea
   // useToast,
 } from "@chakra-ui/react";
 import {
@@ -35,8 +36,8 @@ import TransactionStore from "../Store/TransactionStore";
 import useAuthStore from "../Store/userStore";
 
 const GiftCardForm = () => {
-  const { uploadImages,uploadGiftcard,Images } = TransactionStore();
-  const { user } = useAuthStore()
+  const { uploadImages, uploadGiftcard, Images } = TransactionStore();
+  const { user } = useAuthStore();
   const [formData, setFormData] = useState({
     giftCard: null,
     category: null,
@@ -47,17 +48,21 @@ const GiftCardForm = () => {
     acceptedTerms: false,
   });
 
-   const AddGiftcardRecord = async() => {
-     try {
-        await Promise.all([
-            uploadImages(formData.images)
-         ])
-         uploadGiftcard(formData.giftCard,formData.category,user.uid,1000,formData.price,'Nigeria',user.email,Images)
-     } catch (error) {
-        
-     }
-
-   }
+  const AddGiftcardRecord = async () => {
+    try {
+      await Promise.all([uploadImages(formData.images)]);
+      uploadGiftcard(
+        formData.giftCard,
+        formData.category,
+        user.uid,
+        1000,
+        formData.price,
+        "Nigeria",
+        user.email,
+        Images
+      );
+    } catch (error) {}
+  };
   const giftCards = [
     { id: 1, name: "Adidas Gift Card", image: "/adidas.png", rate: 650 },
     { id: 2, name: "Amazon Gift Card", image: "/amazon.png", rate: 700 },
@@ -105,8 +110,8 @@ const GiftCardForm = () => {
   };
 
   return (
-    <Box maxW="800px" w='85%' mx="auto" p={4}>
-      <Heading as="h1" size="3xl" my={10} color="teal.500" textAlign='center'>
+    <Box maxW="800px" w="85%" mx="auto" p={4}>
+      <Heading as="h1" size="3xl" my={10} color="teal.500" textAlign="center">
         BlixExchange
       </Heading>
       {/* Gift Card Selection */}
@@ -258,7 +263,10 @@ const GiftCardForm = () => {
           placeholder="Calculated amount"
         />
       </FormControl>
-
+      <FormControl>
+        <FormLabel>Description</FormLabel>
+        <Textarea h='100px'onChange={(e) => setFormData({ ...formData, description: e.target.value })} placeholder='Enter a description'></Textarea>
+      </FormControl>
       {/* Image Upload */}
       <FormControl isInvalid={!formData.images.length} isRequired mb={10}>
         <FormLabel>Upload Gift Card Images</FormLabel>
@@ -305,9 +313,15 @@ const GiftCardForm = () => {
       </FormControl>
 
       {/* Summary Dialog */}
-      <DialogRoot >
+      <DialogRoot>
         <DialogTrigger>
-          <Button bg={Blue.p} w="100%" px={10} size="lg" isDisabled={!isFormValid}>
+          <Button
+            bg={Blue.p}
+            w="100%"
+            px={10}
+            size="lg"
+            isDisabled={!isFormValid}
+          >
             Continue
           </Button>
         </DialogTrigger>
@@ -370,6 +384,14 @@ const GiftCardForm = () => {
                   label="Sub-category"
                   value={
                     <Text color="gray.600">{formData.subCategory || "—"}</Text>
+                  }
+                />
+                 <DataListItem
+                  label="Description"
+                  value={
+                    <Text >
+                      {formData.description || "—"}
+                    </Text>
                   }
                 />
                 <DataListItem

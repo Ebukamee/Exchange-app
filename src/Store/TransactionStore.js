@@ -37,10 +37,10 @@ const TransactionStore = create(()=> ({
            throw new Error(error.message)
         }
     },
-    uploadGiftcard : async(Name,subCategory,userId,Rate,Amount,Country,email,Images) => {
+    uploadGiftcard : async(Name,subCategory,userId,Rate,Amount,Country,email,Descrption,Images) => {
         try {
             await setTimeout(() => {
-                addDoc(collection(db, "Transactions"),{Name,subCategory,userId,Rate,Amount,Country,email,status:'confirmed',date:Date.now(),Images});
+                addDoc(collection(db, "Transactions"),{Name,subCategory,userId,Rate,Amount,Country,email,status:'confirmed',date:Date.now(),Images,Descrption});
             }, 3000)
           } catch (error) {
            throw new Error(error.message)
