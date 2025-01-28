@@ -10,7 +10,7 @@ import {
   Checkbox,
   Flex,
   Heading,
-  Textarea
+  Textarea,
   // useToast,
 } from "@chakra-ui/react";
 import {
@@ -34,10 +34,13 @@ import {
 import { Blue } from "../assets/Colors";
 import TransactionStore from "../Store/TransactionStore";
 import useAuthStore from "../Store/userStore";
+import { toaster } from "../components/ui/toaster";
+import { toast } from "../Helper";
 
 const GiftCardForm = () => {
-  const { uploadImages, uploadGiftcard, Images } = TransactionStore();
+  const { uploadImages, uploadGiftcard } = TransactionStore();
   const { user } = useAuthStore();
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     giftCard: null,
     category: null,
@@ -49,8 +52,10 @@ const GiftCardForm = () => {
   });
 
   const AddGiftcardRecord = async () => {
+    setLoading(true);
+    toast("loading", "Please Wait", "Creating Transaction");
     try {
-      await Promise.all([uploadImages(formData.images)]);
+      const imageUrls = await uploadImages(formData.images);
       uploadGiftcard(
         formData.giftCard,
         formData.category,
@@ -59,9 +64,20 @@ const GiftCardForm = () => {
         formData.price,
         "Nigeria",
         user.email,
-        Images
+        formData.description,
+        imageUrls
       );
-    } catch (error) {}
+      setLoading(false);
+      if (!loading) {
+        toaster.dismiss();
+      }
+      toast("success", "Transaction Succesful", "Success");
+    } catch (error) {
+      if (!loading) {
+        toaster.dismiss();
+      }
+      toast("error", error.message, "An Error Occured");
+    }
   };
   const giftCards = [
     { id: 1, name: "Adidas Gift Card", image: "/adidas.png", rate: 650 },
@@ -265,7 +281,13 @@ const GiftCardForm = () => {
       </FormControl>
       <FormControl>
         <FormLabel>Description</FormLabel>
-        <Textarea h='100px'onChange={(e) => setFormData({ ...formData, description: e.target.value })} placeholder='Enter a description'></Textarea>
+        <Textarea
+          h="100px"
+          onChange={(e) =>
+            setFormData({ ...formData, description: e.target.value })
+          }
+          placeholder="Enter a description"
+        ></Textarea>
       </FormControl>
       {/* Image Upload */}
       <FormControl isInvalid={!formData.images.length} isRequired mb={10}>
@@ -386,13 +408,9 @@ const GiftCardForm = () => {
                     <Text color="gray.600">{formData.subCategory || "—"}</Text>
                   }
                 />
-                 <DataListItem
+                <DataListItem
                   label="Description"
-                  value={
-                    <Text >
-                      {formData.description || "—"}
-                    </Text>
-                  }
+                  value={<Text>{formData.description || "—"}</Text>}
                 />
                 <DataListItem
                   label="Amount"
@@ -416,7 +434,7 @@ const GiftCardForm = () => {
                 Cancel
               </Button>
             </DialogActionTrigger>
-            <Button bg="green" onClick={handleSubmit}>
+            <Button bg="green" onClick={AddGiftcardRecord}>
               Confirm Transaction
             </Button>
           </DialogFooter>

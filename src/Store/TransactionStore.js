@@ -1,37 +1,14 @@
 import { create } from "zustand";
 import { db, storage } from "../firesbase/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { setDoc, doc, getDoc, updateDoc, addDoc } from "firebase/firestore";
+import { setDoc, doc, getDoc, updateDoc, addDoc,collection } from "firebase/firestore";
 
-const TransactionStore = create(() => ({
+const TransactionStore = create((set) => ({
   Transaction: [],
-  Images: [],
+  ImageArray: [],
   uploadImages: async (Images) => {
     try {
-      //  const uploadPromises = Images.map(async (Image) => {
-      //   const Ref = ref(storage, "products");
-      //   const ImagesRef = ref(Ref, Image.name);
-      //   const metadata = {
-      //     contentType: 'image/jpeg',
-      //   };
-
-      //   // Upload each image
-      //   const snapshot = await uploadBytes(ImagesRef, Image, metadata);
-      //   console.log('Uploaded Image:', snapshot);
-
-      //   // Get the download URL
-      //   const downloadURL = await getDownloadURL(ImagesRef);
-      //   console.log('Download URL:', downloadURL);
-
-      //   return downloadURL; // Return the download URL for this file
-      // });
-
-      // // Wait for all uploads to finish
-      // const urls = await Promise.all(uploadPromises);
-
-      // // Save all URLs in the state
-      // set({Images:urls});
-      // console.log('All uploaded URLs:', Images);
+    
       const imageUrls = await Promise.all(
         Images.map(async (image) => {
           const formData = new FormData();
@@ -59,10 +36,9 @@ const TransactionStore = create(() => ({
         })
       );
     
-      console.log("Uploaded Image URLs:", imageUrls);
-    //   return imageUrls;
+      return imageUrls;
 
-      console.log(imageUrls);
+    //   console.log(ImageArray);
     } catch (error) {
       throw new Error(error.message);
     }
@@ -75,12 +51,13 @@ const TransactionStore = create(() => ({
     Amount,
     Country,
     email,
-    Descrption,
+    Description,
     Images
   ) => {
     try {
       await setTimeout(() => {
         addDoc(collection(db, "Transactions"), {
+          Type:'Giftcard',
           Name,
           subCategory,
           userId,
@@ -88,12 +65,44 @@ const TransactionStore = create(() => ({
           Amount,
           Country,
           email,
-          status: "confirmed",
+          status: "pending",
           date: Date.now(),
           Images,
-          Descrption,
+          Description,
         });
       }, 3000);
+
+      set({ImageArray:[]})
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
+  uploadCrypto: async (
+    Name,
+    userId,
+    Rate,
+    Amount,
+    email,
+    Description,
+    Images
+  ) => {
+    try {
+      await setTimeout(() => {
+        addDoc(collection(db, "Transactions"), {
+          Type:'Crypto',
+          Name,
+          userId,
+          Rate,
+          Amount,
+          email,
+          status: "pending",
+          date: Date.now(),
+          Images,
+          Description,
+        });
+      }, 3000);
+
+      set({ImageArray:[]})
     } catch (error) {
       throw new Error(error.message);
     }

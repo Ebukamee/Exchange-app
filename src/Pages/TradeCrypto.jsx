@@ -34,10 +34,13 @@ import {
 import { Blue } from "../assets/Colors";
 import TransactionStore from "../Store/TransactionStore";
 import useAuthStore from "../Store/userStore";
+import { toaster } from "../components/ui/toaster";
+import { toast } from "../Helper";
 
 const CryptoForm = () => {
-  const { uploadImages, uploadGiftcard, Images } = TransactionStore();
+  const { uploadImages, uploadCrypto } = TransactionStore();
   const { user } = useAuthStore();
+  const [loading,setLoading] = useState(false)
   const [formData, setFormData] = useState({
     name: "",
     price: "",
@@ -46,20 +49,31 @@ const CryptoForm = () => {
     acceptedTerms: false,
   });
 
-  const AddGiftcardRecord = async () => {
-    try {
-      await Promise.all([uploadImages(formData.images)]);
-      uploadGiftcard(
-        formData.giftCard,
-        formData.category,
-        user.uid,
-        1000,
-        formData.price,
-        "Nigeria",
-        user.email,
-        Images
-      );
-    } catch (error) {}
+  const AddCryptoRecord = async () => {
+    setLoading(true);
+     toast("loading", "Please Wait", "Creating Transaction");
+     try {
+       const imageUrls = await uploadImages(formData.images);
+       uploadCrypto(
+         'Bitcoin',
+         user.uid,
+         1000,
+         formData.price,
+         user.email,
+         formData.description,
+         imageUrls
+       );
+       setLoading(false);
+       if (!loading) {
+         toaster.dismiss();
+       }
+       toast("success", "Transaction Succesful", "Success");
+     } catch (error) {
+       if (!loading) {
+         toaster.dismiss();
+       }
+       toast("error", error.message, "An Error Occured");
+     }
   };
   const giftCards = [
     { id: 1, name: "Adidas Gift Card", image: "/adidas.png", rate: 650 },
@@ -315,7 +329,7 @@ const CryptoForm = () => {
                 Cancel
               </Button>
             </DialogActionTrigger>
-            <Button bg="green" onClick={handleSubmit}>
+            <Button bg="green" onClick={AddCryptoRecord}>
               Confirm Transaction
             </Button>
           </DialogFooter>
