@@ -93,13 +93,14 @@ const CryptoForm = () => {
   };
 
   const handleSubmit = () => {
-    toast({
-      title: "Transaction Submitted",
-      status: "success",
-      duration: 3000,
-      isClosable: true,
-      position: "top-right",
-    });
+    // toast({
+    //   title: "Transaction Submitted",
+    //   status: "success",
+    //   duration: 3000,
+    //   isClosable: true,
+    //   position: "top-right",
+    // });
+    uploadImages(formData.images)
   };
 
   return (
