@@ -80,12 +80,7 @@ const CryptoForm = () => {
     { id: 2, name: "Amazon Gift Card", image: "/amazon.png", rate: 700 },
   ];
 
-  const categories = ["E-commerce", "Fashion", "Electronics"];
-  const subCategories = {
-    "E-commerce": ["Digital Goods", "Subscription Services", "Gift Cards"],
-    Fashion: ["Apparel", "Footwear", "Accessories"],
-    Electronics: ["Devices", "Components", "Peripherals"],
-  };
+  
 
   const amount = formData.price * 500;
 
@@ -93,8 +88,8 @@ const CryptoForm = () => {
     formData.name &&
     formData.price > 0 &&
     formData.description &&
-    formData.image &&
-    formData.acceptedTerms;
+    formData.images.length > 0
+    // formData.acceptedTerms;
 
   const handleFileUpload = (e) => {
     const files = Array.from(e.target.files);
@@ -106,16 +101,6 @@ const CryptoForm = () => {
     }
   };
 
-  const handleSubmit = () => {
-    // toast({
-    //   title: "Transaction Submitted",
-    //   status: "success",
-    //   duration: 3000,
-    //   isClosable: true,
-    //   position: "top-right",
-    // });
-    uploadImages(formData.images)
-  };
 
   return (
     <Box maxW="800px" w="85%" mx="auto" p={4}>
@@ -123,17 +108,17 @@ const CryptoForm = () => {
         BlixExchange
       </Heading>
       {/* Gift Card Selection */}
-      <FormControl isInvalid={!formData.giftCard} isRequired mb={10}>
+      <FormControl isInvalid={!formData.name} isRequired mb={10}>
         <FormLabel>Crypto Name</FormLabel>
         <DialogRoot>
           <DialogTrigger w="100%">
             <Input
               isReadOnly
-              value={formData.giftCard?.name || ""}
+              value={formData.name?.name || ""}
               placeholder="Select Gift Card"
               cursor="pointer"
               _placeholder={{ color: "gray.400" }}
-              borderColor={!formData.giftCard ? "red.300" : "gray.200"}
+              borderColor={!formData.name ? "red.300" : "gray.200"}
             />
           </DialogTrigger>
           <DialogContent>
@@ -150,7 +135,7 @@ const CryptoForm = () => {
                       variant="outline"
                       justifyContent="start"
                       onClick={() =>
-                        setFormData({ ...formData, giftCard: card })
+                        setFormData({ ...formData, name: card })
                       }
                     >
                       <Image src={card.image} boxSize="24px" mr={2} />
@@ -245,7 +230,7 @@ const CryptoForm = () => {
             w="100%"
             px={10}
             size="lg"
-            isDisabled={!isFormValid}
+            disabled={!isFormValid}
           >
             Continue
           </Button>

@@ -102,8 +102,7 @@ const GiftCardForm = () => {
     formData.subCategory &&
     formData.price > 0 &&
     formData.description &&
-    formData.image &&
-    formData.acceptedTerms;
+    formData.images.length > 0 
 
   const handleFileUpload = (e) => {
     const files = Array.from(e.target.files);
@@ -342,7 +341,7 @@ const GiftCardForm = () => {
             w="100%"
             px={10}
             size="lg"
-            isDisabled={!isFormValid}
+            disabled={!isFormValid}
           >
             Continue
           </Button>

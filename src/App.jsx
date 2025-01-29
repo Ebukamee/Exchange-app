@@ -16,6 +16,7 @@ import UpdatePassword from './Pages/update-Password'
 import BankDetails from './Pages/BankDetails'
 import GiftCardForm from './Pages/TradeGiftcard'
 import CryptoForm from './Pages/TradeCrypto'
+import AdminDashboard from './Pages/AdminDashboard'
 
 
 
@@ -42,6 +43,8 @@ useEffect(() => {
       <Route path='/bank-details' element={<BankDetails />} />
       <Route path='/trade-giftcards' element={<GiftCardForm />} />
       <Route path='/trade-crypto' element={<CryptoForm />} />
+      <Route path='/admin/dashboard' element={<AdminDashboard />} />
+      
 
 
       { /*<Route path='/create' element={<CreateProjectForm />} />
