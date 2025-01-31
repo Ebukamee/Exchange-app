@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { auth, db } from "../firesbase/firebase";
 
 import { createUserWithEmailAndPassword,sendEmailVerification,signInWithEmailAndPassword,updateProfile,onAuthStateChanged,updateEmail, signOut } from "firebase/auth";
-import {  setDoc,doc,getDoc, updateDoc } from "firebase/firestore"
+import {  setDoc,doc,getDoc, updateDoc,collection, getDocs } from "firebase/firestore"
 
 const useAuthStore = create((set)=>({
     user:null,
@@ -86,7 +86,26 @@ const useAuthStore = create((set)=>({
           console.error("Sign-out error:", error);
         
         }
-      }
+      },
+      getAllUsers :  async () => {
+        try {
+          // Reference to the "users" collection
+          const usersCollectionRef = collection(db, "users");
+      
+          // Fetch all documents from the collection
+          const querySnapshot = await getDocs(usersCollectionRef);
+          // Map through the documents and extract user data
+          const users = querySnapshot.docs.map((doc) => ({
+            id: doc.id, // Document ID
+            ...doc.data(), // Spread the document data
+          }));
+      
+          return users;
+        } catch (error) {
+          console.error("Error fetching users:", error);
+          throw error; // Re-throw the error for handling in the calling function
+        }
+      },
 
 }))
 
