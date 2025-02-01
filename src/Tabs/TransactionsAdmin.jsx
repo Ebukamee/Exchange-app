@@ -36,7 +36,7 @@ export default function TransactionTable() {
   const [loading, setLoading] = useState(false);
   const Navigate = useNavigate();
   const { getTransactions, Transaction, updateStatus } = TransactionStore();
-  const { getBankDetails } = useAuthStore();
+  const { getBankDetails, BankDetails } = useAuthStore();
   useEffect(() => {
     getTransactions();
   }, []);
@@ -62,48 +62,7 @@ export default function TransactionTable() {
       toast("error", err(error.message), "An Error Occured");
     }
   };
-  const transactions = [
-    {
-      type: "Crypto",
-      name: "Bitcoin",
-      amount: "0.0034 BTC",
-      status: "Confirmed",
-      image: "/path/to/bitcoin-icon.png", // Example icon path
-      proofImages: ["/path/to/proof1.png", "/path/to/proof2.png"], // Example proof images
-    },
-    {
-      type: "Giftcard",
-      name: "Amazon Gift Card",
-      amount: "50 USD",
-      status: "Pending",
-      image: "/path/to/amazon-icon.png", // Example icon path
-      proofImages: ["/path/to/proof3.png"], // Example proof images
-    },
-    {
-      type: "Crypto",
-      name: "Ethereum",
-      amount: "0.045 ETH",
-      status: "Confirmed",
-      image: "/path/to/eth-icon.png", // Example icon path
-      proofImages: ["/path/to/proof4.png"], // Example proof images
-    },
-    {
-      type: "Giftcard",
-      name: "Netflix Gift Card",
-      amount: "25 USD",
-      status: "Rejected",
-      image: "/path/to/netflix-icon.png", // Example icon path
-      proofImages: ["/path/to/proof5.png"], // Example proof images
-    },
-    {
-      type: "Crypto",
-      name: "Tether",
-      amount: "100 USDT",
-      status: "Pending",
-      image: "/path/to/tether-icon.png", // Example icon path
-      proofImages: ["/path/to/proof6.png"], // Example proof images
-    },
-  ];
+
   const handleViewProof = (transaction) => {
     setSelectedTransaction(transaction);
   };
@@ -201,7 +160,10 @@ export default function TransactionTable() {
               <Button
                 bg={Blue.p}
                 size="sm"
-                onClick={() => handleViewProof(transaction)}
+                onClick={() => {
+                  getBankDetails(transaction.userId);
+        // alert(transaction.userId)
+                }}
               >
                 View User Details
               </Button>
@@ -212,27 +174,31 @@ export default function TransactionTable() {
                 <DialogCloseTrigger />
               </DialogHeader>
               <DialogBody>
-                {selectedTransaction?.proofImages?.length > 0 ? (
+                {BankDetails ? (
                   <DataListRoot orientation="horizontal">
                     <DataListItem
                       label="Bank Name"
-                      value={<Text color="gray.600">My Bank</Text>}
+                      value={
+                        <Text color="gray.600">
+                          {BankDetails.BankName || "N/A"}
+                        </Text>
+                      }
                     />
                     <DataListItem
                       label="Account Number"
-                      value={<Text>12345670</Text>}
+                      value={<Text>{BankDetails.AccountNumber || "N/A"}</Text>}
                     />
                     <DataListItem
                       label="Account Name"
                       value={
                         <Text fontWeight="bold" color="green.600">
-                          Okeke Okafor
+                          {BankDetails.AccountName || "N/A"}
                         </Text>
                       }
                     />
                   </DataListRoot>
                 ) : (
-                  <Text>No proof images available.</Text>
+                  <Text>No bank details available.</Text>
                 )}
               </DialogBody>
               <DialogFooter>
