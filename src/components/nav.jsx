@@ -81,14 +81,13 @@ export default function Nav() {
         </Heading>
 
         {/* Menu Button */}
-        <IconButton
-          aria-label="Open Menu"
-          icon={isMenuOpen ? <FaTimes /> : <FaBars />}
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          variant="outline"
-          color="black"
-          zIndex="3"
-        />
+        <Box onClick={() => setIsMenuOpen(!isMenuOpen)} cursor="pointer" zIndex="3">
+      {isMenuOpen ? (
+        <FaTimes size="1.5em" color="black" />
+      ) : (
+        <FaBars size="1.5em" color="black" />
+      )}
+    </Box>
       </Flex>
 
       {/* Mobile Menu */}
@@ -103,26 +102,26 @@ export default function Nav() {
           display={{ base: "flex", md: "none" }}
         >
           <VStack spacing={4} align="start">
-            <Link to="/">
-              <Text fontSize="md" fontWeight="small">
-                Home
-              </Text>
-            </Link>
-            <Link to="/about">
-              <Text fontSize="md" fontWeight="small">
-                About Us
-              </Text>
-            </Link>
-            <Link to="/contact">
-              <Text fontSize="md" fontWeight="small">
-                Contact
-              </Text>
-            </Link>
-            <Link to="/blog">
-              <Text fontSize="md" fontWeight="small">
-                Blog
-              </Text>
-            </Link>
+          <Link to="/">
+            <Text fontSize="md" fontWeight="small" mx="10px" color="gray.500">
+              Home
+            </Text>
+          </Link>
+          <Link to="/about">
+            <Text fontSize="md" fontWeight="small" mx="10px" color="gray.500">
+              About
+            </Text>
+          </Link>
+          <Link to="/giftcard-rates">
+            <Text fontSize="md" fontWeight="small" mx="10px" color="gray.500">
+              Rates
+            </Text>
+          </Link>
+          <Link to="/blog">
+            <Text fontSize="md" fontWeight="small" mx="10px" color="gray.500">
+              Blog
+            </Text>
+          </Link>
             <Flex gap={5} my={5} zIndex='2'>
               <Button color={Blue.p} bg="white" variant="solid" onClick={() => { nav('/login')}}>
                 Login

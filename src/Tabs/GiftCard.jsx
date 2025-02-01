@@ -78,7 +78,7 @@ export default function GiftcardTransactions() {
           const filteredTransactions =
             status === "all"
               ? Transaction.sort((a,b)=> b.date - a.date).filter((t)=>(t.Type=='Giftcard' && t.userId == user.uid))
-              : Transaction.filter(
+              : Transaction.sort((a,b)=> b.date - a.date).filter((t)=> t.userId == user.uid).filter(
                   (t) => t.status.toLowerCase() === status
                 );
 
