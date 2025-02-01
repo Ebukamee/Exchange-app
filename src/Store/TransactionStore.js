@@ -1,10 +1,12 @@
 import { create } from "zustand";
 import { db, storage } from "../firesbase/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { setDoc, doc, getDoc, updateDoc, addDoc,collection } from "firebase/firestore";
+import { setDoc, doc, getDoc, updateDoc, addDoc,collection,getDocs,orderBy } from "firebase/firestore";
+import useAuthStore from "./userStore";
 
 const TransactionStore = create((set) => ({
   Transaction: [],
+  Giftcard:[],
   ImageArray: [],
   uploadImages: async (Images) => {
     try {
@@ -45,6 +47,7 @@ const TransactionStore = create((set) => ({
   },
   uploadGiftcard: async (
     Name,
+    Icon,
     subCategory,
     userId,
     Rate,
@@ -59,13 +62,14 @@ const TransactionStore = create((set) => ({
         addDoc(collection(db, "Transactions"), {
           Type:'Giftcard',
           Name,
+          Icon,
           subCategory,
           userId,
           Rate,
           Amount,
           Country,
           email,
-          status: "pending",
+          status: "Pending",
           date: Date.now(),
           Images,
           Description,
@@ -79,6 +83,7 @@ const TransactionStore = create((set) => ({
   },
   uploadCrypto: async (
     Name,
+    Icon,
     userId,
     Rate,
     Amount,
@@ -91,11 +96,12 @@ const TransactionStore = create((set) => ({
         addDoc(collection(db, "Transactions"), {
           Type:'Crypto',
           Name,
+          Icon,
           userId,
           Rate,
           Amount,
           email,
-          status: "pending",
+          status: "Pending",
           date: Date.now(),
           Images,
           Description,
@@ -107,6 +113,58 @@ const TransactionStore = create((set) => ({
       throw new Error(error.message);
     }
   },
+  getTransactions : async () => {
+    try {
+        const latest = await getDocs(
+            collection(db, 'Transactions'),
+            orderBy('date', '')
+    
+        );
+    var dat=[]
+        latest.forEach((doc) => {
+          const data = doc.data();
+          data.id = doc.id;
+          dat.push(data)
+        });
+
+        set({Transaction : dat})
+    
+        console.log(dat);
+
+      } catch (error) {
+        console.error('Error fetching transactions: ', error);
+      }
+},
+getGiftcards : async () => {
+    try {
+        const latest = await getDocs(
+            collection(db, 'Giftcard'),
+            orderBy('date', '')
+    
+        );
+    var dat=[]
+        latest.forEach((doc) => {
+          const data = doc.data();
+          data.id = doc.id;
+          dat.push(data)
+        });
+
+        set({Giftcard : dat})
+    
+        console.log(dat);
+
+      } catch (error) {
+        console.error('Error fetching transactions: ', error);
+      }
+},
+updateStatus : async (id,status) => {
+    try {
+        await updateDoc(doc(db,'Transactions',id),{status})
+      } catch (error) {
+        throw new Error(error.message)
+      }
+}
 }));
+
 
 export default TransactionStore;

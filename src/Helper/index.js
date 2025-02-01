@@ -1,6 +1,7 @@
 import { toaster } from "../components/ui/toaster";
 import { getDoc, doc } from "firebase/firestore";
 import { db } from "../firesbase/firebase";
+import { collection,addDoc } from "firebase/firestore";
 
 export const toast = (type, message, title) => {
   toaster.create({
@@ -44,3 +45,19 @@ export const checkBankDetails = async (id) => {
     return;
   }
 };
+export const  formatDate = (milliseconds) =>  {
+    const date = new Date(milliseconds);
+
+    // Get the date part: Oct 01 2024
+    const dateOptions = { month: 'short', day: '2-digit', year: 'numeric' };
+    const formattedDate = date.toLocaleDateString('en-US', dateOptions);
+
+    // Get the time part: 07:23pm
+    const timeOptions = { hour: '2-digit', minute: '2-digit', hour12: true };
+    const formattedTime = date.toLocaleTimeString('en-US', timeOptions).toLowerCase();
+
+    // Combine the date and time
+    return `${formattedDate} ${formattedTime}`;
+  }
+
+ 

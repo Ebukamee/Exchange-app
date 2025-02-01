@@ -20,6 +20,10 @@ import {
 } from "../components/ui/dialog";
 import { DataListRoot, DataListItem } from "../components/ui/data-list";
 import No from "../assets/images/no-history.svg";
+import { useEffect } from "react";
+import TransactionStore from "../Store/TransactionStore";
+import { formatDate } from "../Helper";
+import useAuthStore from "../Store/userStore";
 
 const mockTransactions = [
   {
@@ -49,6 +53,11 @@ const mockTransactions = [
 ];
 
 export default function AllTransactions() {
+  const { getTransactions,Transaction } = TransactionStore();
+  const {user } = useAuthStore();
+  useEffect(()=>{
+    getTransactions()
+  },[]) 
   return (
     <Box>
       <Tabs.Root defaultValue="all" w="100%" my={10} variant="enclosed">
@@ -68,8 +77,8 @@ export default function AllTransactions() {
         {["all", "pending", "confirmed", "rejected"].map((status) => {
           const filteredTransactions =
             status === "all"
-              ? mockTransactions
-              : mockTransactions.filter(
+              ? Transaction.sort((a,b)=> b.date - a.date).filter((t)=>(t.userId == user.uid))
+              : Transaction.filter(
                   (t) => t.status.toLowerCase() === status
                 );
 
@@ -86,15 +95,16 @@ export default function AllTransactions() {
                       borderRadius="md"
                       bg="gray.50"
                     >
-                      <Flex>
-                        <Text fontWeight="bold">{transaction.name}</Text>
+                      <Flex justify='space-between' alignItems='center' gap={3}>
+                        <Box><Image src={transaction.Icon}  w='40px'/></Box>
+                        <Text fontWeight="bold">{transaction.Name}</Text>
                         <Spacer />
-                        <Text>{transaction.amount}</Text>
+                        <Text>₦{transaction.Amount}</Text>
                       </Flex>
                       <Text color="gray.600">
-                        {transaction.type} - {transaction.date}
+                        {transaction.Type} - {formatDate(transaction.date)}
                       </Text>
-                      <Flex justify='space-between'>
+                      <Flex justify='space-between' alignItems='center'>
                       <Text
                             color={
                               transaction.status === "Confirmed"
@@ -124,7 +134,7 @@ export default function AllTransactions() {
                                   label="Name"
                                   value={
                                     <Text fontWeight="medium">
-                                      {transaction.name}
+                                      {transaction.Name}
                                     </Text>
                                   }
                                 />
@@ -132,7 +142,7 @@ export default function AllTransactions() {
                                   label="Type"
                                   value={
                                     <Text color="gray.600">
-                                      {transaction.type}
+                                      {transaction.Type}
                                     </Text>
                                   }
                                 />
@@ -140,15 +150,15 @@ export default function AllTransactions() {
                                   label="Date"
                                   value={
                                     <Text color="gray.600">
-                                      {transaction.date}
-                                    </Text>
+                                    {formatDate(transaction.date)}
+                                  </Text>
                                   }
                                 />
                                 <DataListItem
                                   label="Amount"
                                   value={
                                     <Text fontWeight="bold" color="green.600">
-                                      {transaction.amount}
+                                     ₦{transaction.Amount}
                                     </Text>
                                   }
                                 />
@@ -160,7 +170,29 @@ export default function AllTransactions() {
                                     </Text>
                                   }
                                 />
+                                  <DataListItem
+                                  label="Description"
+                                  value={
+                                    <Text color="gray.600">
+                                      {transaction.Description}
+                                    </Text>
+                                  }
+                                />
                               </DataListRoot>
+                              <Flex gap={4}>
+                    {transaction.Images.map((image, index) => (
+                      <Image
+                        key={index}
+                        src={image}
+                        alt={`Uploaded Gift Card ${index + 1}`}
+                        w="100px"
+                        objectFit="contain"
+                        borderRadius="md"
+                        display="inline-block"
+                        flexShrink={0}
+                      />
+                    ))}
+                  </Flex>
                             </VStack>
                           </DialogBody>
                         </DialogContent>

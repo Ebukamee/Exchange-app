@@ -13,6 +13,7 @@ import {
   TableColumnHeader,
   TableBody,
   TableCell,
+  Image,
 } from "@chakra-ui/react";
 import {
   DialogRoot,
@@ -24,6 +25,30 @@ import {
   DialogFooter,
 } from "../components/ui/dialog"; // Adjust the import path based on your project structure
 import { Blue } from "../assets/Colors";
+
+// Mapping of gift card names to their images
+const giftCardImages = {
+  Amazon: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
+  Apple: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg",
+  "Razer Gold": "https://i.pinimg.com/736x/e4/67/0c/e4670c59dade6ed7522fa8054e687de3.jpg",
+  "American Express":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/American_Express_logo_%282018%29.svg/601px-American_Express_logo_%282018%29.svg.png",
+  Steam: "https://upload.wikimedia.org/wikipedia/commons/8/83/Steam_icon_logo.svg",
+  "Vanilla/One":
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Vanilla_Logo_1.png/800px-Vanilla_Logo_1.png?20150330072304",
+  "Vanilla VISA": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Visa_2021.svg/512px-Visa_2021.svg.png",
+  NordStorm:
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Nordstrom_Logo_1991.svg/531px-Nordstrom_Logo_1991.svg.png",
+  Nike: "https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg",
+  Macy: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Macys_logo.svg/512px-Macys_logo.svg.png",
+  Sephora: "https://seeklogo.com/images/S/sephora-logo-F5C4DB9E97-seeklogo.com.png",
+  Target: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Target_logo.svg/432px-Target_logo.svg.png",
+  Ebay: "https://upload.wikimedia.org/wikipedia/commons/1/1b/EBay_logo.svg",
+  VISA: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Visa_2021.svg/512px-Visa_2021.svg.png",
+  Xbox: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Xbox_Logo.svg/372px-Xbox_Logo.svg.png",
+  Footlocker:
+    "https://upload.wikimedia.org/wikipedia/fr/thumb/9/94/Foot_Locker_logo.svg/339px-Foot_Locker_logo.svg.png?20190912154451",
+};
 
 const GiftcardForm = () => {
   // Initial gift cards data
@@ -142,7 +167,7 @@ const GiftcardForm = () => {
               />
             </DialogBody>
             <DialogFooter>
-              <Button bg='green' onClick={handleAddGiftCard}>
+              <Button bg="green" onClick={handleAddGiftCard}>
                 Add Gift Card
               </Button>
             </DialogFooter>
@@ -163,7 +188,17 @@ const GiftcardForm = () => {
         <TableBody>
           {Object.entries(giftCards).map(([giftCard, subcategories]) => (
             <TableRow key={giftCard}>
-              <TableCell>{giftCard}</TableCell>
+              <TableCell>
+                <Flex alignItems="center">
+                  <Image
+                    src={giftCardImages[giftCard]}
+                    alt={giftCard}
+                    w='40px'
+                    mr={2}
+                  />
+                  <Text>{giftCard}</Text>
+                </Flex>
+              </TableCell>
               <TableCell>
                 {subcategories.length > 0 ? (
                   subcategories.map((subcategory, index) => (
@@ -189,7 +224,7 @@ const GiftcardForm = () => {
                         <DialogContent>
                           <DialogHeader>
                             <Heading size="md">
-                              Edit Rate for {giftCard}'s' {subcategory.name}
+                              Edit Rate for {giftCard}'s {subcategory.name}
                             </Heading>
                             <DialogCloseTrigger />
                           </DialogHeader>
@@ -209,7 +244,7 @@ const GiftcardForm = () => {
                           </DialogBody>
                           <DialogFooter>
                             <Button
-                              bg='green'
+                              bg="green"
                               onClick={() =>
                                 handleEditRate(
                                   editingRate.giftCard,
@@ -245,7 +280,7 @@ const GiftcardForm = () => {
                   <DialogTrigger>
                     <Button
                       size="sm"
-                      bg='white'
+                      bg="white"
                       color={Blue.p}
                       borderColor={Blue.p}
                       onClick={() => setSelectedGiftCard(giftCard)}
@@ -274,10 +309,7 @@ const GiftcardForm = () => {
                       />
                     </DialogBody>
                     <DialogFooter>
-                      <Button
-                        bg='green'
-                        onClick={handleAddSubcategory}
-                      >
+                      <Button bg="green" onClick={handleAddSubcategory}>
                         Add Subcategory
                       </Button>
                     </DialogFooter>

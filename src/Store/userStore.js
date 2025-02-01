@@ -73,6 +73,7 @@ const useAuthStore = create((set)=>({
         if (documentSnapshot.exists()) {
         
           set({BankDetails:documentSnapshot.data()})
+          return ocumentSnapshot.data()
         } 
         else {
         return null;

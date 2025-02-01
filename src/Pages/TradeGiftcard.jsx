@@ -19,7 +19,7 @@ import {
   FormErrorMessage,
 } from "@chakra-ui/form-control";
 import { DataListItem, DataListRoot } from "../components/ui/data-list";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   DialogBody,
   DialogCloseTrigger,
@@ -38,7 +38,7 @@ import { toaster } from "../components/ui/toaster";
 import { toast } from "../Helper";
 
 const GiftCardForm = () => {
-  const { uploadImages, uploadGiftcard } = TransactionStore();
+  const { uploadImages, uploadGiftcard,getGiftcards,Giftcard } = TransactionStore();
   const { user } = useAuthStore();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -50,18 +50,25 @@ const GiftCardForm = () => {
     images: [],
     acceptedTerms: false,
   });
-
+useEffect(()=>{
+    getGiftcards()
+},[])
+const amount =
+    formData.price && formData.giftCard
+      ? (formData.giftCard.Subcategory ? formData.price* 1000 * formData.subCategory.rate : formData.price  * formData.giftCard.Rate).toLocaleString()
+      : "";
   const AddGiftcardRecord = async () => {
     setLoading(true);
     toast("loading", "Please Wait", "Creating Transaction");
     try {
       const imageUrls = await uploadImages(formData.images);
       uploadGiftcard(
-        formData.giftCard,
-        formData.category,
+        formData.giftCard.Name,
+        formData.giftCard.ImageURL,
+        formData.subCategory.name,
         user.uid,
         1000,
-        formData.price,
+        amount,
         "Nigeria",
         user.email,
         formData.description,
@@ -91,15 +98,9 @@ const GiftCardForm = () => {
     Electronics: ["Devices", "Components", "Peripherals"],
   };
 
-  const amount =
-    formData.price && formData.giftCard
-      ? (formData.price * formData.giftCard.rate).toLocaleString()
-      : "";
 
   const isFormValid =
     formData.giftCard &&
-    formData.category &&
-    formData.subCategory &&
     formData.price > 0 &&
     formData.description &&
     formData.images.length > 0 
@@ -114,15 +115,7 @@ const GiftCardForm = () => {
     }
   };
 
-  const handleSubmit = () => {
-    toast({
-      title: "Transaction Submitted",
-      status: "success",
-      duration: 3000,
-      isClosable: true,
-      position: "top-right",
-    });
-  };
+
 
   return (
     <Box maxW="800px" w="85%" mx="auto" p={4}>
@@ -136,7 +129,7 @@ const GiftCardForm = () => {
           <DialogTrigger w="100%">
             <Input
               isReadOnly
-              value={formData.giftCard?.name || ""}
+              value={formData.giftCard?.Name || ""}
               placeholder="Select Gift Card"
               cursor="pointer"
               _placeholder={{ color: "gray.400" }}
@@ -150,7 +143,7 @@ const GiftCardForm = () => {
             </DialogHeader>
             <DialogBody>
               <VStack spacing={3}>
-                {giftCards.map((card) => (
+                {Giftcard.sort((a,b)=> a.Name.localeCompare(b.Name)).map((card) => (
                   <DialogActionTrigger key={card.id} asChild>
                     <Button
                       w="100%"
@@ -160,8 +153,8 @@ const GiftCardForm = () => {
                         setFormData({ ...formData, giftCard: card })
                       }
                     >
-                      <Image src={card.image} boxSize="24px" mr={2} />
-                      {card.name}
+                      <Image src={card.ImageURL} w="24px" mr={2} />
+                      {card.Name}
                     </Button>
                   </DialogActionTrigger>
                 ))}
@@ -173,14 +166,15 @@ const GiftCardForm = () => {
 
       {/* Category Selection Grid */}
       {/* <Grid templateColumns="repeat(2, 1fr)" gap={4} mb={4}> */}
-      <FormControl isInvalid={!formData.category} isRequired mb={10}>
-        <FormLabel>Category</FormLabel>
+      <FormControl isInvalid={!formData.subCategory} isRequired mb={10}>
+        <FormLabel>Sub Category</FormLabel>
         <DialogRoot>
           <DialogTrigger w="100%">
             <Input
               isReadOnly
-              value={formData.category || ""}
+              value={formData.subCategory?.name || ""}
               cursor="pointer"
+              disabled={formData.giftCard !=null && !formData.giftCard.Subcategory}
               placeholder="Select Category"
               borderColor={!formData.category ? "red.300" : "gray.200"}
             />
@@ -192,7 +186,7 @@ const GiftCardForm = () => {
             </DialogHeader>
             <DialogBody>
               <VStack spacing={3}>
-                {categories.map((category) => (
+                { formData.giftCard?.Subcategory?.map((category) => (
                   <DialogActionTrigger key={category} asChild>
                     <Button
                       w="100%"
@@ -200,12 +194,12 @@ const GiftCardForm = () => {
                       onClick={() =>
                         setFormData({
                           ...formData,
-                          category,
-                          subCategory: null,
+                          subCategory:category
                         })
                       }
                     >
-                      {category}
+                        <Image src={formData.giftCard.ImageURL} w="24px" mr={2} />
+                      {category.name}
                     </Button>
                   </DialogActionTrigger>
                 ))}
@@ -215,55 +209,17 @@ const GiftCardForm = () => {
         </DialogRoot>
       </FormControl>
 
-      <FormControl isInvalid={!formData.subCategory} isRequired mb={10}>
-        <FormLabel>Sub-category</FormLabel>
-        <DialogRoot>
-          <DialogTrigger w="100%">
-            <Input
-              isReadOnly
-              cursor="pointer"
-              value={formData.subCategory || ""}
-              placeholder="Select Sub-category"
-              borderColor={!formData.subCategory ? "red.300" : "gray.200"}
-            />
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Select Sub-category</DialogTitle>
-              <DialogCloseTrigger />
-            </DialogHeader>
-            <DialogBody>
-              <VStack spacing={3}>
-                {formData.category &&
-                  subCategories[formData.category]?.map((subCat) => (
-                    <DialogActionTrigger key={subCat} asChild>
-                      <Button
-                        w="100%"
-                        variant="outline"
-                        onClick={() =>
-                          setFormData({ ...formData, subCategory: subCat })
-                        }
-                      >
-                        {subCat}
-                      </Button>
-                    </DialogActionTrigger>
-                  ))}
-              </VStack>
-            </DialogBody>
-          </DialogContent>
-        </DialogRoot>
-      </FormControl>
       {/* </Grid> */}
 
       {/* Price Input */}
       <FormControl isInvalid={!formData.price} isRequired mb={10}>
-        <FormLabel>Price</FormLabel>
+        <FormLabel>Quantity</FormLabel>
         <Input
           type="number"
           value={formData.price}
           onChange={(e) => setFormData({ ...formData, price: e.target.value })}
           min="1"
-          placeholder="Enter price"
+          placeholder="Enter Quantity"
         />
       </FormControl>
 
@@ -391,20 +347,14 @@ const GiftCardForm = () => {
                   label="Gift Card"
                   value={
                     <Text fontWeight="medium">
-                      {formData.giftCard?.name || "Not selected"}
+                      {formData.giftCard?.Name || "Not selected"}
                     </Text>
-                  }
-                />
-                <DataListItem
-                  label="Category"
-                  value={
-                    <Text color="gray.600">{formData.category || "—"}</Text>
                   }
                 />
                 <DataListItem
                   label="Sub-category"
                   value={
-                    <Text color="gray.600">{formData.subCategory || "—"}</Text>
+                    <Text color="gray.600">{formData.subCategory?.name || "—"}</Text>
                   }
                 />
                 <DataListItem

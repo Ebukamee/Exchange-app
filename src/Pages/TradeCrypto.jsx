@@ -55,7 +55,8 @@ const CryptoForm = () => {
      try {
        const imageUrls = await uploadImages(formData.images);
        uploadCrypto(
-         'Bitcoin',
+         formData.name.name,
+         formData.name.iconUrl,
          user.uid,
          1000,
          formData.price,
@@ -75,10 +76,27 @@ const CryptoForm = () => {
        toast("error", error.message, "An Error Occured");
      }
   };
-  const giftCards = [
-    { id: 1, name: "Adidas Gift Card", image: "/adidas.png", rate: 650 },
-    { id: 2, name: "Amazon Gift Card", image: "/amazon.png", rate: 700 },
+  const cryptos = [
+    {
+      name: "Bitcoin",
+      iconUrl: "https://cryptologos.cc/logos/bitcoin-btc-logo.png?v=014",
+    },
+    {
+      name: "Ethereum",
+      iconUrl: "https://cryptologos.cc/logos/ethereum-eth-logo.png?v=014",
+    },
+    {
+      name: "TRC20",
+      // TRC20 tokens are built on the TRON blockchain; using TRON's logo as an example
+      iconUrl: "https://cryptologos.cc/logos/tron-trx-logo.png?v=014",
+    },
+    {
+      name: "ERC20",
+      // ERC20 tokens are built on Ethereum; this is a generic placeholder image for ERC20 tokens
+      iconUrl: "https://cryptologos.cc/logos/tether-usdt-logo.png?v=014",
+    },
   ];
+  
 
   
 
@@ -128,7 +146,7 @@ const CryptoForm = () => {
             </DialogHeader>
             <DialogBody>
               <VStack spacing={3}>
-                {giftCards.map((card) => (
+                {cryptos.map((card) => (
                   <DialogActionTrigger key={card.id} asChild>
                     <Button
                       w="100%"
@@ -138,7 +156,7 @@ const CryptoForm = () => {
                         setFormData({ ...formData, name: card })
                       }
                     >
-                      <Image src={card.image} boxSize="24px" mr={2} />
+                      <Image src={card.iconUrl} w="24px" mr={2} />
                       {card.name}
                     </Button>
                   </DialogActionTrigger>
@@ -280,7 +298,7 @@ const CryptoForm = () => {
                   label="Crypto"
                   value={
                     <Text fontWeight="medium">
-                      {formData.name || "Not selected"}
+                      {formData.name.name || "Not selected"}
                     </Text>
                   }
                 />
