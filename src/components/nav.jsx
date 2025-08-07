@@ -8,86 +8,99 @@ import {
   IconButton,
   Button,
   Text,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
-import { Blue } from "../assets/Colors";
+
+// Brand colors
+const brandColors = {
+  blue: "#1E6DEA",   // Primary blue
+  pink: "#E83D84",   // Accent pink
+  dark: "#2D3748",   // For text
+  light: "#718096",  // Secondary text
+};
 
 export default function Nav() {
-  let nav = useNavigate()
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const isMobile = useBreakpointValue({ base: true, md: false });
+
+  const navItems = [
+    { label: "Home", path: "/" },
+    { label: "About", path: "/about" },
+    { label: "Services", path: "/services" },
+    { label: "Technology", path: "/technology" },
+    { label: "Contact", path: "/contact" },
+  ];
 
   return (
-    <Box as="header" bg="white" px={6} py={4} w="100%" display="">
+    <Box as="header" bg="white" px={{ base: 4, md: 8 }} py={4} w="100%" boxShadow="sm">
       {/* Desktop Navigation */}
-      <Flex
-        justify="space-between"
-        align="center"
-        display={{ base: "none", md: "flex" }}
-      >
+      <Flex justify="space-between" align="center">
         {/* Logo */}
-        <Heading as="h2" size="3xl" color="teal.500">
-          BlixExchange
-        </Heading>
+        <Flex align="center">
+          <Heading 
+            as="h1" 
+            size="lg" 
+            color={brandColors.blue}
+            fontFamily="heading"
+            letterSpacing="tight"
+          >
+            Princeton Dental & Lab
+          </Heading>
+          <Text 
+            fontSize="xs" 
+            ml={2} 
+            color={brandColors.pink}
+            fontWeight="medium"
+            display={{ base: "none", lg: "block" }}
+          >
+            Behind every perfect smile...
+          </Text>
+        </Flex>
 
-        {/* Navigation Links */}
-        <HStack spacing={20}>
-          <Link to="/">
-            <Text fontSize="md" fontWeight="small" mx="10px" color="gray.500">
-              Home
-            </Text>
-          </Link>
-          <Link to="/about">
-            <Text fontSize="md" fontWeight="small" mx="10px" color="gray.500">
-              About
-            </Text>
-          </Link>
-          <Link to="/giftcard-rates">
-            <Text fontSize="md" fontWeight="small" mx="10px" color="gray.500">
-              Rates
-            </Text>
-          </Link>
-          <Link to="/blog">
-            <Text fontSize="md" fontWeight="small" mx="10px" color="gray.500">
-              Blog
-            </Text>
-          </Link>
+        {/* Navigation Links - Hidden on mobile */}
+        <HStack 
+          spacing={{ base: 4, md: 6, lg: 8 }}
+          display={{ base: "none", md: "flex" }}
+        >
+          {navItems.map((item) => (
+            <Link to={item.path} key={item.label}>
+              <Text 
+                fontSize="md" 
+                fontWeight="medium" 
+                color={brandColors.dark}
+                _hover={{ color: brandColors.blue }}
+              >
+                {item.label}
+              </Text>
+            </Link>
+          ))}
         </HStack>
 
-        <Flex gap={5} zIndex='2'>
-            <Button
-              color={Blue.p}
-              bg="white"
-              onClick={()=>nav('/login')}
-              variant="solid"
-            >
-              Login
-            </Button>
-            <Button color="white" bg={Blue.p} variant="solid" onClick={() => { nav('/signup')}}>
-              Signup
-            </Button>
-        </Flex>
-      </Flex>
+        {/* CTA Button */}
+        <Button
+          color="white"
+          bg={brandColors.blue}
+          _hover={{ bg: "#1553c9" }}
+          size={isMobile ? "sm" : "md"}
+          onClick={() => navigate("/contact")}
+          display={{ base: "none", md: "block" }}
+        >
+          Get a Quote
+        </Button>
 
-      {/* Mobile Navigation */}
-      <Flex
-        justify="space-between"
-        align="center"
-        display={{ base: "flex", md: "none" }}
-      >
-        {/* Logo */}
-        <Heading as="h1" size="md" color="teal.500">
-          BlixExchange
-        </Heading>
-
-        {/* Menu Button */}
-        <Box onClick={() => setIsMenuOpen(!isMenuOpen)} cursor="pointer" zIndex="3">
-      {isMenuOpen ? (
-        <FaTimes size="1.5em" color="black" />
-      ) : (
-        <FaBars size="1.5em" color="black" />
-      )}
-    </Box>
+        {/* Mobile Menu Button */}
+        <IconButton
+          aria-label="Toggle menu"
+          icon={isMenuOpen ? <FaTimes /> : <FaBars />}
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          display={{ md: "none" }}
+          variant="ghost"
+          color={brandColors.dark}
+          size="lg"
+        />
       </Flex>
 
       {/* Mobile Menu */}
@@ -96,43 +109,47 @@ export default function Nav() {
           bg="white"
           p={4}
           shadow="md"
-          rounded="lg"
+          rounded="md"
           mt={2}
           w="100%"
-          display={{ base: "flex", md: "none" }}
+          position="absolute"
+          left={0}
+          zIndex={10}
         >
-          <VStack spacing={4} align="start">
-          <Link to="/">
-            <Text fontSize="md" fontWeight="small" mx="10px" color="gray.500">
-              Home
-            </Text>
-          </Link>
-          <Link to="/about">
-            <Text fontSize="md" fontWeight="small" mx="10px" color="gray.500">
-              About
-            </Text>
-          </Link>
-          <Link to="/giftcard-rates">
-            <Text fontSize="md" fontWeight="small" mx="10px" color="gray.500">
-              Rates
-            </Text>
-          </Link>
-          <Link to="/blog">
-            <Text fontSize="md" fontWeight="small" mx="10px" color="gray.500">
-              Blog
-            </Text>
-          </Link>
-            <Flex gap={5} my={5} zIndex='2'>
-              <Button color={Blue.p} bg="white" variant="solid" onClick={() => { nav('/login')}}>
-                Login
-              </Button>
-              <Button color="white" bg={Blue.p} variant="solid" onClick={() => { nav('/signup')}}>
-                Signup
-              </Button>
-            </Flex>
+          <VStack spacing={4} align="stretch">
+            {navItems.map((item) => (
+              <Link 
+                to={item.path} 
+                key={`mobile-${item.label}`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <Text 
+                  fontSize="lg" 
+                  fontWeight="medium" 
+                  color={brandColors.dark}
+                  py={2}
+                  borderBottom="1px"
+                  borderColor="gray.100"
+                >
+                  {item.label}
+                </Text>
+              </Link>
+            ))}
+            <Button
+              color="white"
+              bg={brandColors.blue}
+              _hover={{ bg: "#1553c9" }}
+              mt={4}
+              onClick={() => {
+                navigate("/contact");
+                setIsMenuOpen(false);
+              }}
+            >
+              Get a Quote
+            </Button>
           </VStack>
         </Box>
       )}
     </Box>
   );
-}
+          }
