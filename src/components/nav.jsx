@@ -1,4 +1,3 @@
-// src/components/Navbar.js
 import React, { useState } from "react";
 import {
   Box,
@@ -12,10 +11,12 @@ import {
   Link,
   useColorModeValue,
   useBreakpointValue,
+  Image,
+  Icon
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 
-const Nav= () => {
+const Nav = () => {
   const { isOpen, onToggle } = useDisclosure();
   
   // Brand colors
@@ -63,12 +64,11 @@ const Nav= () => {
         
         <Flex flex={{ base: 1 }} justify={{ base: "center", md: "start" }}>
           <Flex align="center">
-            <Box
-              w="12px"
-              h="40px"
-              bg={brandBlue}
+            <Image
+              src="https://images.vexels.com/media/users/3/142486/isolated/lists/8a4a4f2e8f6b35b5f6c6f31f3b9b1f7d-dental-clinic-logo.png"
+              alt="Princeton Dental Logo"
+              boxSize="40px"
               mr={2}
-              borderRadius="full"
             />
             <Text
               textAlign={useBreakpointValue({ base: "center", md: "left" })}
