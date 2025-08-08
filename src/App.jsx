@@ -4,6 +4,7 @@ import useAuthStore from "./Store/userStore";
 import { Navigate, Route } from "react-router-dom";
 import { Routes } from "react-router-dom";
 import Home from "./Pages/Home";
+import TechnologyPage from "./Pages/Technology"
 import Login from "./Pages/login";
 import Signup from "./Pages/signup";
 import "./App.css";
@@ -33,6 +34,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
+        <Route path="/technology" element={<TechnologyPage />} />
         <Route path="/giftcard-rates" element={<RateCalculator />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
