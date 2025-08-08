@@ -68,7 +68,7 @@ const About = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-3xl font-extrabold text-blue-900 sm:text-4xl">
+          <h2 className="mt-[30px] text-3xl font-extrabold text-blue-900 sm:text-4xl">
             About Princeton Dental & Lab
           </h2>
           <p className="mt-4 text-xl text-gray-600">
