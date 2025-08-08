@@ -1,5 +1,7 @@
 // src/components/TechnologyPage.jsx
 import React from 'react';
+import Nav from '../components/Nav'
+import Footer from '../components/Footer'
 
 const TechnologyPage = () => {
   const technologies = [
@@ -25,7 +27,7 @@ const TechnologyPage = () => {
       title: "3D Printing Solutions",
       description: "State-of-the-art additive manufacturing for creating precise dental models, surgical guides, and appliances.",
       features: ["Rapid Prototyping", "High Accuracy", "Multiple Materials", "Cost Efficiency"],
-      image: "https://www.moderndentalmachines.com/wp-content/uploads/2020/07/IMG_1992-scaled.jpg"
+      image: "https://cdn.builtin.com/cdn-cgi/image/f=auto,fit=cover,w=1200,h=635,q=80/sites/www.builtin.com/files/2024-05/3D%20Printing%20Types.jpg"
     }
   ];
 
@@ -78,6 +80,8 @@ const TechnologyPage = () => {
   ];
 
   return (
+    <>
+      <Nav />
     <div className="bg-gradient-to-b from-blue-50 to-white">
       {/* Hero Section */}
       <div className="relative bg-gradient-to-r from-blue-900 to-blue-800 text-white">
@@ -289,6 +293,8 @@ const TechnologyPage = () => {
         </div>
       </section>
     </div>
+      <Footer />
+    </>
   );
 };
 
