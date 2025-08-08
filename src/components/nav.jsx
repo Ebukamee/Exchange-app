@@ -39,14 +39,24 @@ const Nav = () => {
         <div className="flex justify-between items-center">
           {/* Logo */}
           <div className="flex-shrink-0 flex items-center">
-            <div className="bg-white rounded-full p-2 shadow-lg">
+            <div className={`rounded-full p-2 shadow-lg ${
+              scrolled ? 'bg-blue-50' : 'bg-white'
+            }`}>
               <div className="bg-gradient-to-r from-blue-600 to-pink-500 w-12 h-12 rounded-full flex items-center justify-center">
                 <span className="text-white font-bold text-xl">PD</span>
               </div>
             </div>
             <div className="ml-3">
-              <span className="text-white font-bold text-xl">Princeton Dental</span>
-              <p className="text-pink-200 text-xs italic">Behind every perfect smile...</p>
+              <span className={`font-bold text-xl ${
+                scrolled ? 'text-blue-900' : 'text-white'
+              }`}>
+                Princeton Dental
+              </span>
+              <p className={`text-xs italic ${
+                scrolled ? 'text-blue-700' : 'text-pink-200'
+              }`}>
+                Behind every perfect smile...
+              </p>
             </div>
           </div>
 
@@ -59,14 +69,18 @@ const Nav = () => {
                   to={item.path}
                   className={`font-medium transition-colors duration-300 ${
                     scrolled 
-                      ? 'text-blue-900 hover:text-pink-600' 
+                      ? 'text-blue-800 hover:text-blue-600' 
                       : 'text-white hover:text-pink-300'
                   }`}
                 >
                   {item.name}
                 </Link>
               ))}
-              <button className="bg-gradient-to-r from-pink-500 to-pink-600 text-white px-6 py-2 rounded-full font-medium shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5">
+              <button className={`px-6 py-2 rounded-full font-medium shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 ${
+                scrolled
+                  ? 'bg-gradient-to-r from-blue-700 to-blue-900 text-white hover:from-blue-800 hover:to-blue-950'
+                  : 'bg-gradient-to-r from-pink-500 to-pink-600 text-white'
+              }`}>
                 Contact Us
               </button>
             </div>
@@ -76,7 +90,11 @@ const Nav = () => {
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-white hover:text-pink-300 focus:outline-none"
+              className={`inline-flex items-center justify-center p-2 rounded-md focus:outline-none ${
+                scrolled 
+                  ? 'text-blue-800 hover:text-blue-600' 
+                  : 'text-white hover:text-pink-300'
+              }`}
             >
               <svg
                 className={`${isOpen ? 'hidden' : 'block'} h-6 w-6`}
@@ -113,18 +131,28 @@ const Nav = () => {
 
       {/* Mobile Navigation */}
       <div className={`${isOpen ? 'block' : 'hidden'} md:hidden`}>
-        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-blue-900 rounded-b-lg shadow-xl">
+        <div className={`px-2 pt-2 pb-3 space-y-1 sm:px-3 rounded-b-lg shadow-xl ${
+          scrolled ? 'bg-white' : 'bg-blue-900'
+        }`}>
           {navItems.map((item) => (
             <Link
               key={item.name}
               to={item.path}
-              className="block px-3 py-2 rounded-md text-white font-medium hover:bg-blue-800"
+              className={`block px-3 py-2 rounded-md font-medium ${
+                scrolled 
+                  ? 'text-blue-800 hover:bg-blue-50' 
+                  : 'text-white hover:bg-blue-800'
+              }`}
               onClick={() => setIsOpen(false)}
             >
               {item.name}
             </Link>
           ))}
-          <button className="ml-3 mt-2 bg-gradient-to-r from-pink-500 to-pink-600 text-white px-4 py-2 rounded-full font-medium shadow-lg">
+          <button className={`ml-3 mt-2 px-4 py-2 rounded-full font-medium shadow-lg ${
+            scrolled
+              ? 'bg-gradient-to-r from-blue-700 to-blue-900 text-white'
+              : 'bg-gradient-to-r from-pink-500 to-pink-600 text-white'
+          }`}>
             Contact Us
           </button>
         </div>
