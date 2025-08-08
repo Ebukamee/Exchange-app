@@ -1,7 +1,7 @@
 // src/components/ServicesOverview.jsx
 import React from 'react';
 
-const FeaturedSection= () => {
+const FeaturedSection = () => {
   // Service data with icons and descriptions
   const services = [
     {
