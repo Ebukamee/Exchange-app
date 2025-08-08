@@ -1,75 +1,43 @@
 // src/components/ServicesOverview.jsx
 import React from 'react';
 
-const FeaturedSection = () => {
-  // Service data with icons and descriptions
+const FeaturedSection= () => {
   const services = [
     {
       name: "Fixed Prosthodontics",
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-      ),
       description: "Crowns, bridges, inlays, onlays, and veneers crafted with precision for lasting results.",
-      items: ["PFM Crowns", "Zirconia", "E.max", "Veneers"],
-      imagePlaceholder: "bg-gradient-to-br from-blue-100 to-blue-200"
+      items: ["Crowns (PFM, Zirconia, E.max)", "Bridges", "Inlays and Onlays", "Veneers"],
+      image: "https://www.dentalsmiles4kids.com/wp-content/uploads/2023/10/co02.jpg"
     },
     {
       name: "Removable Prosthodontics",
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-        </svg>
-      ),
       description: "Custom dentures and night guards designed for comfort and optimal function.",
-      items: ["Full Dentures", "Partial Dentures", "Flexible Partials", "Night Guards"],
-      imagePlaceholder: "bg-gradient-to-br from-pink-100 to-pink-200"
+      items: ["Full and Partial Dentures", "Flexible Partials", "Night Guards", "Occlusal Splints"],
+      image: "https://lemaclinic.com/wp-content/uploads/2025/07/what-are-the-main-treatment-methods-in-pedodontics-768x512.webp"
     },
     {
       name: "Orthodontic Appliances",
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-        </svg>
-      ),
       description: "Precision appliances for alignment and maintenance of dental positioning.",
-      items: ["Retainers", "Space Maintainers", "Aligners"],
-      imagePlaceholder: "bg-gradient-to-br from-blue-50 to-blue-100"
+      items: ["Retainers", "Space Maintainers", "Orthodontic Devices", "Alignment Solutions"],
+      image: "https://www.brightortho.com/assets/images/appliances/term-archwire.jpg"
     },
     {
       name: "Implant Prosthetics",
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
-        </svg>
-      ),
       description: "Custom implant solutions for natural-looking and functional replacements.",
-      items: ["Custom Abutments", "Implant Crowns", "Implant Bridges"],
-      imagePlaceholder: "bg-gradient-to-br from-pink-50 to-pink-100"
+      items: ["Custom Abutments", "Implant Crowns", "Implant Bridges", "Full Arch Solutions"],
+      image: "https://locustfamilydentistry.com/wp-content/uploads/2019/07/Implant-Supported-Prosthesis-Locust-NC-768x512.png"
     },
     {
       name: "Digital Dentistry",
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
-        </svg>
-      ),
       description: "Advanced CAD/CAM and 3D printing for precision dental solutions.",
-      items: ["CAD/CAM Design", "3D Printing", "Intraoral Scanning"],
-      imagePlaceholder: "bg-gradient-to-br from-blue-100 to-blue-200"
+      items: ["CAD/CAM Design", "3D Printing", "Intraoral Scanning", "Digital Workflow"],
+      image: "https://images.unsplash.com/photo-1581591524425-c7e0978865fc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
     },
     {
       name: "Consultation & Support",
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-        </svg>
-      ),
       description: "Expert guidance for complex cases and material selection.",
-      items: ["Technical Advice", "Case Planning", "Material Guidance"],
-      imagePlaceholder: "bg-gradient-to-br from-pink-100 to-pink-200"
+      items: ["Technical Advice", "Case Planning", "Material Guidance", "Professional Support"],
+      image: "https://www.medicaim.com/uploads/b2e087f0-5a46-11e8-8fc5-bf61b50ce761/consultationdentaire.jpg"
     }
   ];
 
@@ -122,16 +90,15 @@ const FeaturedSection = () => {
               key={index} 
               className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
             >
-              {/* Image Placeholder - Replace with actual images */}
-              <div className={`h-48 ${service.imagePlaceholder} flex items-center justify-center relative`}>
-                <div className="absolute inset-0 flex items-center justify-center opacity-20">
-                  <div className="w-32 h-32 rounded-full bg-white"></div>
-                </div>
-                <div className="relative z-10 text-center p-4">
-                  <div className="inline-flex items-center justify-center bg-white rounded-full p-3 shadow-lg">
-                    {service.icon}
-                  </div>
-                  <h3 className="mt-4 text-2xl font-bold text-blue-900">{service.name}</h3>
+              {/* Service Image */}
+              <div className="h-48 relative overflow-hidden">
+                <img 
+                  src={service.image} 
+                  alt={service.name} 
+                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-blue-900/80 to-transparent flex items-end p-6">
+                  <h3 className="text-2xl font-bold text-white">{service.name}</h3>
                 </div>
               </div>
               
