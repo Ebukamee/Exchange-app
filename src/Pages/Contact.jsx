@@ -9,8 +9,8 @@ const ContactPage = () => {
       <Nav />
       
       <main className="flex-grow">
-        {/* Hero Section */}
-        <div className="bg-gradient-to-r from-blue-900 to-blue-800 py-20">
+        {/* Hero Section with top padding */}
+        <div className="bg-gradient-to-r from-blue-900 to-blue-800 py-20 pt-32">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
               <h1 className="text-4xl font-extrabold text-white sm:text-5xl">
@@ -172,18 +172,23 @@ const ContactPage = () => {
                   </div>
                 </div>
                 
-                {/* Google Map Embed */}
-                <div className="rounded-xl overflow-hidden shadow-lg border border-gray-200">
-                  <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3962.902148700335!2d3.509123574915798!3d6.646223793389812!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x103be948f4b9a071%3A0x7e9b5c5d5f3a3a1a!2sLagos%20State%20Civil%20Service%20Secondary%20School%2C%20Igbogbo!5e0!3m2!1sen!2sng!4v162334567890!5m2!1sen!2sng"
-                    width="100%"
-                    height="450"
-                    style={{ border: 0 }}
-                    allowFullScreen=""
-                    loading="lazy"
-                    title="Princeton Dental Location Map"
-                  ></iframe>
-                </div>
+                {/* Google Map Hyperlink */}
+                <a 
+                  href="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3962.902148700335!2d3.509123574915798!3d6.646223793389812!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x103be948f4b9a071%3A0x7e9b5c5d5f3a3a1a!2sLagos%20State%20Civil%20Service%20Secondary%20School%2C%20Igbogbo!5e0!3m2!1sen!2sng!4v162334567890!5m2!1sen!2sng" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="block rounded-xl overflow-hidden shadow-lg border border-gray-200 mb-6"
+                >
+                  <div className="bg-gray-200 border-2 border-dashed border-gray-300 rounded-xl w-full h-80 flex items-center justify-center">
+                    <div className="text-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-blue-500 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                      </svg>
+                      <p className="text-blue-900 font-bold">View on Google Maps</p>
+                      <p className="text-gray-500 mt-1">Click to open location in Google Maps</p>
+                    </div>
+                  </div>
+                </a>
                 
                 <div className="mt-8 bg-gradient-to-r from-pink-500 to-pink-600 rounded-xl p-6 text-center">
                   <h3 className="text-xl font-bold text-white mb-3">Need Immediate Assistance?</h3>
@@ -202,7 +207,7 @@ const ContactPage = () => {
                       className="px-6 py-3 bg-blue-900 text-white font-bold rounded-full shadow-lg hover:bg-blue-800 transition-colors flex items-center justify-center"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                        <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0116 4H4a2 2 0 00-1.997 1.884z" />
                         <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                       </svg>
                       Email Us
