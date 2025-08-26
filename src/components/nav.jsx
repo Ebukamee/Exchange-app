@@ -32,32 +32,33 @@ const Nav = () => {
   return (
     <nav 
       className={`fixed w-full z-50 transition-all duration-300 ${
-        scrolled ? 'bg-white shadow-md py-2' : 'bg-gradient-to-b from-blue-900 to-blue-800 py-4'
+        scrolled ? 'bg-white shadow-md py-2' : 'bg-transparent py-4' // Made transparent when at top
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           {/* Logo */}
           <div className="flex-shrink-0 flex items-center">
-            <div className={`rounded-full p-2 shadow-lg ${
-              scrolled ? 'bg-blue-50' : 'bg-white'
-            }`}>
-              <div className="bg-gradient-to-r from-blue-600 to-pink-500 w-12 h-12 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-xl">PD</span>
+            <Link to="/" className="flex items-center">
+              {/* Image logo referencing the public folder */}
+              <img
+                className="h-14 w-auto" // Adjusted height for visibility
+                src="/IMG-20250824-WA0014.jpg"
+                alt="Princeton Dental Logo"
+              />
+              <div className="ml-3">
+                <span className={`font-bold text-xl ${
+                  scrolled ? 'text-blue-900' : 'text-white'
+                }`}>
+                  Princeton Dental
+                </span>
+                <p className={`text-xs italic ${
+                  scrolled ? 'text-blue-700' : 'text-pink-200'
+                }`}>
+                  Behind every perfect smile...
+                </p>
               </div>
-            </div>
-            <div className="ml-3">
-              <span className={`font-bold text-xl ${
-                scrolled ? 'text-blue-900' : 'text-white'
-              }`}>
-                Princeton Dental
-              </span>
-              <p className={`text-xs italic ${
-                scrolled ? 'text-blue-700' : 'text-pink-200'
-              }`}>
-                Behind every perfect smile...
-              </p>
-            </div>
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
@@ -76,13 +77,15 @@ const Nav = () => {
                   {item.name}
                 </Link>
               ))}
-              <button className={`px-6 py-2 rounded-full font-medium shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 ${
-                scrolled
-                  ? 'bg-gradient-to-r from-blue-700 to-blue-900 text-white hover:from-blue-800 hover:to-blue-950'
-                  : 'bg-gradient-to-r from-pink-500 to-pink-600 text-white'
-              }`}>
-                Contact Us
-              </button>
+              <Link to="/contact">
+                <button className={`px-6 py-2 rounded-full font-medium shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 ${
+                  scrolled
+                    ? 'bg-gradient-to-r from-blue-700 to-blue-900 text-white hover:from-blue-800 hover:to-blue-950'
+                    : 'bg-gradient-to-r from-pink-500 to-pink-600 text-white'
+                }`}>
+                  Contact Us
+                </button>
+              </Link>
             </div>
           </div>
 
@@ -148,13 +151,15 @@ const Nav = () => {
               {item.name}
             </Link>
           ))}
-          <button className={`ml-3 mt-2 px-4 py-2 rounded-full font-medium shadow-lg ${
-            scrolled
-              ? 'bg-gradient-to-r from-blue-700 to-blue-900 text-white'
-              : 'bg-gradient-to-r from-pink-500 to-pink-600 text-white'
-          }`}>
-            Contact Us
-          </button>
+          <Link to="/contact" className="block w-full">
+            <button className={`w-full text-left ml-3 mt-2 px-4 py-2 rounded-full font-medium shadow-lg ${
+              scrolled
+                ? 'bg-gradient-to-r from-blue-700 to-blue-900 text-white'
+                : 'bg-gradient-to-r from-pink-500 to-pink-600 text-white'
+            }`} onClick={() => setIsOpen(false)}>
+              Contact Us
+            </button>
+          </Link>
         </div>
       </div>
     </nav>
