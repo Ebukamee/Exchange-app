@@ -3,8 +3,9 @@ import React from 'react';
 import Nav from '../components/nav';
 import Footer from '../components/Footer';
 
+// No need to import the image file anymore
+
 const ServicePage = () => {
-  // Updated service data with expanded descriptions
   const serviceCategories = [
     {
       name: "Our Offerings",
@@ -13,35 +14,40 @@ const ServicePage = () => {
         { 
           name: "Preventive Care", 
           description: "Routine cleanings, exams, and digital X-rays to keep your teeth healthy and catch issues early. This is the foundation of lifelong oral health, helping you avoid complex procedures. Our thorough cleanings remove plaque and tartar buildup, while comprehensive exams allow us to detect potential problems before they become serious.",
-          // No image is specified to show the placeholder
         },
         { 
           name: "Cosmetic Dentistry", 
           description: "Transform your smile with professional whitening, veneers, or Invisalign for a confident, radiant look. Whether you want to brighten your teeth, conceal imperfections with custom veneers, or straighten your smile discreetly, we can help you achieve the beautiful, harmonious smile you've always wanted.",
-           // No image is specified to show the placeholder
         },
         { 
           name: "Restorative Treatments", 
           description: "Precision crowns, implants, and fillings to restore function and aesthetics. When a tooth is damaged or lost, our solutions bring back its strength and natural appearance. We use durable, tooth-colored materials for fillings, create custom crowns to protect weakened teeth, and offer dental implants as a permanent solution for missing teeth.",
-           // No image is specified to show the placeholder
         },
         { 
           name: "Advanced Procedures", 
           description: "Pain-free laser treatments and 3D-guided implants for cutting-edge care with minimal discomfort. We utilize the latest technology to make your dental care more precise and comfortable. Laser dentistry allows for minimally invasive treatments with faster healing, while 3D-guided surgery ensures implant placement is perfectly accurate for optimal results.",
-           // No image is specified to show the placeholder
         }
       ]
     }
   ];
+
+  // The direct URL to the background image you liked
+  const heroImageUrl = "http://googleusercontent.com/image_generation_content/0";
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex flex-col">
       <Nav />
       
       <main className="flex-grow">
-        {/* Hero Section */}
-        <div className="bg-gradient-to-r from-blue-900 to-blue-800 py-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Hero Section with Background Image */}
+        <div
+          className="relative bg-cover bg-center py-20"
+          style={{ backgroundImage: `url('${heroImageUrl}')` }}
+        >
+          {/* Semi-transparent overlay for text readability */}
+          <div className="absolute inset-0 bg-blue-900 bg-opacity-60"></div>
+          
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
             <div className="text-center">
               <h1 className="mt-[20px] text-4xl font-extrabold text-white sm:text-5xl">
                 Our Services
@@ -65,7 +71,6 @@ const ServicePage = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {category.services.map((service, idx) => (
                   <div key={idx} className="bg-white rounded-xl shadow-md overflow-hidden border border-blue-50">
-                    {/* This block renders the placeholder since no image URL is provided */}
                     <div className="h-64 bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center">
                       <div className="text-center p-4">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
