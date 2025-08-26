@@ -32,7 +32,7 @@ const ServicePage = () => {
   ];
 
   // The direct URL to the background image you liked
-  const heroImageUrl = "http://googleusercontent.com/image_generation_content/0";
+  const heroImageUrl = "https://plus.unsplash.com/premium_photo-1681995326134-cdc947934015?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aG9zcGl0YWwlMjBiZWRzfGVufDB8fDB8fHww";
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex flex-col">
