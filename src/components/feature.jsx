@@ -47,18 +47,11 @@ const FeaturedSection = () => {
         {/* Company Introduction */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-3xl font-extrabold text-blue-900 sm:text-4xl">
-            Precision Dental Laboratory Services
+            Welcome to Princeton Dental Laboratory Services
           </h2>
           <div className="mt-6 text-xl text-gray-600">
             <p className="mb-4">
-              Princeton Dental and Lab Limited is a premier dental laboratory provider in Nigeria, 
-              committed to delivering exceptional quality through innovative technology and 
-              meticulous craftsmanship.
-            </p>
-            <p>
-              Registered with the Corporate Affairs Commission of Nigeria, we bridge the gap between 
-              advanced dental technology and accessible, high-quality services for dental professionals 
-              and patients nationwide.
+              Transform your smile with Princeton Dental clinic where advanced technology meets expert care. Our dedicated team delivers precise, personalized treatment in a comfortable environment, ensuring you live with confidence. Whether you need a routine check up or a complete smile makeover we are here to provide exceptional Dental care tailored to your needs. Book your appointment today and experience the difference.
             </p>
           </div>
           
