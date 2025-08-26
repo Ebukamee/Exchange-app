@@ -61,6 +61,24 @@ const About = () => {
     }
   ];
 
+  const teamMembers = [
+    {
+      name: "Dr. Adekunle Philips",
+      role: "Chief Dental Surgeon",
+      image: "https://images.pexels.com/photos/5215024/pexels-photo-5215024.jpeg?auto=compress&cs=tinysrgb&w=800"
+    },
+    {
+      name: "Dr. Chioma Nwosu",
+      role: "Orthodontist Specialist",
+      image: "https://images.pexels.com/photos/5327656/pexels-photo-5327656.jpeg?auto=compress&cs=tinysrgb&w=800"
+    },
+    {
+      name: "Mr. Tunde Bello",
+      role: "Head Lab Technician",
+      image: "https://images.pexels.com/photos/8460157/pexels-photo-8460157.jpeg?auto=compress&cs=tinysrgb&w=800"
+    }
+  ];
+
   return (
     <>
       <Nav />
@@ -143,7 +161,7 @@ const About = () => {
         </div>
         
         {/* Technology & Expertise */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20">
           <div>
             <h3 className="text-2xl font-bold text-blue-900 mb-6">Precision Craftsmanship</h3>
             <p className="text-gray-600 mb-6">
@@ -239,9 +257,33 @@ const About = () => {
             </div>
           </div>
         </div>
+
+        {/* Meet Our Team Section */}
+        <div className="py-16">
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <h3 className="text-3xl font-extrabold text-blue-900 sm:text-4xl">Meet Our Team</h3>
+            <p className="mt-4 text-xl text-gray-600">
+              Our experienced dental professionals are passionate about delivering exceptional care. With specialized training in the latest techniques, we combine expertise with compassion to make every visit comfortable and effective. Learn more about our dentists and staff and see why patients trust us to transform their smiles.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {teamMembers.map((member, index) => (
+              <div key={index} className="bg-white p-6 rounded-xl shadow-md text-center hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-2">
+                <img
+                  src={member.image}
+                  alt={`Photo of ${member.name}`}
+                  className="w-32 h-32 rounded-full mx-auto mb-4 object-cover border-4 border-blue-100"
+                />
+                <h4 className="text-xl font-bold text-blue-900">{member.name}</h4>
+                <p className="text-pink-600 font-semibold">{member.role}</p>
+              </div>
+            ))}
+          </div>
+        </div>
         
         {/* Call to Action */}
-        <div className="mt-20 bg-gradient-to-r from-blue-900 to-blue-800 rounded-2xl p-8 text-center">
+        <div className="mt-10 bg-gradient-to-r from-blue-900 to-blue-800 rounded-2xl p-8 text-center">
           <h3 className="text-2xl font-bold text-white">Partner With Princeton Dental Today</h3>
           <p className="mt-4 max-w-2xl mx-auto text-blue-100">
             Join hundreds of dental professionals who trust us for exceptional laboratory services
