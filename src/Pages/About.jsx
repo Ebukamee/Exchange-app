@@ -62,21 +62,7 @@ const About = () => {
   ];
 
   const teamMembers = [
-    {
-      name: "Dr. Adekunle Philips",
-      role: "Chief Dental Surgeon",
-      image: "https://images.pexels.com/photos/5215024/pexels-photo-5215024.jpeg?auto=compress&cs=tinysrgb&w=800"
-    },
-    {
-      name: "Dr. Chioma Nwosu",
-      role: "Orthodontist Specialist",
-      image: "https://images.pexels.com/photos/5327656/pexels-photo-5327656.jpeg?auto=compress&cs=tinysrgb&w=800"
-    },
-    {
-      name: "Mr. Tunde Bello",
-      role: "Head Lab Technician",
-      image: "https://images.pexels.com/photos/8460157/pexels-photo-8460157.jpeg?auto=compress&cs=tinysrgb&w=800"
-    }
+    
   ];
 
   return (
