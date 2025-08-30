@@ -9,25 +9,25 @@ const TechnologyPage = () => {
       title: "3D Imaging",
       description: "High-resolution scans for precise diagnostics and treatment planning.",
       features: ["Precise Diagnostics", "Accurate Treatment Planning", "Detailed Visualizations", "Comprehensive Analysis"],
-      image: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=600&auto=format&fit=crop&q=60"
+      image: "https://www.designerforsmiles.com/wp-content/uploads/2018/07/3D-Image-Teeth-1.jpg"
     },
     {
       title: "Laser Dentistry",
       description: "Minimally invasive procedures for faster recovery and reduced discomfort.",
       features: ["Minimally Invasive", "Faster Recovery", "Reduced Discomfort", "Precise Treatment"],
-      image: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=600&auto=format&fit=crop&q=60"
+      image: "https://www.ismile.com/hs-fs/hubfs/Laser%20Dentistry.jpg?quality=high&width=968&name=Laser%20Dentistry.jpg"
     },
     {
       title: "Intraoral Cameras",
       description: "Real-time visuals to help you understand your dental health and treatment options.",
       features: ["Real-Time Visuals", "Patient Education", "Treatment Documentation", "Enhanced Diagnostics"],
-      image: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=600&auto=format&fit=crop&q=60"
+      image: "https://www.visionflex.com/wp-content/uploads/2020/01/intraoral-dental-camera-feature-2-364x217@2x.jpg"
     },
     {
       title: "Digital X-Rays",
       description: "Safe, low-radiation imaging for detailed insights into your oral health.",
       features: ["Low Radiation", "Detailed Imaging", "Instant Results", "Safe Technology"],
-      image: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=600&auto=format&fit=crop&q=60"
+      image: "https://s33929.pcdn.co/wp-content/uploads/sites/186/2020/08/Xray-and-imaging-800x534.jpg"
     }
   ];
 
