@@ -1,6 +1,6 @@
 import Nav from '../components/nav'
 import Hero from '../components/Hero'
-import TestimonialsSection from '../components/Testiomonials.jsx'
+import TestimonialsSection from '../components/Testimonials.jsx'
 import FeaturesSection from '../components/feature'
 import Other from '../components/othersection'
 import FAQ from '../components/FAQ'
