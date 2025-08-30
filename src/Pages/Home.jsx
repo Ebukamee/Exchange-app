@@ -13,6 +13,7 @@ export default function  Home() {
         <Hero />
         <FeaturesSection />
         <Other />
+        <TestimonialsSection />
 
         <Footer />
         </>
