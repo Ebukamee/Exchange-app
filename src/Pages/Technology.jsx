@@ -1,6 +1,6 @@
 // src/components/TechnologyPage.jsx
 import React from 'react';
-import Nav from '../components/Nav';
+import Nav from '../components/nav';
 import Footer from '../components/Footer';
 
 const TechnologyPage = () => {
