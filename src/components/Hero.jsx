@@ -50,19 +50,19 @@ const Hero = () => {
             </div>
             
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight">
-              <span className="block">Advanced Dental Solutions</span>
+              <span className="block">Welcome to Princeton Dental</span>
               <span className="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-pink-100">
-                For Perfect Smiles
+                Laboratory Service.
               </span>
             </h1>
             
             <p className="mt-6 text-xl text-blue-100 max-w-2xl">
-              Empowering dental professionals with cutting-edge laboratory support and providing patients with access to superior dental care through precision, technology, and excellence.
+              Transform your smile with Princeton Dental clinic where advanced technology meets expert care. Our dedicated team delivers precise, personalized treatment in a comfortable environment, ensuring you live with confidence. Whether you need a routine check up or a complete smile makeover we are here to provide exceptional Dental care tailored to your needs. Book your appointment today and experience the difference.
             </p>
             
             <div className="mt-10 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center md:justify-start">
               <a 
-                href="#services" 
+                href="/services" 
                 className="px-8 py-4 bg-gradient-to-r from-pink-500 to-pink-600 text-white font-bold rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center"
               >
                 <span>Explore Our Services</span>
@@ -71,7 +71,7 @@ const Hero = () => {
                 </svg>
               </a>
               <a 
-                href="#contact" 
+                href="https://wa.me/08159029243" 
                 className="px-8 py-4 bg-white bg-opacity-10 backdrop-blur-sm border border-blue-300 border-opacity-30 text-white font-bold rounded-full hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
