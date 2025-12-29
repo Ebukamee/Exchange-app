@@ -4,6 +4,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { setDoc, doc, getDoc, updateDoc, addDoc,collection,getDocs,orderBy } from "firebase/firestore";
 import useAuthStore from "./userStore";
 
+//create transaction store
 const TransactionStore = create((set) => ({
   Transaction: [],
   Giftcard:[],
