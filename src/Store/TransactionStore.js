@@ -1,170 +1,94 @@
+"use client";
+
 import { create } from "zustand";
-import { db, storage } from "../firesbase/firebase";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { setDoc, doc, getDoc, updateDoc, addDoc,collection,getDocs,orderBy } from "firebase/firestore";
-import useAuthStore from "./userStore";
+import { getCryptos, getGiftcards, getDepositBank } from "@/app/actions/catalog";
+import {
+  uploadProofs,
+  createTransaction as createTx,
+  buyWithBalance as buyWithBalanceAction,
+  requestWithdrawal as requestWithdrawalAction,
+  getMyTransactions,
+  getMyWithdrawals,
+} from "@/app/actions/trade";
+import {
+  adminGetTransactions,
+  adminGetWithdrawals,
+  reviewTransaction as reviewTxAction,
+  reviewWithdrawal as reviewWdAction,
+  saveCrypto as saveCryptoAction,
+  deleteCrypto as deleteCryptoAction,
+  saveGiftcard as saveGiftcardAction,
+  deleteGiftcard as deleteGiftcardAction,
+  saveDepositBank as saveDepositBankAction,
+} from "@/app/actions/admin";
 
-const TransactionStore = create((set) => ({
-  Transaction: [],
-  Giftcard:[],
-  ImageArray: [],
-  uploadImages: async (Images) => {
-    try {
-    
-      const imageUrls = await Promise.all(
-        Images.map(async (image) => {
-          const formData = new FormData();
-          formData.append("file", image);
-          
-          // Add required Cloudinary parameters
-          formData.append("upload_preset", "Blixexchange"); // Replace with your actual upload preset
-          // formData.append("api_key", "your_api_key"); // Only needed for signed uploads
-    
-          const response = await fetch(
-            "https://api.cloudinary.com/v1_1/drzxvn4sl/image/upload",
-            {
-              method: "POST",
-              body: formData,
-            }
-          );
-    
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(`Cloudinary error: ${errorData.error.message}`);
-          }
-    
-          const data = await response.json();
-          return data.secure_url; // Cloudinary returns URLs in secure_url property
-        })
-      );
-    
-      return imageUrls;
+const TransactionStore = create((set, get) => ({
+  cryptos: [],
+  giftcards: [],
+  transactions: [],
+  withdrawals: [],
+  depositBank: null,
 
-    //   console.log(ImageArray);
-    } catch (error) {
-      throw new Error(error.message);
-    }
+  // ---------- Storage ----------
+  uploadImages: async (files) => {
+    const fd = new FormData();
+    files.forEach((f) => fd.append("files", f));
+    return uploadProofs(fd);
   },
-  uploadGiftcard: async (
-    Name,
-    Icon,
-    subCategory,
-    userId,
-    Rate,
-    Amount,
-    Country,
-    email,
-    Description,
-    Images
-  ) => {
-    try {
-      await setTimeout(() => {
-        addDoc(collection(db, "Transactions"), {
-          Type:'Giftcard',
-          Name,
-          Icon,
-          subCategory,
-          userId,
-          Rate,
-          Amount,
-          Country,
-          email,
-          status: "Pending",
-          date: Date.now(),
-          Images,
-          Description,
-        });
-      }, 3000);
 
-      set({ImageArray:[]})
-    } catch (error) {
-      throw new Error(error.message);
-    }
+  // ---------- Catalogue ----------
+  fetchCryptos: async () => {
+    const data = await getCryptos();
+    set({ cryptos: data });
+    return data;
   },
-  uploadCrypto: async (
-    Name,
-    Icon,
-    userId,
-    Rate,
-    Amount,
-    email,
-    Description,
-    Images
-  ) => {
-    try {
-      await setTimeout(() => {
-        addDoc(collection(db, "Transactions"), {
-          Type:'Crypto',
-          Name,
-          Icon,
-          userId,
-          Rate,
-          Amount,
-          email,
-          status: "Pending",
-          date: Date.now(),
-          Images,
-          Description,
-        });
-      }, 3000);
-
-      set({ImageArray:[]})
-    } catch (error) {
-      throw new Error(error.message);
-    }
+  fetchGiftcards: async () => {
+    const data = await getGiftcards();
+    set({ giftcards: data });
+    return data;
   },
-  getTransactions : async () => {
-    try {
-        const latest = await getDocs(
-            collection(db, 'Transactions'),
-            orderBy('date', '')
-    
-        );
-    var dat=[]
-        latest.forEach((doc) => {
-          const data = doc.data();
-          data.id = doc.id;
-          dat.push(data)
-        });
+  fetchDepositBank: async () => {
+    const v = await getDepositBank();
+    set({ depositBank: v });
+    return v;
+  },
 
-        set({Transaction : dat})
-    
-        console.log(dat);
+  // ---------- User transactions ----------
+  createTransaction: (payload) => createTx(payload),
+  buyWithBalance: (payload) => buyWithBalanceAction(payload),
+  getMyTransactions: async () => {
+    const data = await getMyTransactions();
+    set({ transactions: data });
+    return data;
+  },
 
-      } catch (error) {
-        console.error('Error fetching transactions: ', error);
-      }
-},
-getGiftcards : async () => {
-    try {
-        const latest = await getDocs(
-            collection(db, 'Giftcard'),
-            orderBy('date', '')
-    
-        );
-    var dat=[]
-        latest.forEach((doc) => {
-          const data = doc.data();
-          data.id = doc.id;
-          dat.push(data)
-        });
+  // ---------- Withdrawals ----------
+  requestWithdrawal: (payload) => requestWithdrawalAction(payload),
+  getMyWithdrawals: async () => {
+    const data = await getMyWithdrawals();
+    set({ withdrawals: data });
+    return data;
+  },
 
-        set({Giftcard : dat})
-    
-        console.log(dat);
+  // ---------- Admin ----------
+  getAllTransactions: async () => {
+    const data = await adminGetTransactions();
+    set({ transactions: data });
+    return data;
+  },
+  getAllWithdrawals: async () => {
+    const data = await adminGetWithdrawals();
+    set({ withdrawals: data });
+    return data;
+  },
+  reviewTransaction: (tx, status) => reviewTxAction(tx, status),
+  reviewWithdrawal: (wd, status) => reviewWdAction(wd, status),
 
-      } catch (error) {
-        console.error('Error fetching transactions: ', error);
-      }
-},
-updateStatus : async (id,status) => {
-    try {
-        await updateDoc(doc(db,'Transactions',id),{status})
-      } catch (error) {
-        throw new Error(error.message)
-      }
-}
+  saveCrypto: async (payload) => { await saveCryptoAction(payload); await get().fetchCryptos(); },
+  deleteCrypto: async (id) => { await deleteCryptoAction(id); await get().fetchCryptos(); },
+  saveGiftcard: async (payload) => { await saveGiftcardAction(payload); await get().fetchGiftcards(); },
+  deleteGiftcard: async (id) => { await deleteGiftcardAction(id); await get().fetchGiftcards(); },
+  saveDepositBank: async (value) => { await saveDepositBankAction(value); set({ depositBank: value }); },
 }));
-
 
 export default TransactionStore;

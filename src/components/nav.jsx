@@ -1,135 +1,88 @@
-import React, { useState } from "react";
-import {
-  Box,
-  Flex,
-  Heading,
-  VStack,
-  HStack,
-  IconButton,
-  Button,
-  Text,
-} from "@chakra-ui/react";
-import { Link, useNavigate } from "react-router-dom";
+"use client";
+import { useState } from "react";
+import { Box, Flex, HStack, VStack, Button, Text } from "@chakra-ui/react";
+import { Link, useNavigate } from "@/src/compat/router";
 import { FaBars, FaTimes } from "react-icons/fa";
-import { Blue } from "../assets/Colors";
+import Logo from "./Logo";
+
+const links = [
+  { to: "/", label: "Home" },
+  { to: "/rates", label: "Rates" },
+  { to: "/about", label: "About" },
+  { to: "/contact", label: "Contact" },
+];
 
 export default function Nav() {
-  let nav = useNavigate()
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const nav = useNavigate();
+  const [open, setOpen] = useState(false);
 
   return (
-    <Box as="header" bg="white" px={6} py={4} w="100%" display="">
-      {/* Desktop Navigation */}
+    <Box
+      as="header"
+      position="sticky"
+      top="0"
+      zIndex="20"
+      bg="rgba(255,255,255,0.85)"
+      backdropFilter="blur(10px)"
+      borderBottom="1px solid"
+      borderColor="ink.100"
+    >
       <Flex
+        maxW="1200px"
+        mx="auto"
+        px={{ base: 5, md: 8 }}
+        py={4}
         justify="space-between"
         align="center"
-        display={{ base: "none", md: "flex" }}
       >
-        {/* Logo */}
-        <Heading as="h2" size="3xl" color="teal.500">
-          BlixExchange
-        </Heading>
+        <Link to="/">
+          <Logo useImage imageHeight={36} size={30} textColor="ink.900" />
+        </Link>
 
-        {/* Navigation Links */}
-        <HStack spacing={20}>
-          <Link to="/">
-            <Text fontSize="md" fontWeight="small" mx="10px" color="gray.500">
-              Home
-            </Text>
-          </Link>
-          <Link to="/about">
-            <Text fontSize="md" fontWeight="small" mx="10px" color="gray.500">
-              About
-            </Text>
-          </Link>
-          <Link to="/giftcard-rates">
-            <Text fontSize="md" fontWeight="small" mx="10px" color="gray.500">
-              Rates
-            </Text>
-          </Link>
-          <Link to="/blog">
-            <Text fontSize="md" fontWeight="small" mx="10px" color="gray.500">
-              Blog
-            </Text>
-          </Link>
+        <HStack gap={8} display={{ base: "none", md: "flex" }}>
+          {links.map((l) => (
+            <Link key={l.to} to={l.to}>
+              <Text fontWeight="500" color="ink.600" _hover={{ color: "brand.500" }}>
+                {l.label}
+              </Text>
+            </Link>
+          ))}
         </HStack>
 
-        <Flex gap={5} zIndex='2'>
-            <Button
-              color={Blue.p}
-              bg="white"
-              onClick={()=>nav('/login')}
-              variant="solid"
-            >
+        <HStack gap={3} display={{ base: "none", md: "flex" }}>
+          <Button variant="ghost" color="ink.800" fontWeight="600" onClick={() => nav("/login")}>
+            Login
+          </Button>
+          <Button colorPalette="ink" rounded="full" px={7} fontWeight="700" onClick={() => nav("/signup")}>
+            Get started
+          </Button>
+        </HStack>
+
+        <Box
+          display={{ base: "block", md: "none" }}
+          onClick={() => setOpen(!open)}
+          cursor="pointer"
+        >
+          {open ? <FaTimes size="1.4em" /> : <FaBars size="1.4em" />}
+        </Box>
+      </Flex>
+
+      {open && (
+        <Box display={{ base: "block", md: "none" }} px={5} pb={5}>
+          <VStack align="stretch" gap={3}>
+            {links.map((l) => (
+              <Link key={l.to} to={l.to} onClick={() => setOpen(false)}>
+                <Text py={2} fontWeight="500" color="ink.700">
+                  {l.label}
+                </Text>
+              </Link>
+            ))}
+            <Button variant="outline" colorPalette="ink" rounded="full" onClick={() => nav("/login")}>
               Login
             </Button>
-            <Button color="white" bg={Blue.p} variant="solid" onClick={() => { nav('/signup')}}>
-              Signup
+            <Button colorPalette="ink" rounded="full" onClick={() => nav("/signup")}>
+              Get started
             </Button>
-        </Flex>
-      </Flex>
-
-      {/* Mobile Navigation */}
-      <Flex
-        justify="space-between"
-        align="center"
-        display={{ base: "flex", md: "none" }}
-      >
-        {/* Logo */}
-        <Heading as="h1" size="md" color="teal.500">
-          BlixExchange
-        </Heading>
-
-        {/* Menu Button */}
-        <Box onClick={() => setIsMenuOpen(!isMenuOpen)} cursor="pointer" zIndex="3">
-      {isMenuOpen ? (
-        <FaTimes size="1.5em" color="black" />
-      ) : (
-        <FaBars size="1.5em" color="black" />
-      )}
-    </Box>
-      </Flex>
-
-      {/* Mobile Menu */}
-      {isMenuOpen && (
-        <Box
-          bg="white"
-          p={4}
-          shadow="md"
-          rounded="lg"
-          mt={2}
-          w="100%"
-          display={{ base: "flex", md: "none" }}
-        >
-          <VStack spacing={4} align="start">
-          <Link to="/">
-            <Text fontSize="md" fontWeight="small" mx="10px" color="gray.500">
-              Home
-            </Text>
-          </Link>
-          <Link to="/about">
-            <Text fontSize="md" fontWeight="small" mx="10px" color="gray.500">
-              About
-            </Text>
-          </Link>
-          <Link to="/giftcard-rates">
-            <Text fontSize="md" fontWeight="small" mx="10px" color="gray.500">
-              Rates
-            </Text>
-          </Link>
-          <Link to="/blog">
-            <Text fontSize="md" fontWeight="small" mx="10px" color="gray.500">
-              Blog
-            </Text>
-          </Link>
-            <Flex gap={5} my={5} zIndex='2'>
-              <Button color={Blue.p} bg="white" variant="solid" onClick={() => { nav('/login')}}>
-                Login
-              </Button>
-              <Button color="white" bg={Blue.p} variant="solid" onClick={() => { nav('/signup')}}>
-                Signup
-              </Button>
-            </Flex>
           </VStack>
         </Box>
       )}

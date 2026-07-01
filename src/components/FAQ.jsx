@@ -1,86 +1,72 @@
-import React, { useState } from "react";
-import {
-  Box,
-  Heading,
-  Text,
-  Container,
-  Image,
-} from "@chakra-ui/react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
-import Plus from "../assets/images/plus.svg"
-import Minus from "../assets/images/minus.svg"
+"use client";
+import { useState } from "react";
+import { Box, Heading, Text, Flex } from "@chakra-ui/react";
+import { FaPlus, FaMinus } from "react-icons/fa6";
 
-const FAQ = () => {
-  const faqItems = [
-    {
-      question: "How Does Blixexchange Work?",
-      answer:
-        "We've built Blixexchange with love to give you the simplest trading experience ever, so you will never find it difficult to use. From creating an account to carrying out any form of transaction, we have tooltips and guides in place within the app to help you. You will also receive notifications via email and SMS on transaction updates, so you're never in the dark.",
-    },
-    {
-      question: "Is Blixexchange Safe?",
-      answer:
-        "Yes, Blixexchange is built with advanced security measures to ensure your transactions are safe.",
-    },
-    {
-      question: "How Do I Register On Blixexchange?",
-      answer:
-        "To register, click the 'Sign up for free' button on the top-right corner of the page and follow the instructions.",
-    },
-  ];
+const faqItems = [
+  {
+    q: "How does Paycryptt work?",
+    a: "Create an account, choose whether to buy/sell crypto or sell a gift card, and upload proof of your transaction. Our admin team verifies every trade before releasing your funds — so you're always in safe hands.",
+  },
+  {
+    q: "How fast are payouts?",
+    a: "Most verified trades are paid out within minutes. Funds go to your Paycryptt balance, which you can withdraw to your bank account any time.",
+  },
+  {
+    q: "Is Paycryptt safe?",
+    a: "Yes. Every transaction is manually reviewed, your data is protected, and payouts only happen after your proof is verified.",
+  },
+  {
+    q: "What can I trade?",
+    a: "Bitcoin, USDT, Ethereum and other supported coins, plus popular gift cards like Amazon, iTunes, Steam and Google Play. The admin team keeps rates up to date.",
+  },
+];
 
-  const [openIndex, setOpenIndex] = useState(null);
-
-  const toggleFAQ = (index) => {
-    setOpenIndex(openIndex === index ? null : index);
-  };
-
+export default function FAQ() {
+  const [open, setOpen] = useState(0);
   return (
-    <Box bg="gray.50" py={20} pb={0} color='blue.900' className="faq">
-        <div className="faq">
-      <Container maxW="3xl" textAlign="center" pb={20} mb={12} >
-        <Heading as="h2" size="3xl" mb={4} >
-          Frequently Asked Questions
+    <Box maxW="820px" mx="auto" px={{ base: 5, md: 8 }} py={{ base: 16, md: 24 }}>
+      <Box textAlign="center" mb={10}>
+        <Heading fontFamily="heading" fontWeight="800" fontSize={{ base: "4xl", md: "5xl" }} color="ink.900" letterSpacing="-0.02em">
+          Frequently asked questions
         </Heading>
-        <Text>
-          Our customer support is always available to provide answers to any of your questions. To begin, here are some of our most asked questions.
+        <Text mt={3} color="ink.500">
+          Everything you need to know before your first trade.
         </Text>
-      </Container>
+      </Box>
 
-      <Container maxW="5xl">
-        {faqItems.map((item, index) => (
+      {faqItems.map((item, i) => {
+        const active = open === i;
+        return (
           <Box
-            key={index}
-            p={6}
+            key={item.q}
+            border="1px solid"
+            borderColor={active ? "ink.300" : "ink.100"}
+            borderRadius="l2"
             mb={4}
-            
+            overflow="hidden"
+            bg={active ? "ink.50" : "white"}
           >
-            <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="space-between"
+            <Flex
+              align="center"
+              justify="space-between"
+              p={5}
               cursor="pointer"
-              onClick={() => toggleFAQ(index)}
+              onClick={() => setOpen(active ? -1 : i)}
             >
-              <Text fontSize="lg" fontWeight="bold">
-                {item.question}
+              <Text fontWeight="700" color="ink.900">
+                {item.q}
               </Text>
-              
-                  {openIndex === index ? <Image src={Minus} />: <Image src={Plus} />}
-                 
-            </Box>
-            {openIndex === index && (
-              <Text mt={4}>
-                {item.answer}
+              <Box color="brand.500">{active ? <FaMinus /> : <FaPlus />}</Box>
+            </Flex>
+            {active && (
+              <Text px={5} pb={5} color="ink.600" fontSize="sm">
+                {item.a}
               </Text>
             )}
           </Box>
-        ))}
-      </Container>
-      </div>
+        );
+      })}
     </Box>
   );
-};
-
-export default FAQ;
+}

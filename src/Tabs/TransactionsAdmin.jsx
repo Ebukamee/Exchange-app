@@ -1,318 +1,138 @@
-import {
-  Box,
-  Heading,
-  Flex,
-  Spacer,
-  Button,
-  Image,
-  Text,
-  TableHeader,
-  TableRow,
-  TableRoot,
-  TableBody,
-  Tabs,
-  TableColumnHeader,
-  TableCell,
-} from "@chakra-ui/react";
-import { DataListItem, DataListRoot } from "../components/ui/data-list";
-import {
-  DialogRoot,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogBody,
-  DialogFooter,
-  DialogCloseTrigger,
-} from "../components/ui/dialog"; // Assuming you have a custom Dialog component
+"use client";
 import { useEffect, useState } from "react";
-import { Blue } from "../assets/Colors";
+import { Box, Heading, Text, Flex, HStack, VStack, Badge, Button, Image, Spinner, SimpleGrid, Tabs } from "@chakra-ui/react";
+import { DialogRoot, DialogContent, DialogHeader, DialogBody, DialogFooter, DialogTitle, DialogCloseTrigger } from "../components/ui/dialog";
 import TransactionStore from "../Store/TransactionStore";
-import useAuthStore from "../Store/userStore";
-import { toast } from "../Helper";
 import { toaster } from "../components/ui/toaster";
-import { useNavigate } from "react-router-dom";
+import { toast, err, naira, formatDate, statusMeta, txTypeLabel } from "../Helper";
 
-export default function TransactionTable() {
-  const [loading, setLoading] = useState(false);
-  const Navigate = useNavigate();
-  const { getTransactions, Transaction, updateStatus } = TransactionStore();
-  const { getBankDetails, BankDetails } = useAuthStore();
+export default function TransactionsAdmin() {
+  const { transactions, getAllTransactions, reviewTransaction } = TransactionStore();
+  const [loading, setLoading] = useState(true);
+  const [active, setActive] = useState(null);
+  const [busy, setBusy] = useState(false);
+
   useEffect(() => {
-    getTransactions();
-  }, []);
-  const [selectedTransaction, setSelectedTransaction] = useState(null);
-  const statusUpdate = async (id, status) => {
-    setLoading(true);
-    toast("loading", "Please wait...", "Updating Status");
+    getAllTransactions().catch(() => {}).finally(() => setLoading(false));
+  }, [getAllTransactions]);
+
+  const review = async (tx, status) => {
+    setBusy(true);
     try {
-      await updateStatus(id, status);
-      setLoading(false);
-      if (!loading) {
-        toaster.dismiss();
-      }
-      toast("success", "Status Updated", "Success");
-      setTimeout(() => {
-        Navigate("/admin/dashboard");
-      }, 1000);
-    } catch (error) {
-      setLoading(false);
-      if (!loading) {
-        toaster.dismiss();
-      }
-      toast("error", err(error.message), "An Error Occured");
+      await reviewTransaction(tx, status);
+      toast("success", `Transaction ${status}.`, "Done");
+      setActive(null);
+      await getAllTransactions();
+    } catch (e) {
+      toast("error", err(e.message), "Could not update");
+    } finally {
+      setBusy(false);
+      toaster.dismiss();
     }
   };
 
-  const handleViewProof = (transaction) => {
-    setSelectedTransaction(transaction);
-  };
-
-  // Filter transactions by status
-  const pendingTransactions = Transaction.sort(
-    (a, b) => b.date - a.date
-  ).filter((transaction) => transaction.status === "Pending");
-  const confirmedTransactions = Transaction.sort(
-    (a, b) => b.date - a.date
-  ).filter((transaction) => transaction.status === "Confirmed");
-  const rejectedTransactions = Transaction.sort(
-    (a, b) => b.date - a.date
-  ).filter((transaction) => transaction.status === "Rejected");
-
-  // Render table rows
-  const renderTableRows = (transactions, showActions = true) => {
-    return transactions.map((transaction, index) => (
-      <TableRow key={index}>
-        <TableCell>
-          <Flex alignItems="center">
-            <Image
-              src={transaction.Icon}
-              w="40px"
-              mr={2}
-              alt={`${transaction.Name} icon`}
-            />
-            <Text>{transaction.Type}</Text>
-          </Flex>
-        </TableCell>
-        <TableCell>{transaction.Name}</TableCell>
-        <TableCell>{transaction.subCategory || "--"}</TableCell>
-        <TableCell>{transaction.Amount}</TableCell>
-        <TableCell>
-          <Text
-            bg={
-              transaction.status === "Confirmed"
-                ? "green.200"
-                : transaction.status === "Pending"
-                ? "yellow.200"
-                : "red.400"
-            }
-            color="white"
-            rounded="sm"
-            textAlign="center"
-            p={1}
-          >
-            {transaction.status}
-          </Text>
-        </TableCell>
-        <TableCell>
-          <DialogRoot>
-            <DialogTrigger>
-              <Button
-                bg={Blue.p}
-                size="sm"
-                onClick={() => handleViewProof(transaction)}
-              >
-                View Proof
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <Heading size="md">Proof Images</Heading>
-                <DialogCloseTrigger />
-              </DialogHeader>
-              <DialogBody>
-                {selectedTransaction?.Images?.length > 0 ? (
-                  <Flex direction="column" gap={4}>
-                    {selectedTransaction.Images.map((image, index) => (
-                      <Image
-                        key={index}
-                        src={image}
-                        alt={`Proof ${index + 1}`}
-                        borderRadius="md"
-                        objectFit="cover"
-                      />
-                    ))}
-                  </Flex>
-                ) : (
-                  <Text>No proof images available.</Text>
-                )}
-              </DialogBody>
-              <DialogFooter>
-                <DialogCloseTrigger asChild>
-                  <Button colorScheme="teal">Close</Button>
-                </DialogCloseTrigger>
-              </DialogFooter>
-            </DialogContent>
-          </DialogRoot>
-        </TableCell>
-        <TableCell>
-          <DialogRoot>
-            <DialogTrigger>
-              <Button
-                bg={Blue.p}
-                size="sm"
-                onClick={() => {
-                  getBankDetails(transaction.userId);
-        // alert(transaction.userId)
-                }}
-              >
-                View User Details
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <Heading size="md">User Account Details</Heading>
-                <DialogCloseTrigger />
-              </DialogHeader>
-              <DialogBody>
-                {BankDetails ? (
-                  <DataListRoot orientation="horizontal">
-                    <DataListItem
-                      label="Bank Name"
-                      value={
-                        <Text color="gray.600">
-                          {BankDetails.BankName || "N/A"}
-                        </Text>
-                      }
-                    />
-                    <DataListItem
-                      label="Account Number"
-                      value={<Text>{BankDetails.AccountNumber || "N/A"}</Text>}
-                    />
-                    <DataListItem
-                      label="Account Name"
-                      value={
-                        <Text fontWeight="bold" color="green.600">
-                          {BankDetails.AccountName || "N/A"}
-                        </Text>
-                      }
-                    />
-                  </DataListRoot>
-                ) : (
-                  <Text>No bank details available.</Text>
-                )}
-              </DialogBody>
-              <DialogFooter>
-                <DialogCloseTrigger asChild>
-                  <Button colorScheme="teal">Close</Button>
-                </DialogCloseTrigger>
-              </DialogFooter>
-            </DialogContent>
-          </DialogRoot>
-        </TableCell>
-        {showActions && (
-          <TableCell>
-            {transaction.status === "Pending" && (
-              <Flex gap={4}>
-                <Button
-                  bg="green"
-                  onClick={() => statusUpdate(transaction.id, "Confirmed")}
-                >
-                  Confirm
-                </Button>
-                <Button
-                  bg="red.700"
-                  onClick={() => statusUpdate(transaction.id, "Rejected")}
-                >
-                  Reject
-                </Button>
-              </Flex>
-            )}
-          </TableCell>
-        )}
-      </TableRow>
-    ));
-  };
+  const filterBy = (s) => transactions.filter((t) => t.status === s);
 
   return (
-    <Box p={4}>
-      <Flex mb={4} alignItems="center">
-        <Heading as="h2" size="lg">
-          Transactions
-        </Heading>
-        <Spacer />
-      </Flex>
+    <Box>
+      <Heading fontFamily="heading" fontSize="2xl" color="ink.900" mb={1}>Transactions</Heading>
+      <Text color="ink.500" mb={6}>Review proof and approve or reject trades.</Text>
 
-      <Tabs.Root defaultValue="pending">
-        <Tabs.List>
-          <Tabs.Trigger value="pending">Pending</Tabs.Trigger>
-          <Tabs.Trigger value="confirmed">Confirmed</Tabs.Trigger>
-          <Tabs.Trigger value="rejected">Rejected</Tabs.Trigger>
-        </Tabs.List>
+      {loading ? (
+        <Flex justify="center" py={16}><Spinner size="lg" color="brand.500" /></Flex>
+      ) : (
+        <Tabs.Root defaultValue="pending" variant="enclosed">
+          <Tabs.List mb={5}>
+            <Tabs.Trigger value="pending">Pending ({filterBy("pending").length})</Tabs.Trigger>
+            <Tabs.Trigger value="approved">Approved</Tabs.Trigger>
+            <Tabs.Trigger value="rejected">Rejected</Tabs.Trigger>
+          </Tabs.List>
+          {["pending", "approved", "rejected"].map((s) => (
+            <Tabs.Content key={s} value={s}>
+              {filterBy(s).length === 0 ? (
+                <Text color="ink.400" py={10} textAlign="center">Nothing here.</Text>
+              ) : (
+                <SimpleGrid columns={{ base: 1, lg: 2 }} gap={4}>
+                  {filterBy(s).map((tx) => (
+                    <TxCard key={tx.id} tx={tx} onOpen={() => setActive(tx)} />
+                  ))}
+                </SimpleGrid>
+              )}
+            </Tabs.Content>
+          ))}
+        </Tabs.Root>
+      )}
 
-        <Tabs.Content value="pending">
-          <Box overflowX="auto" bg="gray.100">
-            <TableRoot>
-              <TableHeader>
-                <TableRow>
-                  <TableColumnHeader>Type</TableColumnHeader>
-                  <TableColumnHeader>Name</TableColumnHeader>
-                  <TableColumnHeader>SubCategory</TableColumnHeader>
-                  <TableColumnHeader>Amount</TableColumnHeader>
-                  <TableColumnHeader>Status</TableColumnHeader>
-                  <TableColumnHeader></TableColumnHeader>
-                  <TableColumnHeader></TableColumnHeader>
-                  <TableColumnHeader>Actions</TableColumnHeader>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {renderTableRows(pendingTransactions, true)}
-              </TableBody>
-            </TableRoot>
-          </Box>
-        </Tabs.Content>
-
-        <Tabs.Content value="confirmed">
-          <Box overflowX="auto" bg="gray.100">
-            <TableRoot>
-              <TableHeader>
-                <TableRow>
-                  <TableColumnHeader>Type</TableColumnHeader>
-                  <TableColumnHeader>Name</TableColumnHeader>
-                  <TableColumnHeader>SubCategory</TableColumnHeader>
-                  <TableColumnHeader>Amount</TableColumnHeader>
-                  <TableColumnHeader>Status</TableColumnHeader>
-                  <TableColumnHeader></TableColumnHeader>
-                  <TableColumnHeader></TableColumnHeader>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {renderTableRows(confirmedTransactions, false)}
-              </TableBody>
-            </TableRoot>
-          </Box>
-        </Tabs.Content>
-
-        <Tabs.Content value="rejected">
-          <Box overflowX="auto" bg="gray.100">
-            <TableRoot>
-              <TableHeader>
-                <TableRow>
-                  <TableColumnHeader>Type</TableColumnHeader>
-                  <TableColumnHeader>Name</TableColumnHeader>
-                  <TableColumnHeader>SubCategory</TableColumnHeader>
-                  <TableColumnHeader>Amount</TableColumnHeader>
-                  <TableColumnHeader>Status</TableColumnHeader>
-                  <TableColumnHeader></TableColumnHeader>
-                  <TableColumnHeader></TableColumnHeader>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {renderTableRows(rejectedTransactions, false)}
-              </TableBody>
-            </TableRoot>
-          </Box>
-        </Tabs.Content>
-      </Tabs.Root>
+      <DialogRoot open={!!active} onOpenChange={(e) => !e.open && setActive(null)} size="lg">
+        {active && (
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>{txTypeLabel(active.type)} • {active.asset_name}</DialogTitle>
+              <DialogCloseTrigger />
+            </DialogHeader>
+            <DialogBody>
+              <VStack align="stretch" gap={3}>
+                <Row label="User" value={active.full_name || active.email || active.user_id} />
+                <Row label="Amount / Qty" value={String(active.amount)} />
+                <Row label="Rate" value={naira(active.rate)} />
+                <Row label="Payout" value={naira(active.payout)} strong />
+                {active.payment_method && <Row label="Payment" value={active.payment_method} />}
+                {active.country && <Row label="Country" value={active.country} />}
+                {active.sub_category && <Row label="Card type" value={active.sub_category} />}
+                {active.wallet_address && <Row label="Wallet" value={active.wallet_address} />}
+                {active.description && <Row label="Note" value={active.description} />}
+                <Row label="Date" value={formatDate(active.created_at)} />
+                {Array.isArray(active.images) && active.images.length > 0 && (
+                  <Box>
+                    <Text fontSize="sm" color="ink.500" mb={2}>Proof</Text>
+                    <Flex gap={3} wrap="wrap">
+                      {active.images.map((url, i) => (
+                        <a key={i} href={url} target="_blank" rel="noreferrer">
+                          <Image src={url} boxSize="120px" objectFit="cover" borderRadius="l1" border="1px solid" borderColor="ink.100" />
+                        </a>
+                      ))}
+                    </Flex>
+                  </Box>
+                )}
+              </VStack>
+            </DialogBody>
+            {active.status === "pending" && (
+              <DialogFooter>
+                <Button variant="outline" colorPalette="red" onClick={() => review(active, "rejected")} loading={busy}>Reject</Button>
+                <Button colorPalette="green" onClick={() => review(active, "approved")} loading={busy}>Approve &amp; pay</Button>
+              </DialogFooter>
+            )}
+          </DialogContent>
+        )}
+      </DialogRoot>
     </Box>
+  );
+}
+
+function TxCard({ tx, onOpen }) {
+  const meta = statusMeta(tx.status);
+  return (
+    <Box bg="white" border="1px solid" borderColor="ink.100" borderRadius="l2" p={4}>
+      <Flex justify="space-between" align="start">
+        <Box>
+          <HStack gap={2} mb={1}>
+            <Text fontWeight="700" color="ink.900" fontSize="sm">{txTypeLabel(tx.type)}</Text>
+            <Badge colorPalette={meta.palette}>{meta.label}</Badge>
+          </HStack>
+          <Text fontSize="sm" color="ink.600">{tx.asset_name} • {naira(tx.payout)}</Text>
+          <Text fontSize="xs" color="ink.400">{tx.email} • {formatDate(tx.created_at)}</Text>
+        </Box>
+        <Button size="sm" variant="outline" colorPalette="brand" onClick={onOpen}>Review</Button>
+      </Flex>
+    </Box>
+  );
+}
+
+function Row({ label, value, strong }) {
+  return (
+    <Flex justify="space-between" gap={4}>
+      <Text fontSize="sm" color="ink.500">{label}</Text>
+      <Text fontSize="sm" fontWeight={strong ? "800" : "600"} color={strong ? "brand.600" : "ink.900"} textAlign="right" wordBreak="break-all">{value}</Text>
+    </Flex>
   );
 }
