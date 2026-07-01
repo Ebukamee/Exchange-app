@@ -6,6 +6,8 @@ import NextLink from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect } from "react";
 
+
+//code
 export function Link({ to, href, children, ...rest }) {
   return (
     <NextLink href={to || href || "#"} {...rest}>
