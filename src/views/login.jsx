@@ -14,17 +14,24 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [formError, setFormError] = useState("");
   const nav = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (loading) return;
+
     setLoading(true);
+    setFormError("");
+
     try {
       await login(email, password);
       toast("success", "Welcome back!", "Logged in");
       nav("/dashboard");
     } catch (error) {
-      toast("error", err(error.message), "Login failed");
+      const message = err(error?.message || "Unable to sign in right now.");
+      setFormError(message);
+      toast("error", message, "Login failed");
     } finally {
       setLoading(false);
       toaster.dismiss();
@@ -36,14 +43,24 @@ export default function Login() {
       title="Welcome back"
       subtitle="Log in to continue trading on Paycryptt."
       footer={
-        <Text fontSize="sm" color="ink.500" textAlign="center">
-          Don't have an account?{" "}
-          <Link to="/signup">
-            <Text as="span" color="brand.600" fontWeight="600">
-              Sign up
-            </Text>
-          </Link>
-        </Text>
+        <VStack gap={2}>
+          <Text fontSize="sm" color="ink.500" textAlign="center">
+            Don't have an account?{" "}
+            <Link to="/signup">
+              <Text as="span" color="brand.600" fontWeight="600">
+                Sign up
+              </Text>
+            </Link>
+          </Text>
+          <Text fontSize="sm" color="ink.500" textAlign="center">
+            Admin access?{" "}
+            <Link to="/admin/login">
+              <Text as="span" color="brand.600" fontWeight="600">
+                Sign in here
+              </Text>
+            </Link>
+          </Text>
+        </VStack>
       }
     >
       <Box as="form" onSubmit={handleSubmit}>
@@ -61,7 +78,12 @@ export default function Login() {
               </Text>
             </Link>
           </Box>
-          <Button type="submit" colorPalette="ink" rounded="full" size="lg" loading={loading}>
+          {formError ? (
+            <Text fontSize="sm" color="red.500">
+              {formError}
+            </Text>
+          ) : null}
+          <Button type="submit" colorPalette="ink" rounded="full" size="lg" loading={loading} loadingText="Signing in..." disabled={loading}>
             Log in
           </Button>
         </VStack>

@@ -9,7 +9,7 @@ import useAuthStore from "../Store/userStore";
 import { toaster } from "../components/ui/toaster";
 import { toast, err } from "../Helper";
 
-export default function Signup() {
+export default function AdminSignup() {
   const { signup } = useAuthStore();
   const [form, setForm] = useState({ fullname: "", email: "", password: "", confirm: "" });
   const [loading, setLoading] = useState(false);
@@ -34,10 +34,10 @@ export default function Signup() {
 
     try {
       await signup(form.email, form.password, form.fullname);
-      toast("success", "Account created. Check your email to verify.", "Welcome to Paycryptt");
+      toast("success", "Admin account request created. Please verify your email.", "Admin access");
       nav("/verify-email?email=" + encodeURIComponent(form.email));
     } catch (error) {
-      const message = err(error?.message || "Unable to create your account right now.");
+      const message = err(error?.message || "Unable to create the admin account right now.");
       setFormError(message);
       toast("error", message, "Sign up failed");
     } finally {
@@ -47,37 +47,14 @@ export default function Signup() {
   };
 
   return (
-    <AuthShell
-      title="Create your account"
-      subtitle="Start trading crypto and gift cards in minutes."
-      footer={
-        <VStack gap={2}>
-          <Text fontSize="sm" color="ink.500" textAlign="center">
-            Already have an account?{" "}
-            <Link to="/login">
-              <Text as="span" color="brand.600" fontWeight="600">
-                Log in
-              </Text>
-            </Link>
-          </Text>
-          <Text fontSize="sm" color="ink.500" textAlign="center">
-            Need admin access?{" "}
-            <Link to="/admin/signup">
-              <Text as="span" color="brand.600" fontWeight="600">
-                Create admin account
-              </Text>
-            </Link>
-          </Text>
-        </VStack>
-      }
-    >
+    <AuthShell title="Create admin access" subtitle="Request staff access for the admin portal.">
       <Box as="form" onSubmit={handleSignup}>
         <VStack align="stretch" gap={5}>
           <Field label="Full name">
             <Input placeholder="Jane Doe" value={form.fullname} onChange={set("fullname")} required />
           </Field>
           <Field label="Email address">
-            <Input type="email" placeholder="you@email.com" value={form.email} onChange={set("email")} required />
+            <Input type="email" placeholder="admin@paycryptt.com" value={form.email} onChange={set("email")} required />
           </Field>
           <Field label="Password">
             <PasswordInput placeholder="At least 6 characters" value={form.password} onChange={set("password")} required />
@@ -91,8 +68,11 @@ export default function Signup() {
             </Text>
           ) : null}
           <Button type="submit" colorPalette="ink" rounded="full" size="lg" loading={loading} loadingText="Creating account..." disabled={loading}>
-            Create account
+            Create admin account
           </Button>
+          <Text fontSize="xs" color="ink.400" textAlign="center">
+            Already have admin access? <Link to="/admin/login"><Text as="span" color="brand.600">Sign in here</Text></Link>.
+          </Text>
         </VStack>
       </Box>
     </AuthShell>

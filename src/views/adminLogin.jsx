@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Box, Button, Input, Text, VStack } from "@chakra-ui/react";
-import { useNavigate } from "@/src/compat/router";
+import { Link, useNavigate } from "@/src/compat/router";
 import AuthShell from "../components/AuthShell";
 import { Field } from "../components/ui/field";
 import { PasswordInput } from "../components/ui/password-input";
@@ -14,11 +14,16 @@ export default function AdminLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [formError, setFormError] = useState("");
   const nav = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (loading) return;
+
     setLoading(true);
+    setFormError("");
+
     try {
       await login(email, password);
       const profile = await fetchProfile();
@@ -29,7 +34,9 @@ export default function AdminLogin() {
       toast("success", "Welcome, admin.", "Logged in");
       nav("/admin/dashboard");
     } catch (error) {
-      toast("error", err(error.message), "Access denied");
+      const message = err(error?.message || "Unable to access the admin area right now.");
+      setFormError(message);
+      toast("error", message, "Access denied");
     } finally {
       setLoading(false);
       toaster.dismiss();
@@ -46,12 +53,22 @@ export default function AdminLogin() {
           <Field label="Password">
             <PasswordInput placeholder="Enter password" value={password} onChange={(e) => setPassword(e.target.value)} required />
           </Field>
-          <Button type="submit" colorPalette="ink" rounded="full" size="lg" loading={loading}>
+          {formError ? (
+            <Text fontSize="sm" color="red.500">
+              {formError}
+            </Text>
+          ) : null}
+          <Button type="submit" colorPalette="ink" rounded="full" size="lg" loading={loading} loadingText="Signing in..." disabled={loading}>
             Sign in
           </Button>
-          <Text fontSize="xs" color="ink.400" textAlign="center">
-            Not an admin? Go to the <Text as="a" href="/login" color="brand.600">user login</Text>.
-          </Text>
+          <VStack gap={1}>
+            <Text fontSize="xs" color="ink.400" textAlign="center">
+              Need a regular account? Go to the <Link to="/login"><Text as="span" color="brand.600">user login</Text></Link>.
+            </Text>
+            <Text fontSize="xs" color="ink.400" textAlign="center">
+              New admin access? <Link to="/admin/signup"><Text as="span" color="brand.600">Create an admin account</Text></Link>.
+            </Text>
+          </VStack>
         </VStack>
       </Box>
     </AuthShell>
