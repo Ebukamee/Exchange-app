@@ -19,3 +19,4 @@ export const isValidPassword = (password) => {
   if (!/[_\-#]/.test(password)) return false;
   return true;
 };
+

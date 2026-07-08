@@ -274,7 +274,7 @@ DATABASE_URL=postgresql://user:password@hostname:5432/database_name
 
 # Email
 RESEND_API_KEY=your-resend-api-key
-EMAIL_FROM=Paycryppt <noreply@website.com>
+EMAIL_FROM=POWERPAY <noreply@website.com>
 
 # Supabase (if using)
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
@@ -393,3 +393,4 @@ If deployment fails:
 2. Test new version on staging first
 3. Use blue-green deployment
 4. Have quick rollback script ready
+

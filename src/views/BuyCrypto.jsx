@@ -79,7 +79,7 @@ export default function BuyCrypto() {
 
   return (
     <DashboardLayout>
-      <TradeCard title="Buy Crypto" subtitle="Pay by bank transfer or with your Paycryptt balance.">
+      <TradeCard title="Buy Crypto" subtitle="Pay by bank transfer or with your Powerpay balance.">
         {booting ? (
           <Flex justify="center" py={10}><Spinner color="brand.500" /></Flex>
         ) : list.length === 0 ? (
@@ -129,7 +129,7 @@ export default function BuyCrypto() {
                         value="balance"
                         active={method === "balance"}
                         icon={FaWallet}
-                        title="Paycryptt balance"
+                        title="Powerpay balance"
                         desc={`Balance: ${naira(profile?.balance)}${cost > 0 && !enoughBalance ? " — insufficient" : ""}`}
                       />
                     </VStack>
@@ -200,3 +200,4 @@ function MethodOption({ value, active, icon, title, desc }) {
     </RadioGroup.Item>
   );
 }
+

@@ -67,7 +67,7 @@ export default function Footer() {
           fontSize="sm"
           color="ink.400"
         >
-          <Text>© {new Date().getFullYear()} Paycryptt. All rights reserved.</Text>
+          <Text>© {new Date().getFullYear()} Powerpay. All rights reserved.</Text>
           <Text>Trade smart. Get paid fast.</Text>
         </Flex>
       </Box>
@@ -91,3 +91,4 @@ function FooterCol({ title, items }) {
     </VStack>
   );
 }
+

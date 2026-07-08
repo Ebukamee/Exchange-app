@@ -128,3 +128,4 @@ function Stat({ value, label }) {
     </Box>
   );
 }
+

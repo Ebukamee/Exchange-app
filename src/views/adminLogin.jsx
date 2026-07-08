@@ -48,7 +48,7 @@ export default function AdminLogin() {
       <Box as="form" onSubmit={handleSubmit}>
         <VStack align="stretch" gap={5}>
           <Field label="Email address">
-            <Input type="email" placeholder="admin@paycryptt.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            <Input type="email" placeholder="admin@Powerpay.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
           </Field>
           <Field label="Password">
             <PasswordInput placeholder="Enter password" value={password} onChange={(e) => setPassword(e.target.value)} required />
@@ -74,3 +74,4 @@ export default function AdminLogin() {
     </AuthShell>
   );
 }
+

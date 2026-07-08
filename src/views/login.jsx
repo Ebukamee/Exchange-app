@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Box, Button, Input, Text, VStack } from "@chakra-ui/react";
 import { Link, useNavigate } from "@/src/compat/router";
+import { useSearchParams } from "next/navigation";
 import AuthShell from "../components/AuthShell";
 import { Field } from "../components/ui/field";
 import { PasswordInput } from "../components/ui/password-input";
@@ -16,6 +17,22 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState("");
   const nav = useNavigate();
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams.get("next");
+  const domain = process.env.NEXT_PUBLIC_DOMAIN || "powerpaytech.com";
+  const safeRedirectUrl = (() => {
+    if (!redirectUrl) return null;
+    try {
+      const url = new URL(redirectUrl, typeof window !== "undefined" ? window.location.origin : `https://${domain}`);
+      const dashboardHost = `dashboard.${domain}`;
+      if (url.hostname === domain || url.hostname === dashboardHost || url.pathname.startsWith("/dashboard")) {
+        return url.toString();
+      }
+    } catch (error) {
+      return null;
+    }
+    return null;
+  })();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,7 +44,11 @@ export default function Login() {
     try {
       await login(email, password);
       toast("success", "Welcome back!", "Logged in");
-      nav("/dashboard");
+      if (safeRedirectUrl) {
+        window.location.href = safeRedirectUrl;
+      } else {
+        nav("/dashboard");
+      }
     } catch (error) {
       const message = err(error?.message || "Unable to sign in right now.");
       setFormError(message);
@@ -41,7 +62,7 @@ export default function Login() {
   return (
     <AuthShell
       title="Welcome back"
-      subtitle="Log in to continue trading on Paycryptt."
+      subtitle="Log in to continue trading on Powerpay."
       footer={
         <VStack gap={2}>
           <Text fontSize="sm" color="ink.500" textAlign="center">
@@ -49,14 +70,6 @@ export default function Login() {
             <Link to="/signup">
               <Text as="span" color="brand.600" fontWeight="600">
                 Sign up
-              </Text>
-            </Link>
-          </Text>
-          <Text fontSize="sm" color="ink.500" textAlign="center">
-            Admin access?{" "}
-            <Link to="/admin/login">
-              <Text as="span" color="brand.600" fontWeight="600">
-                Sign in here
               </Text>
             </Link>
           </Text>
@@ -91,3 +104,4 @@ export default function Login() {
     </AuthShell>
   );
 }
+

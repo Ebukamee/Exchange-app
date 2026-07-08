@@ -11,7 +11,7 @@ import { toast, err, isValidPassword } from "../Helper";
 
 export default function AdminSignup() {
   const { signup } = useAuthStore();
-  const [form, setForm] = useState({ fullname: "", email: "", password: "", confirm: "", referralCode: "" });
+  const [form, setForm] = useState({ fullname: "", email: "", password: "", confirm: "" });
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState("");
   const nav = useNavigate();
@@ -40,7 +40,7 @@ export default function AdminSignup() {
     setFormError("");
 
     try {
-      await signup(form.email, form.password, form.fullname, form.referralCode);
+      await signup(form.email, form.password, form.fullname);
       toast("success", "Admin account request created. Please verify your email.", "Admin access");
       nav("/verify-email?email=" + encodeURIComponent(form.email));
     } catch (error) {
@@ -61,16 +61,13 @@ export default function AdminSignup() {
             <Input placeholder="Jane Doe" value={form.fullname} onChange={set("fullname")} required />
           </Field>
           <Field label="Email address">
-            <Input type="email" placeholder="admin@paycryptt.com" value={form.email} onChange={set("email")} required />
+            <Input type="email" placeholder="admin@powerpay.com" value={form.email} onChange={set("email")} required />
           </Field>
           <Field label="Password">
             <PasswordInput placeholder="At least 8 characters and include upper, lower, number and _ - #" value={form.password} onChange={set("password")} required />
           </Field>
           <Field label="Confirm password">
             <PasswordInput placeholder="Re-enter password (same rules)" value={form.confirm} onChange={set("confirm")} required />
-          </Field>
-          <Field label="Referral code (optional)">
-            <Input placeholder="ABC123" value={form.referralCode} onChange={set("referralCode")} />
           </Field>
           {formError ? (
             <Text fontSize="sm" color="red.500">
@@ -88,3 +85,4 @@ export default function AdminSignup() {
     </AuthShell>
   );
 }
+

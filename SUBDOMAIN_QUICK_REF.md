@@ -167,3 +167,4 @@ DATABASE_URL=postgresql://...
 - See `IMPLEMENTATION_GUIDE.md` for code examples
 - Check middleware.js for routing logic
 - Review lib/subdomain.js and lib/hooks/useSubdomain.js for utilities
+

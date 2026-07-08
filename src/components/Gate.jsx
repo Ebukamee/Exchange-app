@@ -20,8 +20,16 @@ export function RequireAuth({ children, requireOnboarding = true }) {
 
   useEffect(() => {
     if (!authIsReady) return;
-    if (!user) router.replace("/login");
-    else if (requireOnboarding && profile && !(profile.wallet_address && profile.account_number)) {
+    if (!user) {
+      if (typeof window !== "undefined" && window.location.hostname.startsWith("dashboard.")) {
+        const domain = process.env.NEXT_PUBLIC_DOMAIN || "powerpaytech.com";
+        const loginUrl = new URL(`https://${domain}/login`);
+        loginUrl.searchParams.set("next", window.location.href);
+        window.location.replace(loginUrl.toString());
+      } else {
+        router.replace("/login");
+      }
+    } else if (requireOnboarding && profile && !(profile.wallet_address && profile.account_number)) {
       router.replace("/onboarding");
     }
   }, [authIsReady, user, profile, requireOnboarding, router]);
@@ -45,3 +53,4 @@ export function RequireAdmin({ children }) {
   if (!authIsReady || !user || !profile || !profile.is_admin) return <Loading />;
   return children;
 }
+

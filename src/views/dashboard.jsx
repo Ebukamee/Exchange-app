@@ -49,7 +49,7 @@ export default function Dashboard() {
           <Box position="absolute" top="-60px" right="-40px" w="260px" h="260px" bg="brand.500" opacity={0.3} filter="blur(90px)" borderRadius="full" />
           <HStack color="ink.300" gap={2} mb={2} zIndex={1} position="relative">
             <Icon><FaWallet /></Icon>
-            <Text fontSize="sm">Paycryptt balance</Text>
+            <Text fontSize="sm">Powerpay balance</Text>
           </HStack>
           <Heading fontFamily="heading" fontSize={{ base: "4xl", md: "5xl" }} zIndex={1} position="relative">
             {naira(profile?.balance)}
@@ -126,3 +126,4 @@ export default function Dashboard() {
     </DashboardLayout>
   );
 }
+

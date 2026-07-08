@@ -106,3 +106,4 @@ function WdRow({ wd }) {
 function Empty({ label }) {
   return <Text color="ink.400" py={12} textAlign="center">{label}</Text>;
 }
+

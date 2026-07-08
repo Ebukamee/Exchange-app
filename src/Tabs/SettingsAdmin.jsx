@@ -47,7 +47,7 @@ export default function SettingsAdmin() {
         <Box as="form" onSubmit={save} bg="white" border="1px solid" borderColor="ink.100" borderRadius="l3" p={6}>
           <VStack align="stretch" gap={5}>
             <Field label="Bank name"><Input value={form.bank_name} onChange={set("bank_name")} placeholder="GTBank" /></Field>
-            <Field label="Account name"><Input value={form.account_name} onChange={set("account_name")} placeholder="Paycryptt Ltd" /></Field>
+            <Field label="Account name"><Input value={form.account_name} onChange={set("account_name")} placeholder="Powerpay Ltd" /></Field>
             <Field label="Account number"><Input value={form.account_number} onChange={set("account_number")} placeholder="0123456789" /></Field>
             <Button type="submit" colorPalette="brand" size="lg" loading={busy}>Save bank details</Button>
           </VStack>
@@ -56,3 +56,4 @@ export default function SettingsAdmin() {
     </Box>
   );
 }
+

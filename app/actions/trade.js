@@ -75,3 +75,4 @@ export async function getMyWithdrawals() {
   const u = await requireUser();
   return q("select * from withdrawals where user_id = $1 order by created_at desc", [u.id]);
 }
+

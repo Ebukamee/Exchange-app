@@ -1,4 +1,4 @@
-# Paycryptt
+# Powerpay
 
 A platform to buy and sell cryptocurrency and gift cards, with every trade
 verified by an admin before payout. Built with **Vite + React**, **Chakra UI v3**
@@ -31,3 +31,4 @@ To become an admin, sign up, then in Supabase run:
 ```sql
 update public.profiles set is_admin = true where email = 'you@example.com';
 ```
+

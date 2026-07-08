@@ -14,7 +14,7 @@ export default function TrustBadges() {
     <Box maxW="1200px" mx="auto" px={{ base: 5, md: 8 }} py={{ base: 14, md: 20 }}>
       <Box textAlign="center" mb={12}>
         <Text fontSize="sm" color="ink.400" fontWeight="700" letterSpacing="0.1em" mb={2}>
-          WHY PAYCRYPPT
+          WHY POWERPAY
         </Text>
         <Heading fontFamily="heading" fontWeight="800" fontSize={{ base: "4xl", md: "5xl" }} color="ink.900" letterSpacing="-0.02em">
           Get started in minutes
@@ -44,3 +44,4 @@ export default function TrustBadges() {
     </Box>
   );
 }
+

@@ -105,3 +105,4 @@ const SliderMarks = React.forwardRef(function SliderMarks(props, ref) {
     </ChakraSlider.MarkerGroup>
   )
 })
+

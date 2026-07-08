@@ -2,10 +2,10 @@
 import { useState } from "react";
 import { Flex, Text, Image } from "@chakra-ui/react";
 
-// Path to the real Paycryptt logo. Drop the exact artwork here:
-//   public/paycryptt-logo.png   (transparent PNG or SVG recommended)
-// It is served from the site root as /paycryptt-logo.png
-const LOGO_SRC = "/paycryptt-logo.png";
+// Path to the real Powerpay logo. Drop the exact artwork here:
+//   public/powerpay-logo.png   (transparent PNG or SVG recommended)
+// It is served from the site root as /powerpay-logo.png
+const LOGO_SRC = "/powerpay-logo.png";
 
 // Geometric "P" mark — SVG fallback used until the real artwork is added,
 // and on dark surfaces where a colour-customisable mark reads better.
@@ -41,7 +41,7 @@ export default function Logo({
     return (
       <Image
         src={LOGO_SRC}
-        alt="Paycryptt"
+        alt="Powerpay"
         h={`${imageHeight || size + 8}px`}
         w="auto"
         objectFit="contain"
@@ -63,9 +63,10 @@ export default function Logo({
           fontSize={fontSize}
           color={textColor || color}
         >
-          PAYCRYPPT
+          POWERPAY
         </Text>
       )}
     </Flex>
   );
 }
+

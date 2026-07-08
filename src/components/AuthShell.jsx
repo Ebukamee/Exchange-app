@@ -46,7 +46,7 @@ export default function AuthShell({ title, subtitle, children, footer }) {
           </VStack>
         </VStack>
         <Text fontSize="sm" color="ink.400" zIndex={1}>
-          © {new Date().getFullYear()} Paycryptt
+          © {new Date().getFullYear()} Powerpay
         </Text>
       </Box>
 
@@ -73,3 +73,4 @@ export default function AuthShell({ title, subtitle, children, footer }) {
     </Flex>
   );
 }
+

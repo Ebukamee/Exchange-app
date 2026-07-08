@@ -122,3 +122,4 @@ function SectionLabel({ icon, text }) {
     </HStack>
   );
 }
+

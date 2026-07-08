@@ -5,15 +5,15 @@ import { FaPlus, FaMinus } from "react-icons/fa6";
 
 const faqItems = [
   {
-    q: "How does Paycryptt work?",
+    q: "How does Powerpay work?",
     a: "Create an account, choose whether to buy/sell crypto or sell a gift card, and upload proof of your transaction. Our admin team verifies every trade before releasing your funds — so you're always in safe hands.",
   },
   {
     q: "How fast are payouts?",
-    a: "Most verified trades are paid out within minutes. Funds go to your Paycryptt balance, which you can withdraw to your bank account any time.",
+    a: "Most verified trades are paid out within minutes. Funds go to your Powerpay balance, which you can withdraw to your bank account any time.",
   },
   {
-    q: "Is Paycryptt safe?",
+    q: "Is Powerpay safe?",
     a: "Yes. Every transaction is manually reviewed, your data is protected, and payouts only happen after your proof is verified.",
   },
   {
@@ -70,3 +70,4 @@ export default function FAQ() {
     </Box>
   );
 }
+

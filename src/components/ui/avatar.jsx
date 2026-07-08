@@ -47,3 +47,4 @@ export const AvatarGroup = React.forwardRef(function AvatarGroup(props, ref) {
     </ChakraAvatar.PropsProvider>
   )
 })
+

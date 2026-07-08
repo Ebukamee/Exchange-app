@@ -61,10 +61,10 @@ export default function Other() {
         <Flex direction={{ base: "column", md: "row" }} gap={10} align="center">
           <Box flex="1">
             <Heading fontFamily="heading" fontWeight="800" fontSize={{ base: "4xl", md: "5xl" }} mb={3} letterSpacing="-0.02em">
-              Why traders choose Paycryptt
+              Why traders choose Powerpay
             </Heading>
             <Text color="ink.300" maxW="440px">
-              We built Paycryptt to make trading crypto and gift cards effortless,
+              We built Powerpay to make trading crypto and gift cards effortless,
               transparent and safe — with real rates and payouts you can count on.
             </Text>
           </Box>
@@ -81,3 +81,4 @@ export default function Other() {
     </Box>
   );
 }
+

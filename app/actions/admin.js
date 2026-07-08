@@ -105,3 +105,4 @@ export async function saveDepositBank(value) {
   await requireAdmin();
   await q("update settings set value = $1 where key = 'deposit_bank'", [JSON.stringify(value)]);
 }
+

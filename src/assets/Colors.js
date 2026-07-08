@@ -1,4 +1,4 @@
-// Paycryptt brand palette. Kept as a small object for inline styles where
+// Powerpay brand palette. Kept as a small object for inline styles where
 // Chakra tokens are inconvenient. Prefer theme tokens ("brand.500") in JSX.
 export const Brand = {
   red: "#ed1c24",
@@ -10,3 +10,4 @@ export const Brand = {
 
 // Back-compat alias for older imports that referenced `Blue`.
 export const Blue = { bg: "#fff1f1", p: Brand.red };
+

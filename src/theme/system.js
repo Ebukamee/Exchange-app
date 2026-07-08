@@ -1,6 +1,6 @@
 import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react";
 
-// Paycryptt brand — red on near-black, Cardtonic-style clean fintech.
+// Powerpay brand — red on near-black, Cardtonic-style clean fintech.
 const config = defineConfig({
   theme: {
     tokens: {
@@ -85,3 +85,4 @@ const config = defineConfig({
 });
 
 export const system = createSystem(defaultConfig, config);
+

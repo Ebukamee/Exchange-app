@@ -154,3 +154,4 @@ export function TradeCard({ title, subtitle, children }) {
     </Box>
   );
 }
+

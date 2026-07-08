@@ -21,3 +21,4 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 
 // Storage bucket used for proof-of-payment / gift card screenshots.
 export const PROOFS_BUCKET = "proofs";
+

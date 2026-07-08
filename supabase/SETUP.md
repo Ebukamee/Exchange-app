@@ -1,4 +1,4 @@
-# Paycryptt — Supabase Setup
+# Powerpay — Supabase Setup
 
 Follow these steps once to connect the app to your own Supabase project.
 
@@ -44,3 +44,4 @@ update public.profiles set is_admin = true where email = 'you@example.com';
 ## 6. Seed some data (optional)
 From the admin panel you can add cryptocurrencies and gift cards, set rates,
 and set the company bank account (the account users pay into when buying crypto).
+

@@ -267,3 +267,4 @@ API routes work the same across all subdomains. All subdomains can access:
 5. ✅ Cookie persistence across subdomains
 6. ✅ Admin user cannot access regular dashboard
 7. ✅ Regular user cannot access admin dashboard
+

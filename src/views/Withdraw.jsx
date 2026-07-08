@@ -47,7 +47,7 @@ export default function Withdraw() {
 
   return (
     <DashboardLayout>
-      <TradeCard title="Withdraw" subtitle="Cash out your Paycryptt balance to your bank account.">
+      <TradeCard title="Withdraw" subtitle="Cash out your Powerpay balance to your bank account.">
         <VStack align="stretch" gap={6}>
           <Box bg="ink.950" color="white" borderRadius="l2" p={5}>
             <Text fontSize="sm" color="ink.300">Available balance</Text>
@@ -85,3 +85,4 @@ export default function Withdraw() {
     </DashboardLayout>
   );
 }
+

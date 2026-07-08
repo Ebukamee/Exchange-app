@@ -32,8 +32,8 @@ export default function Contact() {
 
         <SimpleGrid columns={{ base: 1, md: 2 }} gap={10}>
           <VStack align="stretch" gap={5}>
-            <ContactRow icon={FaEnvelope} label="Email" value="support@paycryptt.com" />
-            <ContactRow icon={FaPhone} label="Phone / WhatsApp" value="+234 800 000 0000" />
+            <ContactRow icon={FaEnvelope} label="Email" value="support@Powerpay.com" />
+            <ContactRow icon={FaPhone} label="Phone / WhatsApp" value="+234 816 8236 123" />
             <ContactRow icon={FaLocationDot} label="Address" value="Lagos, Nigeria" />
             <Box bg="ink.950" color="white" borderRadius="l2" p={6}>
               <Heading fontSize="lg" mb={2}>Support hours</Heading>
@@ -75,3 +75,4 @@ function ContactRow({ icon, label, value }) {
     </HStack>
   );
 }
+

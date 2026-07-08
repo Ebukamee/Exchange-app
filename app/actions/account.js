@@ -29,3 +29,4 @@ export async function updateProfile(fields) {
   await q(`update "user" set ${sets.join(", ")} where id = $${i}`, vals);
   return getProfile();
 }
+

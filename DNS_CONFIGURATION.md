@@ -281,3 +281,4 @@ CNAME  | mail               | 1.2.3.4      | 3600
 - Test with both www and non-www versions
 - Keep DNS provider dashboard open during configuration
 - Document your DNS setup for future reference
+

@@ -7,7 +7,7 @@ const reviews = [
   { name: "Chidi O.", source: "Trustpilot", text: "Fastest payout I've used. Sold BTC and got my Naira before I finished my coffee." },
   { name: "Amaka N.", source: "App Store", text: "Sold my Amazon card at a great rate and the team verified it in minutes. Smooth." },
   { name: "Tunde A.", source: "Play Store", text: "Rates are genuinely the best I've found. Buying USDT from my balance is so easy." },
-  { name: "Blessing E.", source: "X", text: "Clean app, no stress, real support. Paycryptt is now my go-to for gift cards." },
+  { name: "Blessing E.", source: "X", text: "Clean app, no stress, real support. Powerpay is now my go-to for gift cards." },
 ];
 
 export default function Testimonials() {
@@ -46,3 +46,4 @@ export default function Testimonials() {
     </Box>
   );
 }
+

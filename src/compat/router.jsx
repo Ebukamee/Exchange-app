@@ -50,3 +50,4 @@ export function Navigate({ to, replace }) {
 export function Outlet({ children }) {
   return children || null;
 }
+

@@ -18,7 +18,7 @@ const solutions = [
   {
     icon: FaCartShopping,
     title: "Buy Crypto",
-    body: "Pay by bank transfer or straight from your Paycryptt balance and receive crypto in your wallet.",
+    body: "Pay by bank transfer or straight from your Powerpay balance and receive crypto in your wallet.",
     bg: "#eafaf1",
     accent: "#1f9d57",
     art: <CoinCluster tokens={["sol", "eth", "ltc", "doge"]} />,
@@ -34,7 +34,7 @@ const solutions = [
   {
     icon: FaMoneyBillWave,
     title: "Withdraw Anytime",
-    body: "Cash out your Paycryptt balance to your bank account whenever you want. Fast, simple, no stress.",
+    body: "Cash out your Powerpay balance to your bank account whenever you want. Fast, simple, no stress.",
     bg: "#f3eefe",
     accent: "#7a4de0",
     art: <BankCards />,
@@ -102,3 +102,4 @@ export default function FeaturesSection() {
     </Box>
   );
 }
+

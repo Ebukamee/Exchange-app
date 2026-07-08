@@ -306,3 +306,4 @@ curl http://admin.localhost:3000/dashboard/transactions
 - [middleware.js](./middleware.js) - Subdomain routing logic
 - [lib/subdomain.js](./lib/subdomain.js) - Utility functions
 - [lib/hooks/useSubdomain.js](./lib/hooks/useSubdomain.js) - React hook
+

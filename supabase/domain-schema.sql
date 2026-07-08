@@ -1,5 +1,5 @@
 -- =====================================================================
---  PAYCRYPTT — domain tables (Next.js + Better Auth edition)
+--  Powerpay — domain tables (Next.js + Better Auth edition)
 --
 --  RUN ORDER:
 --   1) First create Better Auth tables:   npm run auth:migrate
@@ -106,3 +106,4 @@ create policy "proofs: public read" on storage.objects
 --  Make yourself admin after signing up:
 --    update "user" set is_admin = true where email = 'you@example.com';
 -- =====================================================================
+

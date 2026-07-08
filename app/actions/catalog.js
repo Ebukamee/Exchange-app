@@ -15,3 +15,4 @@ export async function getDepositBank() {
   const rows = await q("select value from settings where key='deposit_bank'");
   return rows[0]?.value ?? null;
 }
+

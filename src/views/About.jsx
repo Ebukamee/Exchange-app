@@ -17,13 +17,13 @@ export default function About() {
 
       <Box maxW="900px" mx="auto" px={{ base: 5, md: 8 }} pt={16} pb={8} textAlign="center">
         <Text fontSize="sm" color="ink.400" fontWeight="700" letterSpacing="0.1em" mb={3}>
-          ABOUT PAYCRYPPT
+          ABOUT POWERPAY
         </Text>
         <Heading fontFamily="heading" fontWeight="800" fontSize={{ base: "4xl", md: "6xl" }} color="ink.900" letterSpacing="-0.03em">
           Trading crypto & gift cards, made simple
         </Heading>
         <Text mt={5} fontSize="lg" color="ink.500">
-          Paycryptt is a platform where people in Nigeria can buy and sell
+          Powerpay is a platform where people in Nigeria can buy and sell
           cryptocurrency and gift cards with confidence. Every transaction is
           reviewed by our team before money or crypto changes hands — keeping
           your trades safe and your payouts fast.
@@ -49,7 +49,7 @@ export default function About() {
           <Heading fontSize="2xl" color="ink.900">Our mission</Heading>
           <Text color="ink.600">
             We believe trading digital value should be effortless, transparent
-            and fair. That's why we built Paycryptt — to give everyone a clean,
+            and fair. That's why we built Powerpay — to give everyone a clean,
             reliable way to convert crypto and gift cards to cash, at rates that
             actually make sense, with payouts you can trust.
           </Text>
@@ -60,3 +60,4 @@ export default function About() {
     </Box>
   );
 }
+

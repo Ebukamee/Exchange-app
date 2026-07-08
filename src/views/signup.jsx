@@ -41,7 +41,7 @@ export default function Signup() {
 
     try {
       await signup(form.email, form.password, form.fullname, form.referralCode);
-      toast("success", "Account created. Check your email to verify.", "Welcome to Paycryptt");
+      toast("success", "Account created. Check your email to verify.", "Welcome to Powerpay");
       nav("/verify-email?email=" + encodeURIComponent(form.email));
     } catch (error) {
       const message = err(error?.message || "Unable to create your account right now.");
@@ -64,14 +64,6 @@ export default function Signup() {
             <Link to="/login">
               <Text as="span" color="brand.600" fontWeight="600">
                 Log in
-              </Text>
-            </Link>
-          </Text>
-          <Text fontSize="sm" color="ink.500" textAlign="center">
-            Need admin access?{" "}
-            <Link to="/admin/signup">
-              <Text as="span" color="brand.600" fontWeight="600">
-                Create admin account
               </Text>
             </Link>
           </Text>
@@ -108,3 +100,4 @@ export default function Signup() {
     </AuthShell>
   );
 }
+
