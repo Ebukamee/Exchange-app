@@ -11,6 +11,7 @@ export const PasswordInput = React.forwardRef(function PasswordInput(props, ref)
   const { ...rest } = props
   return (
     <InputGroup
+      width="100%"
       endElement={
         <IconButton
           aria-label={visible ? 'Hide password' : 'Show password'}

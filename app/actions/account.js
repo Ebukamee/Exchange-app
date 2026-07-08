@@ -4,7 +4,7 @@ import { q } from "@/lib/db";
 import { requireUser } from "@/lib/session";
 
 const PROFILE_COLS =
-  'id, email, full_name, wallet_address, bank_name, account_name, account_number, balance, is_admin';
+  'id, email, full_name, wallet_address, bank_name, account_name, account_number, balance, is_admin, referral_code';
 
 export async function getProfile() {
   const u = await requireUser();

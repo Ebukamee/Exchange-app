@@ -2,6 +2,7 @@
 
 import { create } from "zustand";
 import { authClient } from "@/lib/auth-client";
+import { generateReferralCode } from "@/Helper/format";
 import { getProfile, updateProfile as updateProfileAction } from "@/app/actions/account";
 import { adminGetUsers } from "@/app/actions/admin";
 
@@ -26,13 +27,18 @@ const useAuthStore = create((set, get) => ({
     }
   },
 
-  signup: async (email, password, name) => {
-    const { data, error } = await authClient.signUp.email({
+  signup: async (email, password, name, referralCode) => {
+    const referral_code = generateReferralCode();
+    const payload = {
       email,
       password,
       name,
       full_name: name,
-    });
+      referral_code,
+    };
+    if (referralCode) payload.referral_code_used = referralCode;
+
+    const { data, error } = await authClient.signUp.email(payload);
     if (error) throw new Error(error.message);
     return data;
   },

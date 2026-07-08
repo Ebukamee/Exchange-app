@@ -13,6 +13,12 @@
 
 create extension if not exists "pgcrypto";
 
+-- Add referral tracking to Better Auth user table.
+alter table if exists "user" add column if not exists referral_code text;
+alter table if exists "user" add column if not exists referral_code_used text;
+alter table if exists "user" add column if not exists referred_by text;
+create unique index if not exists user_referral_code_idx on "user"(referral_code);
+
 -- ---------- CRYPTOCURRENCIES ----------
 create table if not exists public.cryptocurrencies (
   id              uuid primary key default gen_random_uuid(),

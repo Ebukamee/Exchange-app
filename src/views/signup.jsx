@@ -7,11 +7,11 @@ import { Field } from "../components/ui/field";
 import { PasswordInput } from "../components/ui/password-input";
 import useAuthStore from "../Store/userStore";
 import { toaster } from "../components/ui/toaster";
-import { toast, err } from "../Helper";
+import { toast, err, isValidPassword } from "../Helper";
 
 export default function Signup() {
   const { signup } = useAuthStore();
-  const [form, setForm] = useState({ fullname: "", email: "", password: "", confirm: "" });
+  const [form, setForm] = useState({ fullname: "", email: "", password: "", confirm: "", referralCode: "" });
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState("");
   const nav = useNavigate();
@@ -29,11 +29,18 @@ export default function Signup() {
       return;
     }
 
+    if (!isValidPassword(form.password)) {
+      const message = "Password must be at least 8 characters and include uppercase, lowercase, a number, and one of: _ - #";
+      setFormError(message);
+      toast("error", message, "Invalid password");
+      return;
+    }
+
     setLoading(true);
     setFormError("");
 
     try {
-      await signup(form.email, form.password, form.fullname);
+      await signup(form.email, form.password, form.fullname, form.referralCode);
       toast("success", "Account created. Check your email to verify.", "Welcome to Paycryptt");
       nav("/verify-email?email=" + encodeURIComponent(form.email));
     } catch (error) {
@@ -80,10 +87,13 @@ export default function Signup() {
             <Input type="email" placeholder="you@email.com" value={form.email} onChange={set("email")} required />
           </Field>
           <Field label="Password">
-            <PasswordInput placeholder="At least 6 characters" value={form.password} onChange={set("password")} required />
+            <PasswordInput placeholder="At least 8 characters and include upper, lower, number, and _ - #" value={form.password} onChange={set("password")} required />
           </Field>
           <Field label="Confirm password">
             <PasswordInput placeholder="Re-enter password" value={form.confirm} onChange={set("confirm")} required />
+          </Field>
+          <Field label="Referral code (optional)">
+            <Input placeholder="ABC123" value={form.referralCode} onChange={set("referralCode")} />
           </Field>
           {formError ? (
             <Text fontSize="sm" color="red.500">

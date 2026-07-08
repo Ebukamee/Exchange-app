@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { Box, Heading, Text, Input, Button, VStack, SimpleGrid, HStack, Icon, Avatar } from "@chakra-ui/react";
 import { useNavigate } from "@/src/compat/router";
-import { FaArrowRightFromBracket } from "react-icons/fa6";
+import { FaArrowRightFromBracket, FaCopy } from "react-icons/fa6";
 import DashboardLayout from "../components/DashboardLayout";
 import { Field } from "../components/ui/field";
 import useAuthStore from "../Store/userStore";
@@ -15,6 +15,7 @@ export default function Profile() {
     full_name: "", wallet_address: "", bank_name: "", account_name: "", account_number: "",
   });
   const [loading, setLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
   const nav = useNavigate();
 
   useEffect(() => {
@@ -53,6 +54,14 @@ export default function Profile() {
     nav("/");
   };
 
+  const copyReferralCode = async () => {
+    if (profile?.referral_code) {
+      await navigator.clipboard.writeText(profile.referral_code);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
   return (
     <DashboardLayout>
       <Box maxW="720px" mx="auto">
@@ -65,6 +74,18 @@ export default function Profile() {
             <Text color="ink.500" fontSize="sm">{profile?.email}</Text>
           </Box>
         </HStack>
+        {profile?.referral_code ? (
+          <Box mb={6} p={4} bg="ink.50" border="1px solid" borderColor="ink.100" borderRadius="l3">
+            <Text fontSize="sm" color="ink.500" mb={2}>Your referral code</Text>
+            <HStack gap={3}>
+              <Text fontWeight="700" fontSize="lg" color="ink.900" letterSpacing="0.08em">{profile.referral_code}</Text>
+              <Button size="sm" variant="ghost" onClick={copyReferralCode}>
+                <Icon><FaCopy /></Icon>
+                <Text>{copied ? "Copied!" : "Copy"}</Text>
+              </Button>
+            </HStack>
+          </Box>
+        ) : null}
 
         <Box as="form" onSubmit={save} bg="white" border="1px solid" borderColor="ink.100" borderRadius="l3" p={{ base: 5, md: 7 }}>
           <VStack align="stretch" gap={5}>
