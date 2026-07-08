@@ -2,7 +2,7 @@
 
 import { create } from "zustand";
 import { authClient } from "@/lib/auth-client";
-import { generateReferralCode } from "@/Helper/format";
+import { generateReferralCode } from "@/src/Helper/format";
 import { getProfile, updateProfile as updateProfileAction } from "@/app/actions/account";
 import { adminGetUsers } from "@/app/actions/admin";
 
