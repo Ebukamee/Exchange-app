@@ -1,8 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Box, Heading, Text, Flex, HStack, VStack, Spinner, SimpleGrid, Badge, Avatar, Input } from "@chakra-ui/react";
+import { Box, Heading, Text, Flex, HStack, VStack, Spinner, SimpleGrid, Badge, Avatar, Input, Button } from "@chakra-ui/react";
 import useAuthStore from "../Store/userStore";
+import { toggleAdmin } from "@/app/actions/admin";
 import { naira, formatDate } from "../Helper";
+import { toast } from "../Helper";
 
 export default function Users() {
   const { getAllUsers } = useAuthStore();
@@ -13,6 +15,19 @@ export default function Users() {
   useEffect(() => {
     getAllUsers().then(setUsers).catch(() => {}).finally(() => setLoading(false));
   }, [getAllUsers]);
+
+  const handleToggleAdmin = async (user) => {
+    const newStatus = !user.is_admin;
+    try {
+      await toggleAdmin(user.id, newStatus);
+      setUsers((prev) =>
+        prev.map((u) => (u.id === user.id ? { ...u, is_admin: newStatus } : u))
+      );
+      toast("success", `${user.full_name || user.email} is ${newStatus ? "now an admin" : "no longer an admin"}.`);
+    } catch (e) {
+      toast("error", e.message || "Failed to update admin status.");
+    }
+  };
 
   const filtered = users.filter(
     (u) =>
@@ -51,10 +66,20 @@ export default function Users() {
                 </HStack>
                 <Text fontWeight="800" color="brand.600">{naira(u.balance)}</Text>
               </Flex>
-              <VStack align="stretch" gap={0.5} mt={3} fontSize="xs" color="ink.500">
-                {u.wallet_address && <Text wordBreak="break-all">Wallet: {u.wallet_address}</Text>}
-                {u.account_number && <Text>Bank: {u.bank_name} • {u.account_number}</Text>}
-              </VStack>
+              <Flex align="center" justify="space-between" mt={3}>
+                <VStack align="stretch" gap={0.5} fontSize="xs" color="ink.500">
+                  {u.wallet_address && <Text wordBreak="break-all">Wallet: {u.wallet_address}</Text>}
+                  {u.account_number && <Text>Bank: {u.bank_name} • {u.account_number}</Text>}
+                </VStack>
+                <Button
+                  size="xs"
+                  variant={u.is_admin ? "outline" : "solid"}
+                  colorPalette={u.is_admin ? "red" : "brand"}
+                  onClick={() => handleToggleAdmin(u)}
+                >
+                  {u.is_admin ? "Remove Admin" : "Make Admin"}
+                </Button>
+              </Flex>
             </Box>
           ))}
         </SimpleGrid>

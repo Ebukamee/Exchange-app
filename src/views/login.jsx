@@ -48,7 +48,7 @@ export default function Login() {
       if (safeRedirectUrl) {
         window.location.href = safeRedirectUrl;
       } else {
-        redirectToDashboard("/dashboard");
+        redirectToDashboard("/");
       }
     } catch (error) {
       const message = err(error?.message || "Unable to sign in right now.");

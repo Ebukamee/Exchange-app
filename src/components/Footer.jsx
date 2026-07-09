@@ -1,7 +1,7 @@
 "use client";
 import { Box, Flex, HStack, VStack, Text, SimpleGrid, Icon } from "@chakra-ui/react";
 import { Link } from "@/src/compat/router";
-import { FaXTwitter, FaInstagram, FaFacebook, FaShieldHalved } from "react-icons/fa6";
+import { FaXTwitter, FaInstagram, FaFacebook, FaWhatsapp, FaShieldHalved } from "react-icons/fa6";
 import Logo from "./Logo";
 
 export default function Footer() {
@@ -19,6 +19,7 @@ export default function Footer() {
               <FaXTwitter />
               <FaInstagram />
               <FaFacebook />
+              <a href="https://wa.me/8168236123" target="_blank" rel="noopener noreferrer"><FaWhatsapp /></a>
             </HStack>
           </VStack>
 

@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Box, Heading, Text, Input, Textarea, Button, SimpleGrid, VStack, HStack, Icon } from "@chakra-ui/react";
-import { FaEnvelope, FaPhone, FaLocationDot } from "react-icons/fa6";
+import { FaEnvelope, FaPhone, FaLocationDot, FaWhatsapp } from "react-icons/fa6";
 import Nav from "../components/nav";
 import Footer from "../components/Footer";
 import { Field } from "../components/ui/field";
@@ -33,7 +33,10 @@ export default function Contact() {
         <SimpleGrid columns={{ base: 1, md: 2 }} gap={10}>
           <VStack align="stretch" gap={5}>
             <ContactRow icon={FaEnvelope} label="Email" value="support@Powerpay.com" />
-            <ContactRow icon={FaPhone} label="Phone / WhatsApp" value="+234 816 8236 123" />
+            <ContactRow icon={FaPhone} label="Phone" value="+234 816 8236 123" />
+            <a href="https://wa.me/8168236123" target="_blank" rel="noopener noreferrer">
+              <ContactRow icon={FaWhatsapp} label="WhatsApp" value="Chat with us" />
+            </a>
             <ContactRow icon={FaLocationDot} label="Address" value="Lagos, Nigeria" />
             <Box bg="ink.950" color="white" borderRadius="l2" p={6}>
               <Heading fontSize="lg" mb={2}>Support hours</Heading>

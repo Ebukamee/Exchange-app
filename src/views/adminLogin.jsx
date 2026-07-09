@@ -33,7 +33,7 @@ export default function AdminLogin() {
         throw new Error("This account is not an administrator");
       }
       toast("success", "Welcome, admin.", "Logged in");
-      redirectToAdmin("/admin/dashboard");
+      redirectToAdmin("/dashboard");
     } catch (error) {
       const message = err(error?.message || "Unable to access the admin area right now.");
       setFormError(message);
