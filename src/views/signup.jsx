@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Box, Button, Input, Text, VStack } from "@chakra-ui/react";
 import { Link, useNavigate } from "@/src/compat/router";
+import { useSearchParams } from "next/navigation";
 import AuthShell from "../components/AuthShell";
 import { Field } from "../components/ui/field";
 import { PasswordInput } from "../components/ui/password-input";
@@ -15,6 +16,22 @@ export default function Signup() {
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState("");
   const nav = useNavigate();
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams.get("next");
+  const domain = process.env.NEXT_PUBLIC_DOMAIN || "powerpaytech.com";
+  const safeRedirectUrl = (() => {
+    if (!redirectUrl) return null;
+    try {
+      const url = new URL(redirectUrl, typeof window !== "undefined" ? window.location.origin : `https://${domain}`);
+      const dashboardHost = `dashboard.${domain}`;
+      if (url.hostname === domain || url.hostname === dashboardHost || url.pathname.startsWith("/dashboard")) {
+        return url.toString();
+      }
+    } catch (error) {
+      return null;
+    }
+    return null;
+  })();
 
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value });
 
@@ -42,7 +59,9 @@ export default function Signup() {
     try {
       await signup(form.email, form.password, form.fullname, form.referralCode);
       toast("success", "Account created. Check your email to verify.", "Welcome to Powerpay");
-      nav("/verify-email?email=" + encodeURIComponent(form.email));
+      let verifyUrl = "/verify-email?email=" + encodeURIComponent(form.email);
+      if (safeRedirectUrl) verifyUrl += "&next=" + encodeURIComponent(safeRedirectUrl);
+      nav(verifyUrl);
     } catch (error) {
       const message = err(error?.message || "Unable to create your account right now.");
       setFormError(message);

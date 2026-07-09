@@ -12,7 +12,10 @@ import { toast, err } from "../Helper";
 export default function VerifyEmail() {
   const { user, resendVerification } = useAuthStore();
   const [loading, setLoading] = useState(false);
-  const email = useSearchParams().get("email") || user?.email;
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email") || user?.email;
+  const next = searchParams.get("next");
+  const loginLink = next ? `/login?next=${encodeURIComponent(next)}` : "/login";
 
   const resend = async () => {
     if (!email) return;
@@ -35,7 +38,7 @@ export default function VerifyEmail() {
       footer={
         <Text fontSize="sm" color="ink.500" textAlign="center">
           Already verified?{" "}
-          <Link to="/login">
+          <Link to={loginLink}>
             <Text as="span" color="brand.600" fontWeight="600">
               Log in
             </Text>
