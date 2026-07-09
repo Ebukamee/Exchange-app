@@ -8,7 +8,7 @@ import { Flex, Text, Image } from "@chakra-ui/react";
 
 // Geometric "P" mark — SVG fallback used until the real artwork is added,
 // and on dark surfaces where a colour-customisable mark reads better.
-export function LogoMark({ size = 44, color = "#ed1c24" }) {
+export function LogoMark({ size = 64, color = "#ed1c24" }) {
   return (
     <svg
       width={size}
@@ -25,11 +25,11 @@ export function LogoMark({ size = 44, color = "#ed1c24" }) {
 }
 
 export default function Logo({
-  size = 44,
+  size = 64,
   color = "#ed1c24",
   showText = true,
   textColor,
-  fontSize = "2xl",
+  fontSize = "4xl",
   useImage = false, // render the real logo image (mark + wordmark) as one lockup
   imageHeight,
 }) {
@@ -55,7 +55,7 @@ export default function Logo({
       <Image
         src={src}
         alt="Powerpay"
-        h={`${imageHeight || size + 12}px`}
+        h={`${imageHeight || size + 20}px`}
         w="auto"
         objectFit="contain"
         onError={() => setImgFailed(true)}

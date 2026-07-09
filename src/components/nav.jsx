@@ -36,7 +36,7 @@ export default function Nav() {
         align="center"
       >
         <Link to="/">
-          <Logo useImage imageHeight={48} size={40} textColor="ink.900" />
+          <Logo useImage imageHeight={80} size={72} textColor="ink.900" />
         </Link>
 
         <HStack gap={8} display={{ base: "none", md: "flex" }}>
