@@ -10,7 +10,7 @@ export default function Footer() {
       <Box maxW="1200px" mx="auto" px={{ base: 5, md: 8 }} py={16}>
         <SimpleGrid columns={{ base: 1, md: 4 }} gap={10}>
           <VStack align="start" gap={4}>
-            <Logo useImage imageHeight={72} />
+            <Logo useImage imageHeight={36} />
             <Text fontSize="sm" color="ink.300" maxW="240px">
               The fast, secure way to trade crypto and gift cards for cash in
               Nigeria. Every trade verified before payout.

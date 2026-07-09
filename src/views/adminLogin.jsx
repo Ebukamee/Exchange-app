@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Box, Button, Input, Text, VStack } from "@chakra-ui/react";
 import { Link } from "@/src/compat/router";
-import { useSubdomain } from "@/lib/hooks/useSubdomain";
+import { getRedirectUrl } from "@/lib/subdomain";
 import AuthShell from "../components/AuthShell";
 import { Field } from "../components/ui/field";
 import { PasswordInput } from "../components/ui/password-input";
@@ -16,8 +16,6 @@ export default function AdminLogin() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState("");
-  const { redirectToAdmin } = useSubdomain();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (loading) return;
@@ -33,7 +31,8 @@ export default function AdminLogin() {
         throw new Error("This account is not an administrator");
       }
       toast("success", "Welcome, admin.", "Logged in");
-      redirectToAdmin("/dashboard");
+      const url = getRedirectUrl(window.location.hostname, true, "/dashboard");
+      window.location.href = url;
     } catch (error) {
       const message = err(error?.message || "Unable to access the admin area right now.");
       setFormError(message);

@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Box, Heading, Text, SimpleGrid, Flex, Image, Badge, Spinner, Tabs, HStack } from "@chakra-ui/react";
+import { Box, Heading, Text, SimpleGrid, Flex, Image, Badge, Spinner, Tabs, HStack, Input } from "@chakra-ui/react";
 import Nav from "../components/nav";
 import Footer from "../components/Footer";
 import TransactionStore from "../Store/TransactionStore";
@@ -49,15 +49,7 @@ export default function RatesPage() {
               ) : (
                 <SimpleGrid columns={{ base: 1, sm: 2, lg: 3 }} gap={5}>
                   {cryptos.filter((c) => c.enabled).map((c) => (
-                    <RateCard
-                      key={c.id}
-                      name={c.name}
-                      icon={c.icon_url}
-                      rows={[
-                        ["We buy at", naira(c.sell_price)],
-                        ["We sell at", naira(c.buy_price)],
-                      ]}
-                    />
+                    <CryptoCalcCard key={c.id} crypto={c} />
                   ))}
                 </SimpleGrid>
               )}
@@ -69,12 +61,7 @@ export default function RatesPage() {
               ) : (
                 <SimpleGrid columns={{ base: 1, sm: 2, lg: 3 }} gap={5}>
                   {giftcards.filter((g) => g.enabled).map((g) => (
-                    <RateCard
-                      key={g.id}
-                      name={g.name}
-                      icon={g.icon_url}
-                      rows={[["Rate / $", naira(g.rate)]]}
-                    />
+                    <GiftcardCalcCard key={g.id} card={g} />
                   ))}
                 </SimpleGrid>
               )}
@@ -87,25 +74,97 @@ export default function RatesPage() {
   );
 }
 
-function RateCard({ name, icon, rows }) {
+function CardIcon({ name, icon }) {
+  return icon ? (
+    <Image src={icon} boxSize="36px" borderRadius="md" objectFit="contain" />
+  ) : (
+    <Flex boxSize="36px" bg="brand.50" color="brand.500" borderRadius="md" align="center" justify="center" fontWeight="700" fontSize="sm">
+      {name?.[0]}
+    </Flex>
+  );
+}
+
+function CryptoCalcCard({ crypto }) {
+  const [usd, setUsd] = useState("");
+  const amt = Number(usd) || 0;
   return (
     <Box bg="white" border="1px solid" borderColor="ink.100" borderRadius="l2" p={6} _hover={{ borderColor: "brand.300" }}>
       <HStack mb={4} gap={3}>
-        {icon ? (
-          <Image src={icon} boxSize="40px" borderRadius="md" objectFit="contain" />
-        ) : (
-          <Flex boxSize="40px" bg="brand.50" color="brand.500" borderRadius="md" align="center" justify="center" fontWeight="700">
-            {name?.[0]}
+        <CardIcon name={crypto.name} icon={crypto.icon_url} />
+        <Box>
+          <Text fontWeight="700" color="ink.900" lineHeight="1.2">{crypto.name}</Text>
+          {crypto.symbol && <Text fontSize="xs" color="ink.400">{crypto.symbol}</Text>}
+        </Box>
+      </HStack>
+      <Flex justify="space-between" py={1.5}>
+        <Text fontSize="sm" color="ink.500">We buy at</Text>
+        <Text fontSize="sm" fontWeight="700" color="ink.900">{naira(crypto.sell_price)}<Text as="span" color="ink.400" fontWeight="400">/USD</Text></Text>
+      </Flex>
+      <Flex justify="space-between" py={1.5} mb={3}>
+        <Text fontSize="sm" color="ink.500">We sell at</Text>
+        <Text fontSize="sm" fontWeight="700" color="ink.900">{naira(crypto.buy_price)}<Text as="span" color="ink.400" fontWeight="400">/USD</Text></Text>
+      </Flex>
+      <Box bg="ink.50" borderRadius="l1" p={3}>
+        <Text fontSize="xs" color="ink.500" mb={2} fontWeight="600">Quick calculator</Text>
+        <Input
+          placeholder="Enter USD amount"
+          size="sm"
+          type="number"
+          min="0"
+          value={usd}
+          onChange={(e) => setUsd(e.target.value)}
+          bg="white"
+          mb={2}
+        />
+        {amt > 0 && (
+          <Box fontSize="sm">
+            <Flex justify="space-between" py={1}>
+              <Text color="ink.500">You sell ${usd}</Text>
+              <Text fontWeight="700" color="green.600">{naira(amt * Number(crypto.sell_price))}</Text>
+            </Flex>
+            <Flex justify="space-between" py={1}>
+              <Text color="ink.500">You buy ${usd}</Text>
+              <Text fontWeight="700" color="brand.600">{naira(amt * Number(crypto.buy_price))}</Text>
+            </Flex>
+          </Box>
+        )}
+      </Box>
+    </Box>
+  );
+}
+
+function GiftcardCalcCard({ card }) {
+  const [usd, setUsd] = useState("");
+  const amt = Number(usd) || 0;
+  return (
+    <Box bg="white" border="1px solid" borderColor="ink.100" borderRadius="l2" p={6} _hover={{ borderColor: "brand.300" }}>
+      <HStack mb={4} gap={3}>
+        <CardIcon name={card.name} icon={card.icon_url} />
+        <Text fontWeight="700" color="ink.900">{card.name}</Text>
+      </HStack>
+      <Flex justify="space-between" py={1.5} mb={3}>
+        <Text fontSize="sm" color="ink.500">Rate / $</Text>
+        <Text fontSize="sm" fontWeight="700" color="ink.900">{naira(card.rate)}</Text>
+      </Flex>
+      <Box bg="ink.50" borderRadius="l1" p={3}>
+        <Text fontSize="xs" color="ink.500" mb={2} fontWeight="600">Quick calculator</Text>
+        <Input
+          placeholder="Enter card value in USD"
+          size="sm"
+          type="number"
+          min="0"
+          value={usd}
+          onChange={(e) => setUsd(e.target.value)}
+          bg="white"
+          mb={2}
+        />
+        {amt > 0 && (
+          <Flex justify="space-between" py={1} fontSize="sm">
+            <Text color="ink.500">${usd} card</Text>
+            <Text fontWeight="700" color="green.600">{naira(amt * Number(card.rate))}</Text>
           </Flex>
         )}
-        <Text fontWeight="700" color="ink.900">{name}</Text>
-      </HStack>
-      {rows.map(([label, value]) => (
-        <Flex key={label} justify="space-between" py={1.5}>
-          <Text fontSize="sm" color="ink.500">{label}</Text>
-          <Text fontSize="sm" fontWeight="700" color="ink.900">{value}</Text>
-        </Flex>
-      ))}
+      </Box>
     </Box>
   );
 }
