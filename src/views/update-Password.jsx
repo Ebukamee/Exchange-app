@@ -25,7 +25,6 @@ export default function ForgotPassword() {
       toast("error", err(error.message), "Could not send email");
     } finally {
       setLoading(false);
-      toaster.dismiss();
     }
   };
 

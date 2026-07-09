@@ -27,7 +27,6 @@ export default function TransactionsAdmin() {
       toast("error", err(e.message), "Could not update");
     } finally {
       setBusy(false);
-      toaster.dismiss();
     }
   };
 

@@ -41,7 +41,6 @@ export default function ManageGiftcards() {
       toast("error", err(e.message), "Could not save");
     } finally {
       setBusy(false);
-      toaster.dismiss();
     }
   };
 

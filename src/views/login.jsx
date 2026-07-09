@@ -56,7 +56,6 @@ export default function Login() {
       toast("error", message, "Login failed");
     } finally {
       setLoading(false);
-      toaster.dismiss();
     }
   };
 

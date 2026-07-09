@@ -51,7 +51,6 @@ export default function Onboarding() {
       toast("error", err(error.message), "Could not save");
     } finally {
       setLoading(false);
-      toaster.dismiss();
     }
   };
 

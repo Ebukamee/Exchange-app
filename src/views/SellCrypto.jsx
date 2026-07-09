@@ -51,7 +51,6 @@ export default function SellCrypto() {
       toast("error", err(error.message), "Could not submit");
     } finally {
       setLoading(false);
-      toaster.dismiss();
     }
   };
 

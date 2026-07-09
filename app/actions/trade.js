@@ -4,6 +4,8 @@ import { randomUUID } from "crypto";
 import { q } from "@/lib/db";
 import { requireUser } from "@/lib/session";
 import { supabaseAdmin, PROOFS_BUCKET } from "@/lib/storage";
+import { sendNotice } from "@/lib/email";
+import { naira, txTypeLabel } from "@/src/Helper/format.js";
 
 // Upload proof images (sent as FormData 'files'). Returns public URLs.
 export async function uploadProofs(formData) {
@@ -39,14 +41,28 @@ export async function createTransaction(p) {
       p.status || "pending",
     ]
   );
-  return rows[0];
+  const tx = rows[0];
+  try {
+    const label = txTypeLabel(tx.type);
+    const status = tx.status === "approved" ? "approved" : "submitted and is pending review";
+    await sendNotice(
+      u.email,
+      `${label} transaction ${tx.status === "approved" ? "approved" : "received"}`,
+      `Your ${label} transaction for ${tx.asset_name} (${naira(tx.payout)}) has been ${status}. You can track its progress from your dashboard.`
+    );
+  } catch (e) {
+    console.error("transaction email failed", e.message);
+  }
+  return tx;
 }
 
 export async function buyWithBalance({ asset_name, icon_url, amount, rate, payout, wallet_address }) {
   const u = await requireUser();
-  const rows = await q('select balance from "user" where id = $1', [u.id]);
-  if (!rows[0] || Number(rows[0].balance) < Number(payout)) throw new Error("Insufficient balance");
-  await q('update "user" set balance = balance - $1 where id = $2', [payout, u.id]);
+  const rows = await q(
+    'update "user" set balance = balance - $1 where id = $2 and balance >= $1 returning balance',
+    [payout, u.id]
+  );
+  if (!rows.length) throw new Error("Insufficient balance");
   return createTransaction({
     type: "buy_crypto", asset_name, icon_url, amount, rate, payout,
     wallet_address, payment_method: "balance", status: "approved",
@@ -55,14 +71,25 @@ export async function buyWithBalance({ asset_name, icon_url, amount, rate, payou
 
 export async function requestWithdrawal({ amount, bank_name, account_name, account_number }) {
   const u = await requireUser();
-  const rows = await q('select balance from "user" where id = $1', [u.id]);
-  if (!rows[0] || Number(rows[0].balance) < Number(amount)) throw new Error("Insufficient balance");
-  await q('update "user" set balance = balance - $1 where id = $2', [amount, u.id]);
+  const rows = await q(
+    'update "user" set balance = balance - $1 where id = $2 and balance >= $1 returning balance',
+    [amount, u.id]
+  );
+  if (!rows.length) throw new Error("Insufficient balance");
   const w = await q(
     `insert into withdrawals (user_id, amount, bank_name, account_name, account_number)
      values ($1,$2,$3,$4,$5) returning *`,
     [u.id, amount, bank_name, account_name, account_number]
   );
+  try {
+    await sendNotice(
+      u.email,
+      "Withdrawal request received",
+      `Your withdrawal of ${naira(amount)} to ${bank_name} (${account_number}) has been submitted and is pending review.`
+    );
+  } catch (e) {
+    console.error("withdrawal email failed", e.message);
+  }
   return w[0];
 }
 

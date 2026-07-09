@@ -7,9 +7,9 @@ export function middleware(request) {
 
   // Never rewrite API routes — they must stay reachable at the real path
   // on every subdomain, since auth/session calls happen from all of them.
-  if (pathname.startsWith("/api")) {
-    return NextResponse.next();
-  }
+ if (pathname.startsWith("/api") || pathname.startsWith("/onboarding")) {
+  return NextResponse.next();
+}
 
   const hostparts = hostname.split(".");
   let subdomain = null;

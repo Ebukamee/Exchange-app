@@ -27,7 +27,6 @@ export default function VerifyEmail() {
       toast("error", err(error.message), "Could not resend");
     } finally {
       setLoading(false);
-      toaster.dismiss();
     }
   };
 

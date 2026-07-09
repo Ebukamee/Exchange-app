@@ -17,7 +17,11 @@ export async function adminGetTransactions() {
 
 export async function reviewTransaction(tx, status) {
   await requireAdmin();
-  await q("update transactions set status = $1 where id = $2", [status, tx.id]);
+  const updated = await q(
+    "update transactions set status = $1 where id = $2 and status = 'pending' returning id",
+    [status, tx.id]
+  );
+  if (!updated.length) throw new Error("Transaction already reviewed");
   if (status === "approved" && tx.type !== "buy_crypto") {
     await q('update "user" set balance = balance + $1 where id = $2', [tx.payout, tx.user_id]);
   }
@@ -47,7 +51,11 @@ export async function adminGetWithdrawals() {
 
 export async function reviewWithdrawal(wd, status) {
   await requireAdmin();
-  await q("update withdrawals set status = $1 where id = $2", [status, wd.id]);
+  const updated = await q(
+    "update withdrawals set status = $1 where id = $2 and status = 'pending' returning id",
+    [status, wd.id]
+  );
+  if (!updated.length) throw new Error("Withdrawal already reviewed");
   if (status === "rejected") {
     await q('update "user" set balance = balance + $1 where id = $2', [wd.amount, wd.user_id]);
   }
@@ -61,6 +69,11 @@ export async function adminGetUsers() {
             account_number, balance, is_admin, "createdAt" as created_at
      from "user" order by "createdAt" desc`
   );
+}
+
+export async function toggleAdmin(userId, makeAdmin) {
+  await requireAdmin();
+  await q('update "user" set is_admin = $1 where id = $2', [!!makeAdmin, userId]);
 }
 
 // ---------- Catalogue ----------

@@ -45,7 +45,6 @@ export default function Profile() {
       toast("error", err(error.message), "Could not save");
     } finally {
       setLoading(false);
-      toaster.dismiss();
     }
   };
 

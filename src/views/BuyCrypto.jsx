@@ -73,7 +73,6 @@ export default function BuyCrypto() {
       toast("error", err(error.message), "Could not submit");
     } finally {
       setLoading(false);
-      toaster.dismiss();
     }
   };
 

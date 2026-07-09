@@ -41,7 +41,6 @@ export default function Withdraw() {
       toast("error", err(error.message), "Could not withdraw");
     } finally {
       setLoading(false);
-      toaster.dismiss();
     }
   };
 

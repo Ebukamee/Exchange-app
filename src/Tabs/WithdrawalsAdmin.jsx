@@ -24,7 +24,6 @@ export default function WithdrawalsAdmin() {
       toast("error", err(e.message), "Could not update");
     } finally {
       setBusy(null);
-      toaster.dismiss();
     }
   };
 

@@ -35,7 +35,6 @@ export default function ResetPassword() {
       toast("error", err(error.message), "Could not update");
     } finally {
       setLoading(false);
-      toaster.dismiss();
     }
   };
 

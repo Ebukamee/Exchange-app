@@ -68,7 +68,6 @@ export default function Signup() {
       toast("error", message, "Sign up failed");
     } finally {
       setLoading(false);
-      toaster.dismiss();
     }
   };
 

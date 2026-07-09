@@ -32,7 +32,6 @@ export default function SettingsAdmin() {
       toast("error", err(er.message), "Could not save");
     } finally {
       setBusy(false);
-      toaster.dismiss();
     }
   };
 

@@ -40,7 +40,6 @@ export default function AdminLogin() {
       toast("error", message, "Access denied");
     } finally {
       setLoading(false);
-      toaster.dismiss();
     }
   };
 
@@ -62,14 +61,9 @@ export default function AdminLogin() {
           <Button type="submit" colorPalette="ink" rounded="full" size="lg" loading={loading} loadingText="Signing in..." disabled={loading}>
             Sign in
           </Button>
-          <VStack gap={1}>
-            <Text fontSize="xs" color="ink.400" textAlign="center">
-              Need a regular account? Go to the <Link to="/login"><Text as="span" color="brand.600">user login</Text></Link>.
-            </Text>
-            <Text fontSize="xs" color="ink.400" textAlign="center">
-              New admin access? <Link to="/admin/signup"><Text as="span" color="brand.600">Create an admin account</Text></Link>.
-            </Text>
-          </VStack>
+          <Text fontSize="xs" color="ink.400" textAlign="center">
+            Need a regular account? Go to the <Link to="/login"><Text as="span" color="brand.600">user login</Text></Link>.
+          </Text>
         </VStack>
       </Box>
     </AuthShell>

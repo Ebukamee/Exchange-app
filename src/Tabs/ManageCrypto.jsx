@@ -47,7 +47,6 @@ export default function ManageCrypto() {
       toast("error", err(e.message), "Could not save");
     } finally {
       setBusy(false);
-      toaster.dismiss();
     }
   };
 
