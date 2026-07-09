@@ -17,7 +17,7 @@ export default function WithdrawalsAdmin() {
   const review = async (wd, status) => {
     setBusy(wd.id);
     try {
-      await reviewWithdrawal(wd, status);
+      await reviewWithdrawal(wd.id, status);
       toast("success", `Withdrawal ${status}.`, "Done");
       await getAllWithdrawals();
     } catch (e) {

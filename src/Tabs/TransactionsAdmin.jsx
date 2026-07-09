@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Box, Heading, Text, Flex, HStack, VStack, Badge, Button, Image, Spinner, SimpleGrid, Tabs } from "@chakra-ui/react";
+import { Box, Heading, Text, Flex, HStack, VStack, Badge, Button, Spinner, SimpleGrid, Tabs } from "@chakra-ui/react";
 import { DialogRoot, DialogContent, DialogHeader, DialogBody, DialogFooter, DialogTitle, DialogCloseTrigger } from "../components/ui/dialog";
 import TransactionStore from "../Store/TransactionStore";
 import { toaster } from "../components/ui/toaster";
@@ -19,7 +19,7 @@ export default function TransactionsAdmin() {
   const review = async (tx, status) => {
     setBusy(true);
     try {
-      await reviewTransaction(tx, status);
+      await reviewTransaction(tx.id, status);
       toast("success", `Transaction ${status}.`, "Done");
       setActive(null);
       await getAllTransactions();
@@ -87,7 +87,7 @@ export default function TransactionsAdmin() {
                     <Flex gap={3} wrap="wrap">
                       {active.images.map((url, i) => (
                         <a key={i} href={url} target="_blank" rel="noreferrer">
-                          <Image src={url} boxSize="120px" objectFit="cover" borderRadius="l1" border="1px solid" borderColor="ink.100" />
+                          <img src={url} alt="Proof" style={{ width: "120px", height: "120px", objectFit: "cover", borderRadius: "8px", border: "1px solid #e5e5e5" }} />
                         </a>
                       ))}
                     </Flex>

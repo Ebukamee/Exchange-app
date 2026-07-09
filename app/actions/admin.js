@@ -15,15 +15,16 @@ export async function adminGetTransactions() {
   );
 }
 
-export async function reviewTransaction(tx, status) {
+export async function reviewTransaction(txId, status) {
   await requireAdmin();
   const updated = await q(
-    "update transactions set status = $1::trade_status where id = $2 and status = 'pending'::trade_status returning id",
-    [status, tx.id]
+    "update transactions set status = $1::trade_status where id = $2 and status = 'pending'::trade_status returning *",
+    [status, txId]
   );
   if (!updated.length) throw new Error("Transaction already reviewed");
+  const tx = updated[0];
   if (status === "confirmed" && tx.type !== "buy_crypto") {
-    await q('update "user" set balance = balance + $1 where id = $2', [tx.payout, tx.user_id]);
+    await q('update "user" set balance = balance + $1 where id = $2', [Number(tx.payout), tx.user_id]);
   }
   const rows = await q('select email from "user" where id = $1', [tx.user_id]);
   if (rows[0]?.email) {
@@ -49,15 +50,16 @@ export async function adminGetWithdrawals() {
   );
 }
 
-export async function reviewWithdrawal(wd, status) {
+export async function reviewWithdrawal(wdId, status) {
   await requireAdmin();
   const updated = await q(
-    "update withdrawals set status = $1::trade_status where id = $2 and status = 'pending'::trade_status returning id",
-    [status, wd.id]
+    "update withdrawals set status = $1::trade_status where id = $2 and status = 'pending'::trade_status returning *",
+    [status, wdId]
   );
   if (!updated.length) throw new Error("Withdrawal already reviewed");
+  const wd = updated[0];
   if (status === "rejected") {
-    await q('update "user" set balance = balance + $1 where id = $2', [wd.amount, wd.user_id]);
+    await q('update "user" set balance = balance + $1 where id = $2', [Number(wd.amount), wd.user_id]);
   }
 }
 

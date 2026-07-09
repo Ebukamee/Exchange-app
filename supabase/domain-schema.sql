@@ -23,6 +23,7 @@ end $$;
 alter table if exists "user" add column if not exists referral_code text;
 alter table if exists "user" add column if not exists referral_code_used text;
 alter table if exists "user" add column if not exists referred_by text;
+alter table if exists "user" add column if not exists balance numeric(14,2) not null default 0;
 create unique index if not exists user_referral_code_idx on "user"(referral_code);
 
 -- ---------- CRYPTOCURRENCIES ----------
