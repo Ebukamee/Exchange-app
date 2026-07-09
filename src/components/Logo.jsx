@@ -1,9 +1,9 @@
 "use client";
-import { useState } from "react";
-import { Flex, Text, Image } from "@chakra-ui/react";
+import { useState, useEffect } from "react";
+import { Flex, Text } from "@chakra-ui/react";
 
-// Geometric "P" mark — SVG fallback used until the real artwork is added,
-// and on dark surfaces where a colour-customisable mark reads better.
+// Geometric "P" mark — SVG fallback used on dark surfaces where a
+// colour-customisable mark reads better, or when the image fails to load.
 export function LogoMark({ size = 32, color = "#ed1c24" }) {
   return (
     <svg
@@ -20,18 +20,6 @@ export function LogoMark({ size = 32, color = "#ed1c24" }) {
   );
 }
 
-function getLogoSrc() {
-  if (typeof window === "undefined") {
-    return `https://${process.env.NEXT_PUBLIC_DOMAIN || "powerpaytech.com"}/powerpay-logo.png`;
-  }
-  const hostname = window.location.hostname || "";
-  const domain = process.env.NEXT_PUBLIC_DOMAIN || "powerpaytech.com";
-  if (hostname.startsWith("admin.") || hostname.startsWith("dashboard.")) {
-    return `https://${domain}/powerpay-logo.png`;
-  }
-  return `${window.location.origin}/powerpay-logo.png`;
-}
-
 export default function Logo({
   size = 32,
   color = "#ed1c24",
@@ -41,40 +29,52 @@ export default function Logo({
   useImage = false,
   imageHeight,
 }) {
+  // Resolve the logo src on the client only (avoids SSR/hydration mismatch).
+  const [src, setSrc] = useState(null);
   const [imgFailed, setImgFailed] = useState(false);
-  const showImage = useImage && !imgFailed;
 
-  // Always render the same component tree to avoid conditional hook violations
-  // in Chakra's internal components (Image vs Flex use different hooks).
+  useEffect(() => {
+    if (!useImage) return;
+    const domain = process.env.NEXT_PUBLIC_DOMAIN || "powerpaytech.com";
+    const hostname = window.location.hostname || "";
+    if (hostname.startsWith("admin.") || hostname.startsWith("dashboard.")) {
+      setSrc(`https://${domain}/powerpay-logo.png`);
+    } else {
+      setSrc(`${window.location.origin}/powerpay-logo.png`);
+    }
+  }, [useImage]);
+
+  const showImage = useImage && src && !imgFailed;
+  const h = imageHeight || size + 20;
+
+  // Use a plain <img> to avoid Chakra Image's internal hooks which cause
+  // React error #310 when conditionally mounted/unmounted.
+  if (showImage) {
+    return (
+      <img
+        src={src}
+        alt="Powerpay"
+        style={{ height: `${h}px`, width: "auto", objectFit: "contain" }}
+        onError={() => setImgFailed(true)}
+      />
+    );
+  }
+
   return (
-    <>
-      {showImage && (
-        <Image
-          src={getLogoSrc()}
-          alt="Powerpay"
-          h={`${imageHeight || size + 20}px`}
-          w="auto"
-          objectFit="contain"
-          onError={() => setImgFailed(true)}
-        />
+    <Flex align="center" gap={2}>
+      <LogoMark size={size} color={color} />
+      {showText && (
+        <Text
+          as="span"
+          fontFamily="heading"
+          fontWeight="800"
+          letterSpacing="0.12em"
+          fontSize={fontSize}
+          color={textColor || color}
+        >
+          POWERPAY
+        </Text>
       )}
-      {!showImage && (
-        <Flex align="center" gap={2}>
-          <LogoMark size={size} color={color} />
-          {showText && (
-            <Text
-              as="span"
-              fontFamily="heading"
-              fontWeight="800"
-              letterSpacing="0.12em"
-              fontSize={fontSize}
-              color={textColor || color}
-            >
-              POWERPAY
-            </Text>
-          )}
-        </Flex>
-      )}
-    </>
+    </Flex>
   );
 }
