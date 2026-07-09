@@ -30,7 +30,7 @@ export default function AuthShell({ title, subtitle, children, footer }) {
           <CoinCluster tokens={["btc", "eth", "usdt"]} />
         </Box>
         <Link to="/" style={{ position: "relative", zIndex: 1 }}>
-          <Logo useImage imageHeight={34} />
+          <Logo useImage imageHeight={46} />
         </Link>
         <VStack align="start" gap={6} zIndex={1}>
           <Heading fontFamily="heading" fontSize="4xl" lineHeight="1.1">
@@ -55,7 +55,7 @@ export default function AuthShell({ title, subtitle, children, footer }) {
         <Box w="100%" maxW="420px">
           <Box display={{ base: "block", lg: "none" }} mb={8}>
             <Link to="/">
-              <Logo useImage imageHeight={32} />
+              <Logo useImage imageHeight={44} />
             </Link>
           </Box>
           <Heading fontFamily="heading" fontSize="3xl" color="ink.900" mb={2}>

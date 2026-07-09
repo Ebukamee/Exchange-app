@@ -71,7 +71,7 @@ export default function Onboarding() {
     <Box minH="100vh" bg="ink.50" py={{ base: 8, md: 16 }} px={5}>
       <Box maxW="560px" mx="auto">
         <Flex justify="center" mb={8}>
-          <Logo useImage imageHeight={34} />
+          <Logo useImage imageHeight={46} />
         </Flex>
         <Box bg="white" border="1px solid" borderColor="ink.100" borderRadius="l3" p={{ base: 6, md: 10 }}>
           <Heading fontFamily="heading" fontSize="2xl" color="ink.900" mb={1}>

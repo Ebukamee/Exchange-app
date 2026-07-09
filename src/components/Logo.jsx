@@ -2,14 +2,13 @@
 import { useState } from "react";
 import { Flex, Text, Image } from "@chakra-ui/react";
 
-// Path to the real Powerpay logo. Drop the exact artwork here:
-//   public/powerpay-logo.png   (transparent PNG or SVG recommended)
-// It is served from the site root as /powerpay-logo.png
-const LOGO_SRC = "/powerpay-logo.png";
+// The logo asset is hosted at the site root. On admin/dashboard subdomains
+// some environments may not serve the public assets from the subdomain, so
+// we compute a safe absolute host when necessary.
 
 // Geometric "P" mark — SVG fallback used until the real artwork is added,
 // and on dark surfaces where a colour-customisable mark reads better.
-export function LogoMark({ size = 34, color = "#ed1c24" }) {
+export function LogoMark({ size = 44, color = "#ed1c24" }) {
   return (
     <svg
       width={size}
@@ -26,23 +25,37 @@ export function LogoMark({ size = 34, color = "#ed1c24" }) {
 }
 
 export default function Logo({
-  size = 34,
+  size = 44,
   color = "#ed1c24",
   showText = true,
   textColor,
-  fontSize = "xl",
+  fontSize = "2xl",
   useImage = false, // render the real logo image (mark + wordmark) as one lockup
   imageHeight,
 }) {
   const [imgFailed, setImgFailed] = useState(false);
 
-  // Preferred: the exact uploaded artwork.
+  // Preferred: the exact uploaded artwork. Use the main site host for admin
+  // and dashboard subdomains to ensure the asset is reachable.
   if (useImage && !imgFailed) {
+    let src = "/powerpay-logo.png";
+    if (typeof window !== "undefined") {
+      const hostname = window.location.hostname || "";
+      const domain = process.env.NEXT_PUBLIC_DOMAIN || "powerpaytech.com";
+      if (hostname.startsWith("admin.") || hostname.startsWith("dashboard.")) {
+        src = `https://${domain}/powerpay-logo.png`;
+      } else {
+        src = `${window.location.origin}/powerpay-logo.png`;
+      }
+    } else {
+      src = `https://${process.env.NEXT_PUBLIC_DOMAIN || "powerpaytech.com"}/powerpay-logo.png`;
+    }
+
     return (
       <Image
-        src={LOGO_SRC}
+        src={src}
         alt="Powerpay"
-        h={`${imageHeight || size + 8}px`}
+        h={`${imageHeight || size + 12}px`}
         w="auto"
         objectFit="contain"
         onError={() => setImgFailed(true)}

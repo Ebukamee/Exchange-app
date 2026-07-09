@@ -51,7 +51,7 @@ export default function DashboardLayout({ children }) {
         p={6}
       >
         <Box mb={10}>
-          <Logo useImage imageHeight={30} />
+          <Logo useImage imageHeight={44} />
         </Box>
         <VStack align="stretch" gap={1} flex="1">
           {nav.map((item) => (
@@ -94,7 +94,7 @@ export default function DashboardLayout({ children }) {
           zIndex="10"
         >
           <Box display={{ base: "block", md: "none" }}>
-            <Logo useImage imageHeight={26} />
+            <Logo useImage imageHeight={38} />
           </Box>
           <Text display={{ base: "none", md: "block" }} fontWeight="700" color="ink.900" fontFamily="heading">
             {nav.find((n) => (n.end ? location.pathname === n.to : location.pathname.startsWith(n.to)))?.label || "Dashboard"}
