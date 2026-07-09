@@ -136,18 +136,35 @@ function CryptoCalcCard({ crypto }) {
 }
 
 function GiftcardCalcCard({ card }) {
+  const subs = Array.isArray(card.subcategories) ? card.subcategories : [];
+  const [selectedSub, setSelectedSub] = useState(subs[0] || null);
   const [usd, setUsd] = useState("");
   const amt = Number(usd) || 0;
+  const rate = selectedSub ? Number(selectedSub.rate) : 0;
   return (
     <Box bg="white" border="1px solid" borderColor="ink.100" borderRadius="l2" p={6} _hover={{ borderColor: "brand.300" }}>
       <HStack mb={4} gap={3}>
         <CardIcon name={card.name} icon={card.icon_url} />
         <Text fontWeight="700" color="ink.900">{card.name}</Text>
       </HStack>
-      <Flex justify="space-between" py={1.5} mb={3}>
-        <Text fontSize="sm" color="ink.500">Rate / $</Text>
-        <Text fontSize="sm" fontWeight="700" color="ink.900">{naira(card.rate)}</Text>
-      </Flex>
+      {subs.length > 0 && (
+        <Flex gap={2} wrap="wrap" mb={3}>
+          {subs.map((s, i) => (
+            <Box key={i} as="button" type="button" onClick={() => setSelectedSub(s)}
+              px={3} py={1.5} borderRadius="full" fontSize="xs" fontWeight="600"
+              bg={selectedSub?.name === s.name ? "brand.500" : "ink.100"}
+              color={selectedSub?.name === s.name ? "white" : "ink.700"}>
+              {s.name}
+            </Box>
+          ))}
+        </Flex>
+      )}
+      {selectedSub && (
+        <Flex justify="space-between" py={1.5} mb={3}>
+          <Text fontSize="sm" color="ink.500">Rate ({selectedSub.name})</Text>
+          <Text fontSize="sm" fontWeight="700" color="ink.900">{naira(rate)}/$</Text>
+        </Flex>
+      )}
       <Box bg="ink.50" borderRadius="l1" p={3}>
         <Text fontSize="xs" color="ink.500" mb={2} fontWeight="600">Quick calculator</Text>
         <Input
@@ -160,10 +177,10 @@ function GiftcardCalcCard({ card }) {
           bg="white"
           mb={2}
         />
-        {amt > 0 && (
+        {amt > 0 && selectedSub && (
           <Flex justify="space-between" py={1} fontSize="sm">
             <Text color="ink.500">${usd} card</Text>
-            <Text fontWeight="700" color="green.600">{naira(amt * Number(card.rate))}</Text>
+            <Text fontWeight="700" color="green.600">{naira(amt * rate)}</Text>
           </Flex>
         )}
       </Box>

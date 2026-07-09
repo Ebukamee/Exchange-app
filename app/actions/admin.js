@@ -22,7 +22,7 @@ export async function reviewTransaction(tx, status) {
     [status, tx.id]
   );
   if (!updated.length) throw new Error("Transaction already reviewed");
-  if (status === "approved" && tx.type !== "buy_crypto") {
+  if (status === "confirmed" && tx.type !== "buy_crypto") {
     await q('update "user" set balance = balance + $1 where id = $2', [tx.payout, tx.user_id]);
   }
   const rows = await q('select email from "user" where id = $1', [tx.user_id]);
@@ -105,7 +105,8 @@ export async function deleteCrypto(id) {
 
 export async function saveGiftcard(payload) {
   await requireAdmin();
-  const { text, vals } = buildUpsert("giftcards", payload, ["name", "icon_url", "rate", "enabled"]);
+  if (payload.subcategories) payload.subcategories = JSON.stringify(payload.subcategories);
+  const { text, vals } = buildUpsert("giftcards", payload, ["name", "icon_url", "subcategories", "enabled"]);
   await q(text, vals);
 }
 

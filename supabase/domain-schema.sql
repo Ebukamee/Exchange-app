@@ -35,12 +35,12 @@ alter table public.cryptocurrencies enable row level security;
 
 -- ---------- GIFT CARDS ----------
 create table if not exists public.giftcards (
-  id          uuid primary key default gen_random_uuid(),
-  name        text not null,
-  icon_url    text,
-  rate        numeric(14,2) not null default 0,
-  enabled     boolean not null default true,
-  created_at  timestamptz not null default now()
+  id              uuid primary key default gen_random_uuid(),
+  name            text not null,
+  icon_url        text,
+  subcategories   jsonb not null default '[]'::jsonb,   -- [{name, rate}, ...]
+  enabled         boolean not null default true,
+  created_at      timestamptz not null default now()
 );
 alter table public.giftcards enable row level security;
 
@@ -60,7 +60,7 @@ create table if not exists public.transactions (
   wallet_address text,
   description    text,
   images         jsonb not null default '[]'::jsonb,
-  status         text not null default 'pending' check (status in ('pending','approved','rejected')),
+  status         text not null default 'pending' check (status in ('pending','confirmed','rejected')),
   created_at     timestamptz not null default now()
 );
 alter table public.transactions enable row level security;
@@ -74,7 +74,7 @@ create table if not exists public.withdrawals (
   bank_name      text,
   account_name   text,
   account_number text,
-  status         text not null default 'pending' check (status in ('pending','approved','rejected')),
+  status         text not null default 'pending' check (status in ('pending','confirmed','rejected')),
   created_at     timestamptz not null default now()
 );
 alter table public.withdrawals enable row level security;

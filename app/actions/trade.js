@@ -44,10 +44,10 @@ export async function createTransaction(p) {
   const tx = rows[0];
   try {
     const label = txTypeLabel(tx.type);
-    const status = tx.status === "approved" ? "approved" : "submitted and is pending review";
+    const status = tx.status === "confirmed" ? "confirmed" : "submitted and is pending review";
     await sendNotice(
       u.email,
-      `${label} transaction ${tx.status === "approved" ? "approved" : "received"}`,
+      `${label} transaction ${tx.status === "confirmed" ? "confirmed" : "received"}`,
       `Your ${label} transaction for ${tx.asset_name} (${naira(tx.payout)}) has been ${status}. You can track its progress from your dashboard.`
     );
   } catch (e) {
@@ -65,7 +65,7 @@ export async function buyWithBalance({ asset_name, icon_url, amount, rate, payou
   if (!rows.length) throw new Error("Insufficient balance");
   return createTransaction({
     type: "buy_crypto", asset_name, icon_url, amount, rate, payout,
-    wallet_address, payment_method: "balance", status: "approved",
+    wallet_address, payment_method: "balance", status: "confirmed",
   });
 }
 

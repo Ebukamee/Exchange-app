@@ -2,9 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   eslint: { ignoreDuringBuilds: true },
-  experimental: {
-    optimizePackageImports: ["@chakra-ui/react"],
-  },
+  experimental: {},
   // Support for multi-subdomain routing
   async headers() {
     return [

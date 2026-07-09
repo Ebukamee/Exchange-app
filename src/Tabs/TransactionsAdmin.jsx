@@ -43,10 +43,10 @@ export default function TransactionsAdmin() {
         <Tabs.Root defaultValue="pending" variant="enclosed">
           <Tabs.List mb={5}>
             <Tabs.Trigger value="pending">Pending ({filterBy("pending").length})</Tabs.Trigger>
-            <Tabs.Trigger value="approved">Approved</Tabs.Trigger>
+            <Tabs.Trigger value="confirmed">Confirmed</Tabs.Trigger>
             <Tabs.Trigger value="rejected">Rejected</Tabs.Trigger>
           </Tabs.List>
-          {["pending", "approved", "rejected"].map((s) => (
+          {["pending", "confirmed", "rejected"].map((s) => (
             <Tabs.Content key={s} value={s}>
               {filterBy(s).length === 0 ? (
                 <Text color="ink.400" py={10} textAlign="center">Nothing here.</Text>
@@ -63,13 +63,13 @@ export default function TransactionsAdmin() {
       )}
 
       <DialogRoot open={!!active} onOpenChange={(e) => !e.open && setActive(null)} size="lg">
-        {active && (
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>{txTypeLabel(active.type)} • {active.asset_name}</DialogTitle>
-              <DialogCloseTrigger />
-            </DialogHeader>
-            <DialogBody>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{active ? `${txTypeLabel(active.type)} \u2022 ${active.asset_name}` : "\u00A0"}</DialogTitle>
+            <DialogCloseTrigger />
+          </DialogHeader>
+          <DialogBody>
+            {active && (
               <VStack align="stretch" gap={3}>
                 <Row label="User" value={active.full_name || active.email || active.user_id} />
                 <Row label="Amount / Qty" value={String(active.amount)} />
@@ -94,15 +94,15 @@ export default function TransactionsAdmin() {
                   </Box>
                 )}
               </VStack>
-            </DialogBody>
-            {active.status === "pending" && (
-              <DialogFooter>
-                <Button variant="outline" colorPalette="red" onClick={() => review(active, "rejected")} loading={busy}>Reject</Button>
-                <Button colorPalette="green" onClick={() => review(active, "approved")} loading={busy}>Approve &amp; pay</Button>
-              </DialogFooter>
             )}
-          </DialogContent>
-        )}
+          </DialogBody>
+          {active?.status === "pending" && (
+            <DialogFooter>
+              <Button variant="outline" colorPalette="red" onClick={() => review(active, "rejected")} loading={busy}>Reject</Button>
+              <Button colorPalette="green" onClick={() => review(active, "confirmed")} loading={busy}>Confirm &amp; pay</Button>
+            </DialogFooter>
+          )}
+        </DialogContent>
       </DialogRoot>
     </Box>
   );

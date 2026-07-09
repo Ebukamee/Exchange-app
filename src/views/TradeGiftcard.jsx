@@ -9,15 +9,14 @@ import FileUpload from "../components/FileUpload";
 import { Field } from "../components/ui/field";
 import { TradeCard } from "./SellCrypto";
 import TransactionStore from "../Store/TransactionStore";
-import { toaster } from "../components/ui/toaster";
 import { toast, err, naira } from "../Helper";
 
 export default function SellGiftcard() {
   const { giftcards, fetchGiftcards, uploadImages, createTransaction } = TransactionStore();
   const [booting, setBooting] = useState(true);
   const [selected, setSelected] = useState(null);
+  const [selectedSub, setSelectedSub] = useState(null);
   const [amount, setAmount] = useState("");
-  const [subCategory, setSubCategory] = useState("");
   const [country, setCountry] = useState("");
   const [description, setDescription] = useState("");
   const [images, setImages] = useState([]);
@@ -29,8 +28,15 @@ export default function SellGiftcard() {
   }, [fetchGiftcards]);
 
   const list = giftcards.filter((g) => g.enabled);
-  const payout = selected ? Number(amount || 0) * Number(selected.rate) : 0;
-  const valid = selected && Number(amount) > 0 && images.length > 0;
+  const subs = selected ? (Array.isArray(selected.subcategories) ? selected.subcategories : []) : [];
+  const rate = selectedSub ? Number(selectedSub.rate) : 0;
+  const payout = rate * Number(amount || 0);
+  const valid = selected && selectedSub && Number(amount) > 0 && images.length > 0;
+
+  const selectCard = (g) => {
+    setSelected(g);
+    setSelectedSub(null);
+  };
 
   const submit = async () => {
     setLoading(true);
@@ -41,9 +47,9 @@ export default function SellGiftcard() {
         asset_name: selected.name,
         icon_url: selected.icon_url,
         amount: Number(amount),
-        rate: Number(selected.rate),
+        rate,
         payout,
-        sub_category: subCategory,
+        sub_category: selectedSub.name,
         country,
         description,
         images: urls,
@@ -71,20 +77,36 @@ export default function SellGiftcard() {
                 {list.map((g) => {
                   const active = selected?.id === g.id;
                   return (
-                    <Box key={g.id} as="button" type="button" onClick={() => setSelected(g)}
+                    <Box key={g.id} as="button" type="button" onClick={() => selectCard(g)}
                       border="2px solid" borderColor={active ? "brand.500" : "ink.100"} bg={active ? "brand.50" : "white"} borderRadius="l2" p={4}>
                       <HStack gap={2}>
                         {g.icon_url ? <Image src={g.icon_url} boxSize="26px" objectFit="contain" /> : null}
                         <Text fontWeight="600" fontSize="sm">{g.name}</Text>
                       </HStack>
-                      <Text fontSize="xs" color="ink.500" mt={1}>{naira(g.rate)}/$</Text>
                     </Box>
                   );
                 })}
               </SimpleGrid>
             </Field>
 
-            {selected && (
+            {selected && subs.length > 0 && (
+              <Field label="Select subcategory">
+                <SimpleGrid columns={{ base: 2, md: 3 }} gap={3}>
+                  {subs.map((s, i) => {
+                    const active = selectedSub?.name === s.name;
+                    return (
+                      <Box key={i} as="button" type="button" onClick={() => setSelectedSub(s)}
+                        border="2px solid" borderColor={active ? "brand.500" : "ink.100"} bg={active ? "brand.50" : "white"} borderRadius="l2" p={3} textAlign="left">
+                        <Text fontWeight="600" fontSize="sm" color="ink.900">{s.name}</Text>
+                        <Text fontSize="xs" color="ink.500">{naira(s.rate)}/$</Text>
+                      </Box>
+                    );
+                  })}
+                </SimpleGrid>
+              </Field>
+            )}
+
+            {selected && selectedSub && (
               <>
                 <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
                   <Field label="Card value ($)">
@@ -95,11 +117,11 @@ export default function SellGiftcard() {
                   </Field>
                 </SimpleGrid>
 
-                <Field label="Card type (optional)" helperText="e.g. Physical, E-code, Cash Receipt">
-                  <Input placeholder="e.g. E-code" value={subCategory} onChange={(e) => setSubCategory(e.target.value)} />
-                </Field>
-
                 <Box bg="ink.50" borderRadius="l2" p={4}>
+                  <Flex justify="space-between" mb={1}>
+                    <Text color="ink.500" fontSize="sm">Rate ({selectedSub.name})</Text>
+                    <Text fontWeight="600" color="ink.700" fontSize="sm">{naira(rate)}/$</Text>
+                  </Flex>
                   <Flex justify="space-between">
                     <Text color="ink.500" fontSize="sm">You'll receive</Text>
                     <Text fontWeight="800" color="brand.600">{naira(payout)}</Text>
@@ -125,4 +147,3 @@ export default function SellGiftcard() {
     </DashboardLayout>
   );
 }
-

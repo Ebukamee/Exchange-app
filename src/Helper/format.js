@@ -6,7 +6,7 @@ export const cut = (s) => {
 };
 
 export const naira = (n) =>
-  "₦" + Number(n || 0).toLocaleString("en-NG", { maximumFractionDigits: 2 });
+  "₦" + Number(n || 0).toLocaleString("en-NG", { maximumFractionDigits: 7 });
 
 export const formatDate = (value) => {
   const date = new Date(value);
@@ -17,8 +17,8 @@ export const formatDate = (value) => {
 
 export const statusMeta = (status) => {
   switch (status) {
-    case "approved":
-      return { label: "Approved", palette: "green" };
+    case "confirmed":
+      return { label: "Confirmed", palette: "green" };
     case "rejected":
       return { label: "Rejected", palette: "red" };
     default:
