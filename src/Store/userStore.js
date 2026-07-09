@@ -32,6 +32,7 @@ const useAuthStore = create((set, get) => ({
     const payload = {
       email,
       password,
+      name,
       full_name: name,
       referral_code,
     };
