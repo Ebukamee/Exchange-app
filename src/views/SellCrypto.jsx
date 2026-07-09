@@ -17,6 +17,7 @@ export default function SellCrypto() {
   const [booting, setBooting] = useState(true);
   const [selected, setSelected] = useState(null);
   const [amount, setAmount] = useState("");
+  const [mode, setMode] = useState("unit"); // "unit" or "naira"
   const [description, setDescription] = useState("");
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -27,8 +28,11 @@ export default function SellCrypto() {
   }, [fetchCryptos]);
 
   const list = cryptos.filter((c) => c.enabled);
-  const payout = selected ? Number(amount || 0) * Number(selected.sell_price) : 0;
-  const valid = selected && Number(amount) > 0 && images.length > 0;
+  const raw = Number(amount || 0);
+  const rate = selected ? Number(selected.sell_price) : 0;
+  const unitQty = mode === "unit" ? raw : rate ? raw / rate : 0;
+  const payout = mode === "unit" ? raw * rate : raw;
+  const valid = selected && unitQty > 0 && images.length > 0;
 
   const submit = async () => {
     setLoading(true);
@@ -38,8 +42,8 @@ export default function SellCrypto() {
         type: "sell_crypto",
         asset_name: selected.name,
         icon_url: selected.icon_url,
-        amount: Number(amount),
-        rate: Number(selected.sell_price),
+        amount: unitQty,
+        rate,
         payout,
         wallet_address: selected.deposit_address,
         description,
@@ -92,15 +96,32 @@ export default function SellCrypto() {
 
             {selected && (
               <>
-                <Field label={`Amount of ${selected.name} to sell`}>
-                  <Input type="number" min="0" step="any" placeholder="0.00" value={amount} onChange={(e) => setAmount(e.target.value)} />
+                <Field label={mode === "unit" ? `Amount of ${selected.symbol || selected.name} to sell` : "Amount in Naira"}>
+                  <Input type="number" min="0" step="any" placeholder={mode === "unit" ? "0.00" : "0"} value={amount} onChange={(e) => setAmount(e.target.value)} />
                 </Field>
+                <Text as="button" type="button" fontSize="xs" color="brand.600" fontWeight="600" mt={-4} onClick={() => { setAmount(""); setMode(mode === "unit" ? "naira" : "unit"); }}>
+                  Switch to {mode === "unit" ? "Naira (₦)" : selected.symbol || selected.name}
+                </Text>
 
                 <Box bg="ink.50" borderRadius="l2" p={4}>
-                  <Flex justify="space-between">
-                    <Text color="ink.500" fontSize="sm">You'll receive</Text>
-                    <Text fontWeight="800" color="brand.600">{naira(payout)}</Text>
-                  </Flex>
+                  <VStack align="stretch" gap={1}>
+                    {mode === "naira" && raw > 0 && (
+                      <Flex justify="space-between">
+                        <Text color="ink.500" fontSize="sm">You're selling</Text>
+                        <Text fontWeight="700" color="ink.900" fontSize="sm">{unitQty.toLocaleString("en", { maximumFractionDigits: 7 })} {selected.symbol || selected.name}</Text>
+                      </Flex>
+                    )}
+                    {mode === "unit" && raw > 0 && (
+                      <Flex justify="space-between">
+                        <Text color="ink.500" fontSize="sm">You're selling</Text>
+                        <Text fontWeight="700" color="ink.900" fontSize="sm">{raw} {selected.symbol || selected.name}</Text>
+                      </Flex>
+                    )}
+                    <Flex justify="space-between">
+                      <Text color="ink.500" fontSize="sm">You'll receive</Text>
+                      <Text fontWeight="800" color="brand.600">{naira(payout)}</Text>
+                    </Flex>
+                  </VStack>
                 </Box>
 
                 {selected.deposit_address && (

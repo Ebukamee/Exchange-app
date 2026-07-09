@@ -40,10 +40,10 @@ export default function WithdrawalsAdmin() {
         <Tabs.Root defaultValue="pending" variant="enclosed">
           <Tabs.List mb={5}>
             <Tabs.Trigger value="pending">Pending ({filterBy("pending").length})</Tabs.Trigger>
-            <Tabs.Trigger value="approved">Approved</Tabs.Trigger>
+            <Tabs.Trigger value="confirmed">Confirmed</Tabs.Trigger>
             <Tabs.Trigger value="rejected">Rejected</Tabs.Trigger>
           </Tabs.List>
-          {["pending", "approved", "rejected"].map((s) => (
+          {["pending", "confirmed", "rejected"].map((s) => (
             <Tabs.Content key={s} value={s}>
               {filterBy(s).length === 0 ? (
                 <Text color="ink.400" py={10} textAlign="center">Nothing here.</Text>
@@ -66,7 +66,7 @@ export default function WithdrawalsAdmin() {
                         {wd.status === "pending" && (
                           <HStack mt={3}>
                             <Button size="sm" variant="outline" colorPalette="red" onClick={() => review(wd, "rejected")} loading={busy === wd.id}>Reject</Button>
-                            <Button size="sm" colorPalette="green" onClick={() => review(wd, "approved")} loading={busy === wd.id}>Mark paid</Button>
+                            <Button size="sm" colorPalette="green" onClick={() => review(wd, "confirmed")} loading={busy === wd.id}>Mark paid</Button>
                           </HStack>
                         )}
                       </Box>

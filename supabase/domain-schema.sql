@@ -13,6 +13,12 @@
 
 create extension if not exists "pgcrypto";
 
+-- Status enum shared by transactions & withdrawals
+do $$ begin
+  create type public.trade_status as enum ('pending','confirmed','rejected');
+exception when duplicate_object then null;
+end $$;
+
 -- Add referral tracking to Better Auth user table.
 alter table if exists "user" add column if not exists referral_code text;
 alter table if exists "user" add column if not exists referral_code_used text;
@@ -60,7 +66,7 @@ create table if not exists public.transactions (
   wallet_address text,
   description    text,
   images         jsonb not null default '[]'::jsonb,
-  status         text not null default 'pending' check (status in ('pending','confirmed','rejected')),
+  status         public.trade_status not null default 'pending',
   created_at     timestamptz not null default now()
 );
 alter table public.transactions enable row level security;
@@ -74,7 +80,7 @@ create table if not exists public.withdrawals (
   bank_name      text,
   account_name   text,
   account_number text,
-  status         text not null default 'pending' check (status in ('pending','confirmed','rejected')),
+  status         public.trade_status not null default 'pending',
   created_at     timestamptz not null default now()
 );
 alter table public.withdrawals enable row level security;

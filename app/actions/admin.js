@@ -18,7 +18,7 @@ export async function adminGetTransactions() {
 export async function reviewTransaction(tx, status) {
   await requireAdmin();
   const updated = await q(
-    "update transactions set status = $1 where id = $2 and status = 'pending' returning id",
+    "update transactions set status = $1::trade_status where id = $2 and status = 'pending'::trade_status returning id",
     [status, tx.id]
   );
   if (!updated.length) throw new Error("Transaction already reviewed");
@@ -52,7 +52,7 @@ export async function adminGetWithdrawals() {
 export async function reviewWithdrawal(wd, status) {
   await requireAdmin();
   const updated = await q(
-    "update withdrawals set status = $1 where id = $2 and status = 'pending' returning id",
+    "update withdrawals set status = $1::trade_status where id = $2 and status = 'pending'::trade_status returning id",
     [status, wd.id]
   );
   if (!updated.length) throw new Error("Withdrawal already reviewed");

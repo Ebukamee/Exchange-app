@@ -32,13 +32,13 @@ export async function createTransaction(p) {
   const rows = await q(
     `insert into transactions
       (user_id, type, asset_name, icon_url, sub_category, country, amount, rate, payout, payment_method, wallet_address, description, images, status)
-     values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14)
+     values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14::trade_status)
      returning *`,
     [
       u.id, p.type, p.asset_name, p.icon_url, p.sub_category || null, p.country || null,
       p.amount || 0, p.rate || 0, p.payout || 0, p.payment_method || null,
       p.wallet_address || null, p.description || null, JSON.stringify(p.images || []),
-      p.status || "pending",
+      (p.status || "pending"),
     ]
   );
   const tx = rows[0];

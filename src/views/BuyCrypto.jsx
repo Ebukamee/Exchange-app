@@ -20,6 +20,7 @@ export default function BuyCrypto() {
   const [booting, setBooting] = useState(true);
   const [selected, setSelected] = useState(null);
   const [amount, setAmount] = useState("");
+  const [mode, setMode] = useState("unit"); // "unit" or "naira"
   const [method, setMethod] = useState("bank");
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -32,11 +33,14 @@ export default function BuyCrypto() {
   }, [fetchCryptos, fetchDepositBank, fetchProfile]);
 
   const list = cryptos.filter((c) => c.enabled);
-  const cost = selected ? Number(amount || 0) * Number(selected.buy_price) : 0;
+  const raw = Number(amount || 0);
+  const rate = selected ? Number(selected.buy_price) : 0;
+  const unitQty = mode === "unit" ? raw : rate ? raw / rate : 0;
+  const cost = mode === "unit" ? raw * rate : raw;
   const enoughBalance = Number(profile?.balance || 0) >= cost;
   const valid =
     selected &&
-    Number(amount) > 0 &&
+    unitQty > 0 &&
     (method === "balance" ? enoughBalance && cost > 0 : images.length > 0);
 
   const submit = async () => {
@@ -46,8 +50,8 @@ export default function BuyCrypto() {
         await buyWithBalance({
           asset_name: selected.name,
           icon_url: selected.icon_url,
-          amount: Number(amount),
-          rate: Number(selected.buy_price),
+          amount: unitQty,
+          rate,
           payout: cost,
           wallet_address: profile.wallet_address,
         });
@@ -59,8 +63,8 @@ export default function BuyCrypto() {
           type: "buy_crypto",
           asset_name: selected.name,
           icon_url: selected.icon_url,
-          amount: Number(amount),
-          rate: Number(selected.buy_price),
+          amount: unitQty,
+          rate,
           payout: cost,
           payment_method: "bank",
           wallet_address: profile.wallet_address,
@@ -105,19 +109,30 @@ export default function BuyCrypto() {
 
             {selected && (
               <>
-                <Field label={`Amount of ${selected.name} to buy`}>
-                  <Input type="number" min="0" step="any" placeholder="0.00" value={amount} onChange={(e) => setAmount(e.target.value)} />
+                <Field label={mode === "unit" ? `Amount of ${selected.symbol || selected.name} to buy` : "Amount in Naira"}>
+                  <Input type="number" min="0" step="any" placeholder={mode === "unit" ? "0.00" : "0"} value={amount} onChange={(e) => setAmount(e.target.value)} />
                 </Field>
+                <Text as="button" type="button" fontSize="xs" color="brand.600" fontWeight="600" mt={-4} onClick={() => { setAmount(""); setMode(mode === "unit" ? "naira" : "unit"); }}>
+                  Switch to {mode === "unit" ? "Naira (₦)" : selected.symbol || selected.name}
+                </Text>
 
                 <Box bg="ink.50" borderRadius="l2" p={4}>
-                  <Flex justify="space-between">
-                    <Text color="ink.500" fontSize="sm">You'll pay</Text>
-                    <Text fontWeight="800" color="brand.600">{naira(cost)}</Text>
-                  </Flex>
-                  <Flex justify="space-between" mt={1}>
-                    <Text color="ink.400" fontSize="xs">Sent to your wallet</Text>
-                    <Text color="ink.500" fontSize="xs" wordBreak="break-all">{profile?.wallet_address || "—"}</Text>
-                  </Flex>
+                  <VStack align="stretch" gap={1}>
+                    {mode === "naira" && raw > 0 && (
+                      <Flex justify="space-between">
+                        <Text color="ink.500" fontSize="sm">You're buying</Text>
+                        <Text fontWeight="700" color="ink.900" fontSize="sm">{unitQty.toLocaleString("en", { maximumFractionDigits: 7 })} {selected.symbol || selected.name}</Text>
+                      </Flex>
+                    )}
+                    <Flex justify="space-between">
+                      <Text color="ink.500" fontSize="sm">You'll pay</Text>
+                      <Text fontWeight="800" color="brand.600">{naira(cost)}</Text>
+                    </Flex>
+                    <Flex justify="space-between">
+                      <Text color="ink.400" fontSize="xs">Sent to your wallet</Text>
+                      <Text color="ink.500" fontSize="xs" wordBreak="break-all">{profile?.wallet_address || "—"}</Text>
+                    </Flex>
+                  </VStack>
                 </Box>
 
                 <Field label="Payment method">

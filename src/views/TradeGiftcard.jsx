@@ -17,6 +17,7 @@ export default function SellGiftcard() {
   const [selected, setSelected] = useState(null);
   const [selectedSub, setSelectedSub] = useState(null);
   const [amount, setAmount] = useState("");
+  const [mode, setMode] = useState("unit"); // "unit" (USD) or "naira"
   const [country, setCountry] = useState("");
   const [description, setDescription] = useState("");
   const [images, setImages] = useState([]);
@@ -30,8 +31,10 @@ export default function SellGiftcard() {
   const list = giftcards.filter((g) => g.enabled);
   const subs = selected ? (Array.isArray(selected.subcategories) ? selected.subcategories : []) : [];
   const rate = selectedSub ? Number(selectedSub.rate) : 0;
-  const payout = rate * Number(amount || 0);
-  const valid = selected && selectedSub && Number(amount) > 0 && images.length > 0;
+  const raw = Number(amount || 0);
+  const usdQty = mode === "unit" ? raw : rate ? raw / rate : 0;
+  const payout = mode === "unit" ? rate * raw : raw;
+  const valid = selected && selectedSub && usdQty > 0 && images.length > 0;
 
   const selectCard = (g) => {
     setSelected(g);
@@ -46,7 +49,7 @@ export default function SellGiftcard() {
         type: "sell_giftcard",
         asset_name: selected.name,
         icon_url: selected.icon_url,
-        amount: Number(amount),
+        amount: usdQty,
         rate,
         payout,
         sub_category: selectedSub.name,
@@ -109,23 +112,36 @@ export default function SellGiftcard() {
             {selected && selectedSub && (
               <>
                 <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
-                  <Field label="Card value ($)">
-                    <Input type="number" min="0" step="any" placeholder="e.g. 100" value={amount} onChange={(e) => setAmount(e.target.value)} />
-                  </Field>
+                  <Box>
+                    <Field label={mode === "unit" ? "Card value ($)" : "Amount in Naira"}>
+                      <Input type="number" min="0" step="any" placeholder={mode === "unit" ? "e.g. 100" : "0"} value={amount} onChange={(e) => setAmount(e.target.value)} />
+                    </Field>
+                    <Text as="button" type="button" fontSize="xs" color="brand.600" fontWeight="600" mt={1} onClick={() => { setAmount(""); setMode(mode === "unit" ? "naira" : "unit"); }}>
+                      Switch to {mode === "unit" ? "Naira (₦)" : "USD ($)"}
+                    </Text>
+                  </Box>
                   <Field label="Country">
                     <Input placeholder="e.g. USA" value={country} onChange={(e) => setCountry(e.target.value)} />
                   </Field>
                 </SimpleGrid>
 
                 <Box bg="ink.50" borderRadius="l2" p={4}>
-                  <Flex justify="space-between" mb={1}>
-                    <Text color="ink.500" fontSize="sm">Rate ({selectedSub.name})</Text>
-                    <Text fontWeight="600" color="ink.700" fontSize="sm">{naira(rate)}/$</Text>
-                  </Flex>
-                  <Flex justify="space-between">
-                    <Text color="ink.500" fontSize="sm">You'll receive</Text>
-                    <Text fontWeight="800" color="brand.600">{naira(payout)}</Text>
-                  </Flex>
+                  <VStack align="stretch" gap={1}>
+                    <Flex justify="space-between">
+                      <Text color="ink.500" fontSize="sm">Rate ({selectedSub.name})</Text>
+                      <Text fontWeight="600" color="ink.700" fontSize="sm">{naira(rate)}/$</Text>
+                    </Flex>
+                    {mode === "naira" && raw > 0 && (
+                      <Flex justify="space-between">
+                        <Text color="ink.500" fontSize="sm">Card value</Text>
+                        <Text fontWeight="700" color="ink.900" fontSize="sm">${usdQty.toLocaleString("en", { maximumFractionDigits: 2 })}</Text>
+                      </Flex>
+                    )}
+                    <Flex justify="space-between">
+                      <Text color="ink.500" fontSize="sm">You'll receive</Text>
+                      <Text fontWeight="800" color="brand.600">{naira(payout)}</Text>
+                    </Flex>
+                  </VStack>
                 </Box>
 
                 <Field label="Card image / proof">
