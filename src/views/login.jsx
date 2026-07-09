@@ -1,8 +1,9 @@
 "use client";
 import { useState } from "react";
 import { Box, Button, Input, Text, VStack } from "@chakra-ui/react";
-import { Link, useNavigate } from "@/src/compat/router";
+import { Link } from "@/src/compat/router";
 import { useSearchParams } from "next/navigation";
+import { useSubdomain } from "@/lib/hooks/useSubdomain";
 import AuthShell from "../components/AuthShell";
 import { Field } from "../components/ui/field";
 import { PasswordInput } from "../components/ui/password-input";
@@ -16,7 +17,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState("");
-  const nav = useNavigate();
+  const { redirectToDashboard } = useSubdomain();
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("next");
   const domain = process.env.NEXT_PUBLIC_DOMAIN || "powerpaytech.com";
@@ -47,7 +48,7 @@ export default function Login() {
       if (safeRedirectUrl) {
         window.location.href = safeRedirectUrl;
       } else {
-        nav("/dashboard");
+        redirectToDashboard("/dashboard");
       }
     } catch (error) {
       const message = err(error?.message || "Unable to sign in right now.");
