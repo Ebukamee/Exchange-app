@@ -2,10 +2,6 @@
 import { useState } from "react";
 import { Flex, Text, Image } from "@chakra-ui/react";
 
-// The logo asset is hosted at the site root. On admin/dashboard subdomains
-// some environments may not serve the public assets from the subdomain, so
-// we compute a safe absolute host when necessary.
-
 // Geometric "P" mark — SVG fallback used until the real artwork is added,
 // and on dark surfaces where a colour-customisable mark reads better.
 export function LogoMark({ size = 32, color = "#ed1c24" }) {
@@ -24,62 +20,61 @@ export function LogoMark({ size = 32, color = "#ed1c24" }) {
   );
 }
 
+function getLogoSrc() {
+  if (typeof window === "undefined") {
+    return `https://${process.env.NEXT_PUBLIC_DOMAIN || "powerpaytech.com"}/powerpay-logo.png`;
+  }
+  const hostname = window.location.hostname || "";
+  const domain = process.env.NEXT_PUBLIC_DOMAIN || "powerpaytech.com";
+  if (hostname.startsWith("admin.") || hostname.startsWith("dashboard.")) {
+    return `https://${domain}/powerpay-logo.png`;
+  }
+  return `${window.location.origin}/powerpay-logo.png`;
+}
+
 export default function Logo({
   size = 32,
   color = "#ed1c24",
   showText = true,
   textColor,
   fontSize = "xl",
-  useImage = false, // render the real logo image (mark + wordmark) as one lockup
+  useImage = false,
   imageHeight,
 }) {
   const [imgFailed, setImgFailed] = useState(false);
+  const showImage = useImage && !imgFailed;
 
-  // Preferred: the exact uploaded artwork. Use the main site host for admin
-  // and dashboard subdomains to ensure the asset is reachable.
-  if (useImage && !imgFailed) {
-    let src = "/powerpay-logo.png";
-    if (typeof window !== "undefined") {
-      const hostname = window.location.hostname || "";
-      const domain = process.env.NEXT_PUBLIC_DOMAIN || "powerpaytech.com";
-      if (hostname.startsWith("admin.") || hostname.startsWith("dashboard.")) {
-        src = `https://${domain}/powerpay-logo.png`;
-      } else {
-        src = `${window.location.origin}/powerpay-logo.png`;
-      }
-    } else {
-      src = `https://${process.env.NEXT_PUBLIC_DOMAIN || "powerpaytech.com"}/powerpay-logo.png`;
-    }
-
-    return (
-      <Image
-        src={src}
-        alt="Powerpay"
-        h={`${imageHeight || size + 20}px`}
-        w="auto"
-        objectFit="contain"
-        onError={() => setImgFailed(true)}
-      />
-    );
-  }
-
-  // Fallback: SVG mark + wordmark (colour-customisable).
+  // Always render the same component tree to avoid conditional hook violations
+  // in Chakra's internal components (Image vs Flex use different hooks).
   return (
-    <Flex align="center" gap={2}>
-      <LogoMark size={size} color={color} />
-      {showText && (
-        <Text
-          as="span"
-          fontFamily="heading"
-          fontWeight="800"
-          letterSpacing="0.12em"
-          fontSize={fontSize}
-          color={textColor || color}
-        >
-          POWERPAY
-        </Text>
+    <>
+      {showImage && (
+        <Image
+          src={getLogoSrc()}
+          alt="Powerpay"
+          h={`${imageHeight || size + 20}px`}
+          w="auto"
+          objectFit="contain"
+          onError={() => setImgFailed(true)}
+        />
       )}
-    </Flex>
+      {!showImage && (
+        <Flex align="center" gap={2}>
+          <LogoMark size={size} color={color} />
+          {showText && (
+            <Text
+              as="span"
+              fontFamily="heading"
+              fontWeight="800"
+              letterSpacing="0.12em"
+              fontSize={fontSize}
+              color={textColor || color}
+            >
+              POWERPAY
+            </Text>
+          )}
+        </Flex>
+      )}
+    </>
   );
 }
-

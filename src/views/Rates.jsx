@@ -85,8 +85,9 @@ function CardIcon({ name, icon }) {
 }
 
 function CryptoCalcCard({ crypto }) {
-  const [usd, setUsd] = useState("");
-  const amt = Number(usd) || 0;
+  const [qty, setQty] = useState("");
+  const amt = Number(qty) || 0;
+  const symbol = crypto.symbol || crypto.name;
   return (
     <Box bg="white" border="1px solid" borderColor="ink.100" borderRadius="l2" p={6} _hover={{ borderColor: "brand.300" }}>
       <HStack mb={4} gap={3}>
@@ -107,23 +108,24 @@ function CryptoCalcCard({ crypto }) {
       <Box bg="ink.50" borderRadius="l1" p={3}>
         <Text fontSize="xs" color="ink.500" mb={2} fontWeight="600">Quick calculator</Text>
         <Input
-          placeholder="Enter USD amount"
+          placeholder={`Enter amount in ${symbol}`}
           size="sm"
           type="number"
           min="0"
-          value={usd}
-          onChange={(e) => setUsd(e.target.value)}
+          step="any"
+          value={qty}
+          onChange={(e) => setQty(e.target.value)}
           bg="white"
           mb={2}
         />
         {amt > 0 && (
           <Box fontSize="sm">
             <Flex justify="space-between" py={1}>
-              <Text color="ink.500">You sell ${usd}</Text>
+              <Text color="ink.500">Sell {qty} {symbol}</Text>
               <Text fontWeight="700" color="green.600">{naira(amt * Number(crypto.sell_price))}</Text>
             </Flex>
             <Flex justify="space-between" py={1}>
-              <Text color="ink.500">You buy ${usd}</Text>
+              <Text color="ink.500">Buy {qty} {symbol}</Text>
               <Text fontWeight="700" color="brand.600">{naira(amt * Number(crypto.buy_price))}</Text>
             </Flex>
           </Box>
