@@ -73,7 +73,7 @@ function TxRow({ tx }) {
           {tx.icon_url ? (
             <Image src={tx.icon_url} boxSize="40px" borderRadius="md" objectFit="contain" />
           ) : (
-            <Flex boxSize="40px" bg="ink.50" color="ink.500" borderRadius="md" align="center" justify="center" fontWeight="700">
+            <Flex boxSize="40px" bg="brand.50" color="brand.500" borderRadius="md" align="center" justify="center" fontWeight="700">
               {tx.asset_name?.[0]}
             </Flex>
           )}

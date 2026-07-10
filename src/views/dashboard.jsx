@@ -77,10 +77,10 @@ export default function Dashboard() {
               borderColor="ink.100"
               p={5}
               textAlign="left"
-              transition="all .15s"
-              _hover={{ borderColor: "ink.200", transform: "translateY(-2px)", boxShadow: "0 2px 8px rgba(10,14,36,0.08)" }}
+              transition="all .2s"
+              _hover={{ borderColor: "brand.300", transform: "translateY(-3px)" }}
             >
-              <Flex w="44px" h="44px" bg="ink.50" color="ink.600" borderRadius="l1" align="center" justify="center" mb={3}>
+              <Flex w="44px" h="44px" bg="brand.50" color="brand.500" borderRadius="l1" align="center" justify="center" mb={3}>
                 <Icon>{<a.icon />}</Icon>
               </Flex>
               <Text fontWeight="600" color="ink.900" fontSize="sm">{a.label}</Text>
@@ -105,18 +105,13 @@ export default function Dashboard() {
               {recent.map((tx) => {
                 const meta = statusMeta(tx.status);
                 return (
-                  <Flex key={tx.id} justify="space-between" align="center" py={4}>
-                    <HStack gap={3}>
-                      <Flex w="36px" h="36px" bg="ink.50" color="ink.500" borderRadius="full" align="center" justify="center" flexShrink={0} fontSize="xs" fontWeight="700">
-                        {tx.asset_name?.[0] || "T"}
-                      </Flex>
-                      <Box>
-                        <Text fontWeight="600" color="ink.900" fontSize="sm">
-                          {txTypeLabel(tx.type)} • {tx.asset_name}
-                        </Text>
-                        <Text fontSize="xs" color="ink.400">{formatDate(tx.created_at)}</Text>
-                      </Box>
-                    </HStack>
+                  <Flex key={tx.id} justify="space-between" align="center" py={3}>
+                    <Box>
+                      <Text fontWeight="600" color="ink.900" fontSize="sm">
+                        {txTypeLabel(tx.type)} • {tx.asset_name}
+                      </Text>
+                      <Text fontSize="xs" color="ink.400">{formatDate(tx.created_at)}</Text>
+                    </Box>
                     <HStack gap={3}>
                       <Text fontWeight="700" color="ink.900" fontSize="sm">{naira(tx.payout)}</Text>
                       <Badge colorPalette={meta.palette}>{meta.label}</Badge>

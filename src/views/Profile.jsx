@@ -74,7 +74,7 @@ export default function Profile() {
           </Box>
         </HStack>
         {profile?.referral_code ? (
-          <Box mb={6} p={4} bg="brand.50" border="1px solid" borderColor="brand.100" borderRadius="l3">
+          <Box mb={6} p={4} bg="ink.50" border="1px solid" borderColor="ink.100" borderRadius="l3">
             <Text fontSize="sm" color="ink.500" mb={2}>Your referral code</Text>
             <HStack gap={3}>
               <Text fontWeight="700" fontSize="lg" color="ink.900" letterSpacing="0.08em">{profile.referral_code}</Text>
