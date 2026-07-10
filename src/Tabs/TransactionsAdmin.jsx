@@ -136,8 +136,8 @@ export default function TransactionsAdmin() {
 function TxCard({ tx, onOpen }) {
   const meta = statusMeta(tx.status);
   return (
-    <Box bg="white" borderRadius="l2" boxShadow="0 1px 3px rgba(10,14,36,0.06), 0 1px 2px rgba(10,14,36,0.04)" p={4}
-      borderLeft="3px solid" borderColor={tx.status === "pending" ? "yellow.400" : tx.status === "confirmed" ? "green.400" : "red.400"}>
+    <Box bg="white" borderRadius="l2" border="1px solid" borderColor="ink.100" p={4}
+      borderLeft="3px solid" borderLeftColor={tx.status === "pending" ? "yellow.400" : tx.status === "confirmed" ? "green.400" : "red.400"}>
       <Flex justify="space-between" align="start">
         <Box>
           <HStack gap={2} mb={1}>

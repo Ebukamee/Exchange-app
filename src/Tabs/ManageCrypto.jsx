@@ -76,17 +76,14 @@ export default function ManageCrypto() {
       ) : (
         <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
           {cryptos.map((c) => (
-            <Box key={c.id} bg="white" borderRadius="l2" boxShadow="0 1px 3px rgba(10,14,36,0.06), 0 1px 2px rgba(10,14,36,0.04)" p={4}>
+            <Box key={c.id} bg="white" borderRadius="l2" border="1px solid" borderColor="ink.100" p={4}>
               <Flex justify="space-between" align="start">
                 <HStack gap={3}>
                   {c.icon_url ? <Image src={c.icon_url} boxSize="36px" objectFit="contain" /> :
                     <Flex boxSize="36px" bg="brand.50" color="brand.500" borderRadius="md" align="center" justify="center" fontWeight="700">{c.name?.[0]}</Flex>}
                   <Box>
                     <Text fontWeight="700" color="ink.900">{c.name} {c.symbol ? `(${c.symbol})` : ""}</Text>
-                    <HStack gap={2} mt={0.5}>
-                      <Box bg="brand.50" px={2} py={0.5} borderRadius="full"><Text fontSize="xs" color="brand.600" fontWeight="600">Buy {naira(c.buy_price)}</Text></Box>
-                      <Box bg="green.50" px={2} py={0.5} borderRadius="full"><Text fontSize="xs" color="green.600" fontWeight="600">Sell {naira(c.sell_price)}</Text></Box>
-                    </HStack>
+                    <Text fontSize="xs" color="ink.500">Buy {naira(c.buy_price)} · Sell {naira(c.sell_price)}</Text>
                   </Box>
                 </HStack>
                 <HStack>

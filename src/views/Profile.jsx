@@ -86,7 +86,7 @@ export default function Profile() {
           </Box>
         ) : null}
 
-        <Box as="form" onSubmit={save} bg="white" borderRadius="l3" boxShadow="0 1px 3px rgba(10,14,36,0.06), 0 1px 2px rgba(10,14,36,0.04)" p={{ base: 5, md: 7 }}>
+        <Box as="form" onSubmit={save} bg="white" borderRadius="l3" border="1px solid" borderColor="ink.100" p={{ base: 5, md: 7 }}>
           <VStack align="stretch" gap={5}>
             <Field label="Full name">
               <Input value={form.full_name} onChange={set("full_name")} />

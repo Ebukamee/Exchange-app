@@ -73,13 +73,14 @@ export default function Dashboard() {
               onClick={() => nav(a.to)}
               bg="white"
               borderRadius="l2"
-              boxShadow="0 1px 3px rgba(10,14,36,0.06), 0 1px 2px rgba(10,14,36,0.04)"
+              border="1px solid"
+              borderColor="ink.100"
               p={5}
               textAlign="left"
-              transition="all .2s"
-              _hover={{ boxShadow: "0 8px 24px rgba(10,14,36,0.12)", transform: "translateY(-3px)" }}
+              transition="all .15s"
+              _hover={{ borderColor: "ink.200", transform: "translateY(-2px)", boxShadow: "0 2px 8px rgba(10,14,36,0.08)" }}
             >
-              <Flex w="48px" h="48px" bg="brand.50" color="brand.500" borderRadius="l1" align="center" justify="center" mb={3} fontSize="lg">
+              <Flex w="44px" h="44px" bg="ink.50" color="ink.600" borderRadius="l1" align="center" justify="center" mb={3}>
                 <Icon>{<a.icon />}</Icon>
               </Flex>
               <Text fontWeight="600" color="ink.900" fontSize="sm">{a.label}</Text>
@@ -88,7 +89,7 @@ export default function Dashboard() {
         </SimpleGrid>
 
         {/* Recent transactions */}
-        <Box bg="white" borderRadius="l2" boxShadow="0 1px 3px rgba(10,14,36,0.06), 0 1px 2px rgba(10,14,36,0.04)" p={{ base: 5, md: 6 }}>
+        <Box bg="white" borderRadius="l2" border="1px solid" borderColor="ink.100" p={{ base: 5, md: 6 }}>
           <Flex justify="space-between" align="center" mb={4}>
             <Heading fontSize="lg" color="ink.900">Recent activity</Heading>
             <Button variant="ghost" size="sm" colorPalette="ink" onClick={() => nav("/dashboard/history")}>
@@ -106,7 +107,7 @@ export default function Dashboard() {
                 return (
                   <Flex key={tx.id} justify="space-between" align="center" py={4}>
                     <HStack gap={3}>
-                      <Flex w="38px" h="38px" bg="brand.50" color="brand.500" borderRadius="full" align="center" justify="center" flexShrink={0} fontSize="sm">
+                      <Flex w="36px" h="36px" bg="ink.50" color="ink.500" borderRadius="full" align="center" justify="center" flexShrink={0} fontSize="xs" fontWeight="700">
                         {tx.asset_name?.[0] || "T"}
                       </Flex>
                       <Box>

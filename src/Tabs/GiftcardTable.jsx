@@ -92,7 +92,7 @@ export default function ManageGiftcards() {
           {giftcards.map((g) => {
             const subs = Array.isArray(g.subcategories) ? g.subcategories : [];
             return (
-              <Box key={g.id} bg="white" borderRadius="l2" boxShadow="0 1px 3px rgba(10,14,36,0.06), 0 1px 2px rgba(10,14,36,0.04)" p={4}>
+              <Box key={g.id} bg="white" borderRadius="l2" border="1px solid" borderColor="ink.100" p={4}>
                 <Flex justify="space-between" align="start">
                   <HStack gap={3}>
                     {g.icon_url ? <Image src={g.icon_url} boxSize="36px" objectFit="contain" /> :

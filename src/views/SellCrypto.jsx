@@ -168,7 +168,7 @@ export function TradeCard({ title, subtitle, children }) {
         <Heading fontFamily="heading" fontSize="2xl" color="ink.900">{title}</Heading>
         {subtitle && <Text color="ink.500">{subtitle}</Text>}
       </Box>
-      <Box bg="white" borderRadius="l3" boxShadow="0 1px 3px rgba(10,14,36,0.06), 0 1px 2px rgba(10,14,36,0.04)" p={{ base: 5, md: 7 }}>
+      <Box bg="white" borderRadius="l3" border="1px solid" borderColor="ink.100" p={{ base: 5, md: 7 }}>
         {children}
       </Box>
     </Box>

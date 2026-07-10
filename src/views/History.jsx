@@ -67,13 +67,13 @@ function TxRow({ tx }) {
   };
 
   return (
-    <Box bg="white" borderRadius="l2" boxShadow="0 1px 3px rgba(10,14,36,0.06), 0 1px 2px rgba(10,14,36,0.04)" p={4}>
+    <Box bg="white" borderRadius="l2" border="1px solid" borderColor="ink.100" p={4}>
       <Flex justify="space-between" align="start" gap={3}>
         <HStack gap={3} align="start">
           {tx.icon_url ? (
-            <Image src={tx.icon_url} boxSize="44px" borderRadius="md" objectFit="contain" />
+            <Image src={tx.icon_url} boxSize="40px" borderRadius="md" objectFit="contain" />
           ) : (
-            <Flex boxSize="44px" bg="brand.50" color="brand.500" borderRadius="md" align="center" justify="center" fontWeight="700">
+            <Flex boxSize="40px" bg="ink.50" color="ink.500" borderRadius="md" align="center" justify="center" fontWeight="700">
               {tx.asset_name?.[0]}
             </Flex>
           )}
@@ -98,7 +98,7 @@ function TxRow({ tx }) {
 function WdRow({ wd }) {
   const meta = statusMeta(wd.status);
   return (
-    <Box bg="white" borderRadius="l2" boxShadow="0 1px 3px rgba(10,14,36,0.06), 0 1px 2px rgba(10,14,36,0.04)" p={4}>
+    <Box bg="white" borderRadius="l2" border="1px solid" borderColor="ink.100" p={4}>
       <Flex justify="space-between" align="center">
         <Box>
           <Text fontWeight="600" color="ink.900" fontSize="sm">Withdrawal to {wd.bank_name || "bank"}</Text>
