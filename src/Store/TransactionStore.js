@@ -9,10 +9,12 @@ import {
   requestWithdrawal as requestWithdrawalAction,
   getMyTransactions,
   getMyWithdrawals,
+  getSignedProofUrls,
 } from "@/app/actions/trade";
 import {
   adminGetTransactions,
   adminGetWithdrawals,
+  adminGetSignedProofUrls,
   reviewTransaction as reviewTxAction,
   reviewWithdrawal as reviewWdAction,
   saveCrypto as saveCryptoAction,
@@ -21,6 +23,8 @@ import {
   deleteGiftcard as deleteGiftcardAction,
   saveDepositBank as saveDepositBankAction,
 } from "@/app/actions/admin";
+
+const PAGE_LIMIT = 50;
 
 const TransactionStore = create((set, get) => ({
   cryptos: [],
@@ -35,6 +39,10 @@ const TransactionStore = create((set, get) => ({
     files.forEach((f) => fd.append("files", f));
     return uploadProofs(fd);
   },
+
+  // ---------- Signed URLs ----------
+  getProofUrls: (paths) => getSignedProofUrls(paths),
+  getAdminProofUrls: (paths) => adminGetSignedProofUrls(paths),
 
   // ---------- Catalogue ----------
   fetchCryptos: async () => {
@@ -70,19 +78,32 @@ const TransactionStore = create((set, get) => ({
     return data;
   },
 
-  // ---------- Admin ----------
-  getAllTransactions: async () => {
-    const data = await adminGetTransactions();
-    set({ transactions: data });
-    return data;
+  // ---------- Admin (paginated) ----------
+  getAllTransactions: async (offset = 0) => {
+    const data = await adminGetTransactions(offset);
+    const hasMore = data.length > PAGE_LIMIT;
+    const items = hasMore ? data.slice(0, PAGE_LIMIT) : data;
+    if (offset === 0) {
+      set({ transactions: items });
+    } else {
+      set((s) => ({ transactions: [...s.transactions, ...items] }));
+    }
+    return { items, hasMore };
   },
-  getAllWithdrawals: async () => {
-    const data = await adminGetWithdrawals();
-    set({ withdrawals: data });
-    return data;
+  getAllWithdrawals: async (offset = 0) => {
+    const data = await adminGetWithdrawals(offset);
+    const hasMore = data.length > PAGE_LIMIT;
+    const items = hasMore ? data.slice(0, PAGE_LIMIT) : data;
+    if (offset === 0) {
+      set({ withdrawals: items });
+    } else {
+      set((s) => ({ withdrawals: [...s.withdrawals, ...items] }));
+    }
+    return { items, hasMore };
   },
-  reviewTransaction: (tx, status) => reviewTxAction(tx, status),
-  reviewWithdrawal: (wd, status) => reviewWdAction(wd, status),
+  getAllUsers: null, // handled directly in Users.jsx via the action
+  reviewTransaction: (txId, status) => reviewTxAction(txId, status),
+  reviewWithdrawal: (wdId, status) => reviewWdAction(wdId, status),
 
   saveCrypto: async (payload) => { await saveCryptoAction(payload); await get().fetchCryptos(); },
   deleteCrypto: async (id) => { await deleteCryptoAction(id); await get().fetchCryptos(); },
@@ -92,4 +113,3 @@ const TransactionStore = create((set, get) => ({
 }));
 
 export default TransactionStore;
-

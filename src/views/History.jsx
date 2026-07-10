@@ -55,7 +55,17 @@ export default function History() {
 }
 
 function TxRow({ tx }) {
+  const { getProofUrls } = TransactionStore();
   const meta = statusMeta(tx.status);
+  const hasImages = Array.isArray(tx.images) && tx.images.length > 0;
+
+  const viewProof = async () => {
+    try {
+      const urls = await getProofUrls(tx.images);
+      if (urls[0]) window.open(urls[0], "_blank");
+    } catch { /* ignore */ }
+  };
+
   return (
     <Box bg="white" border="1px solid" borderColor="ink.100" borderRadius="l2" p={4}>
       <Flex justify="space-between" align="start" gap={3}>
@@ -71,8 +81,8 @@ function TxRow({ tx }) {
             <Text fontWeight="600" color="ink.900" fontSize="sm">{txTypeLabel(tx.type)} • {tx.asset_name}</Text>
             <Text fontSize="xs" color="ink.400">{formatDate(tx.created_at)}</Text>
             {tx.amount ? <Text fontSize="xs" color="ink.500">Qty: {tx.amount}{tx.country ? ` • ${tx.country}` : ""}</Text> : null}
-            {Array.isArray(tx.images) && tx.images.length > 0 && (
-              <CLink href={tx.images[0]} target="_blank" color="brand.600" fontSize="xs">View proof</CLink>
+            {hasImages && (
+              <Text as="button" type="button" onClick={viewProof} color="brand.600" fontSize="xs" cursor="pointer">View proof</Text>
             )}
           </Box>
         </HStack>

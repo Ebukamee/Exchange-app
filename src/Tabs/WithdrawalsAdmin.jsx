@@ -8,10 +8,11 @@ import { toast, err, naira, formatDate, statusMeta } from "../Helper";
 export default function WithdrawalsAdmin() {
   const { withdrawals, getAllWithdrawals, reviewWithdrawal } = TransactionStore();
   const [loading, setLoading] = useState(true);
+  const [hasMore, setHasMore] = useState(false);
   const [busy, setBusy] = useState(null);
 
   useEffect(() => {
-    getAllWithdrawals().catch(() => {}).finally(() => setLoading(false));
+    getAllWithdrawals().then((r) => setHasMore(r.hasMore)).catch(() => {}).finally(() => setLoading(false));
   }, [getAllWithdrawals]);
 
   const review = async (wd, status) => {
@@ -19,12 +20,18 @@ export default function WithdrawalsAdmin() {
     try {
       await reviewWithdrawal(wd.id, status);
       toast("success", `Withdrawal ${status}.`, "Done");
-      await getAllWithdrawals();
+      const r = await getAllWithdrawals();
+      setHasMore(r.hasMore);
     } catch (e) {
       toast("error", err(e.message), "Could not update");
     } finally {
       setBusy(null);
     }
+  };
+
+  const loadMore = async () => {
+    const r = await getAllWithdrawals(withdrawals.length);
+    setHasMore(r.hasMore);
   };
 
   const filterBy = (s) => withdrawals.filter((w) => w.status === s);
@@ -76,9 +83,13 @@ export default function WithdrawalsAdmin() {
               )}
             </Tabs.Content>
           ))}
+          {hasMore && (
+            <Flex justify="center" mt={4}>
+              <Button variant="outline" colorPalette="brand" onClick={loadMore}>Load more</Button>
+            </Flex>
+          )}
         </Tabs.Root>
       )}
     </Box>
   );
 }
-

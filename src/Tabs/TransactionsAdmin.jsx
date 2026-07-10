@@ -7,14 +7,26 @@ import { toaster } from "../components/ui/toaster";
 import { toast, err, naira, formatDate, statusMeta, txTypeLabel } from "../Helper";
 
 export default function TransactionsAdmin() {
-  const { transactions, getAllTransactions, reviewTransaction } = TransactionStore();
+  const { transactions, getAllTransactions, reviewTransaction, getAdminProofUrls } = TransactionStore();
   const [loading, setLoading] = useState(true);
+  const [hasMore, setHasMore] = useState(false);
   const [active, setActive] = useState(null);
+  const [signedUrls, setSignedUrls] = useState([]);
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    getAllTransactions().catch(() => {}).finally(() => setLoading(false));
+    getAllTransactions().then((r) => setHasMore(r.hasMore)).catch(() => {}).finally(() => setLoading(false));
   }, [getAllTransactions]);
+
+  // Fetch signed URLs when a transaction with images is opened
+  useEffect(() => {
+    if (active?.images?.length) {
+      setSignedUrls([]);
+      getAdminProofUrls(active.images).then(setSignedUrls).catch(() => {});
+    } else {
+      setSignedUrls([]);
+    }
+  }, [active, getAdminProofUrls]);
 
   const review = async (tx, status) => {
     setBusy(true);
@@ -22,12 +34,18 @@ export default function TransactionsAdmin() {
       await reviewTransaction(tx.id, status);
       toast("success", `Transaction ${status}.`, "Done");
       setActive(null);
-      await getAllTransactions();
+      const r = await getAllTransactions();
+      setHasMore(r.hasMore);
     } catch (e) {
       toast("error", err(e.message), "Could not update");
     } finally {
       setBusy(false);
     }
+  };
+
+  const loadMore = async () => {
+    const r = await getAllTransactions(transactions.length);
+    setHasMore(r.hasMore);
   };
 
   const filterBy = (s) => transactions.filter((t) => t.status === s);
@@ -59,6 +77,11 @@ export default function TransactionsAdmin() {
               )}
             </Tabs.Content>
           ))}
+          {hasMore && (
+            <Flex justify="center" mt={4}>
+              <Button variant="outline" colorPalette="brand" onClick={loadMore}>Load more</Button>
+            </Flex>
+          )}
         </Tabs.Root>
       )}
 
@@ -85,11 +108,13 @@ export default function TransactionsAdmin() {
                   <Box>
                     <Text fontSize="sm" color="ink.500" mb={2}>Proof</Text>
                     <Flex gap={3} wrap="wrap">
-                      {active.images.map((url, i) => (
+                      {signedUrls.length > 0 ? signedUrls.map((url, i) => (
                         <a key={i} href={url} target="_blank" rel="noreferrer">
                           <img src={url} alt="Proof" style={{ width: "120px", height: "120px", objectFit: "cover", borderRadius: "8px", border: "1px solid #e5e5e5" }} />
                         </a>
-                      ))}
+                      )) : (
+                        <Spinner size="sm" color="brand.500" />
+                      )}
                     </Flex>
                   </Box>
                 )}
@@ -135,4 +160,3 @@ function Row({ label, value, strong }) {
     </Flex>
   );
 }
-

@@ -22,6 +22,7 @@ export default function SellGiftcard() {
   const [description, setDescription] = useState("");
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [idempotencyKey] = useState(() => crypto.randomUUID());
   const nav = useNavigate();
 
   useEffect(() => {
@@ -50,12 +51,11 @@ export default function SellGiftcard() {
         asset_name: selected.name,
         icon_url: selected.icon_url,
         amount: usdQty,
-        rate,
-        payout,
         sub_category: selectedSub.name,
         country,
         description,
         images: urls,
+        idempotency_key: idempotencyKey,
       });
       toast("success", "Submitted for review. You'll be paid once verified.", "Card submitted");
       nav("/dashboard/history");

@@ -21,6 +21,7 @@ export default function SellCrypto() {
   const [description, setDescription] = useState("");
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [idempotencyKey] = useState(() => crypto.randomUUID());
   const nav = useNavigate();
 
   useEffect(() => {
@@ -43,11 +44,10 @@ export default function SellCrypto() {
         asset_name: selected.name,
         icon_url: selected.icon_url,
         amount: unitQty,
-        rate,
-        payout,
         wallet_address: selected.deposit_address,
         description,
         images: urls,
+        idempotency_key: idempotencyKey,
       });
       toast("success", "Submitted for review. You'll be paid once verified.", "Trade submitted");
       nav("/dashboard/history");

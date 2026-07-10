@@ -16,6 +16,7 @@ export default function Withdraw() {
   const { profile, fetchProfile } = useAuthStore();
   const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(false);
+  const [idempotencyKey] = useState(() => crypto.randomUUID());
   const nav = useNavigate();
 
   useEffect(() => {
@@ -23,7 +24,8 @@ export default function Withdraw() {
   }, [fetchProfile]);
 
   const balance = Number(profile?.balance || 0);
-  const valid = Number(amount) > 0 && Number(amount) <= balance;
+  const numAmt = Number(amount || 0);
+  const valid = numAmt >= 1000 && numAmt <= balance;
 
   const submit = async () => {
     setLoading(true);
@@ -33,6 +35,7 @@ export default function Withdraw() {
         bank_name: profile.bank_name,
         account_name: profile.account_name,
         account_number: profile.account_number,
+        idempotency_key: idempotencyKey,
       });
       await fetchProfile();
       toast("success", "Withdrawal requested. It'll be processed shortly.", "Request sent");
@@ -72,7 +75,7 @@ export default function Withdraw() {
             )}
           </Box>
 
-          <Field label="Amount to withdraw" errorText={amount && !valid ? "Amount exceeds your balance" : undefined} invalid={!!amount && !valid}>
+          <Field label="Amount to withdraw" helperText="Minimum ₦1,000" errorText={amount && !valid ? (numAmt < 1000 ? "Minimum withdrawal is ₦1,000" : "Amount exceeds your balance") : undefined} invalid={!!amount && !valid}>
             <Input type="number" min="0" step="any" placeholder="0.00" value={amount} onChange={(e) => setAmount(e.target.value)} />
           </Field>
 

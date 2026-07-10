@@ -99,15 +99,13 @@ values ('deposit_bank', '{"bank_name":"","account_name":"","account_number":""}'
 on conflict (key) do nothing;
 
 -- =====================================================================
---  STORAGE — public bucket for proof images (uploaded server-side).
+--  STORAGE — private bucket for proof images (accessed via signed URLs).
 -- =====================================================================
 insert into storage.buckets (id, name, public)
-values ('proofs', 'proofs', true)
-on conflict (id) do nothing;
+values ('proofs', 'proofs', false)
+on conflict (id) do update set public = false;
 
 drop policy if exists "proofs: public read" on storage.objects;
-create policy "proofs: public read" on storage.objects
-  for select using (bucket_id = 'proofs');
 
 -- =====================================================================
 --  Make yourself admin after signing up:

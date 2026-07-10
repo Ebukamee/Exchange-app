@@ -24,6 +24,7 @@ export default function BuyCrypto() {
   const [method, setMethod] = useState("bank");
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [idempotencyKey] = useState(() => crypto.randomUUID());
   const nav = useNavigate();
 
   useEffect(() => {
@@ -51,9 +52,8 @@ export default function BuyCrypto() {
           asset_name: selected.name,
           icon_url: selected.icon_url,
           amount: unitQty,
-          rate,
-          payout: cost,
           wallet_address: profile.wallet_address,
+          idempotency_key: idempotencyKey,
         });
         await fetchProfile();
         toast("success", "Purchase complete — crypto is on its way to your wallet.", "Done");
@@ -64,11 +64,10 @@ export default function BuyCrypto() {
           asset_name: selected.name,
           icon_url: selected.icon_url,
           amount: unitQty,
-          rate,
-          payout: cost,
           payment_method: "bank",
           wallet_address: profile.wallet_address,
           images: urls,
+          idempotency_key: idempotencyKey,
         });
         toast("success", "Submitted for review. Crypto is sent once verified.", "Trade submitted");
       }
