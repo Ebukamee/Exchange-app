@@ -43,7 +43,7 @@ export default function SettingsAdmin() {
       {loading ? (
         <Flex justify="center" py={16}><Spinner size="lg" color="brand.500" /></Flex>
       ) : (
-        <Box as="form" onSubmit={save} bg="white" border="1px solid" borderColor="ink.100" borderRadius="l3" p={6}>
+        <Box as="form" onSubmit={save} bg="white" borderRadius="l3" boxShadow="0 1px 3px rgba(10,14,36,0.06), 0 1px 2px rgba(10,14,36,0.04)" p={6}>
           <VStack align="stretch" gap={5}>
             <Field label="Bank name"><Input value={form.bank_name} onChange={set("bank_name")} placeholder="GTBank" /></Field>
             <Field label="Account name"><Input value={form.account_name} onChange={set("account_name")} placeholder="Powerpay Ltd" /></Field>

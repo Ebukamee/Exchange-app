@@ -50,21 +50,24 @@ export default function DashboardLayout({ children }) {
         h="100vh"
         p={6}
       >
-        <Box mb={10}>
+        <Box mb={6}>
           <Logo useImage imageHeight={36} />
         </Box>
+        <Box h="1px" bg="ink.800" mb={6} />
         <VStack align="stretch" gap={1} flex="1">
           {nav.map((item) => (
             <NavLink key={item.to} to={item.to} end={item.end}>
               {({ isActive }) => (
                 <HStack
                   px={4}
-                  py={3}
+                  py={3.5}
                   borderRadius="l1"
                   gap={3}
-                  bg={isActive ? "brand.500" : "transparent"}
+                  bg={isActive ? "whiteAlpha.100" : "transparent"}
                   color={isActive ? "white" : "ink.300"}
-                  _hover={{ bg: isActive ? "brand.500" : "ink.900", color: "white" }}
+                  borderLeft="3px solid"
+                  borderColor={isActive ? "brand.400" : "transparent"}
+                  _hover={{ bg: isActive ? "whiteAlpha.100" : "ink.900", color: "white" }}
                 >
                   <Icon>{<item.icon />}</Icon>
                   <Text fontWeight="500" fontSize="sm">{item.label}</Text>
@@ -85,8 +88,7 @@ export default function DashboardLayout({ children }) {
           justify="space-between"
           align="center"
           bg="white"
-          borderBottom="1px solid"
-          borderColor="ink.100"
+          boxShadow="0 1px 3px rgba(10,14,36,0.04)"
           px={{ base: 5, md: 8 }}
           py={4}
           position="sticky"
@@ -125,8 +127,7 @@ export default function DashboardLayout({ children }) {
         left="0"
         right="0"
         bg="white"
-        borderTop="1px solid"
-        borderColor="ink.100"
+        boxShadow="0 -1px 3px rgba(10,14,36,0.06)"
         justify="space-around"
         py={2}
         zIndex="20"

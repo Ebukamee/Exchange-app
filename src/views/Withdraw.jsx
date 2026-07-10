@@ -51,12 +51,13 @@ export default function Withdraw() {
     <DashboardLayout>
       <TradeCard title="Withdraw" subtitle="Cash out your Powerpay balance to your bank account.">
         <VStack align="stretch" gap={6}>
-          <Box bg="ink.950" color="white" borderRadius="l2" p={5}>
-            <Text fontSize="sm" color="ink.300">Available balance</Text>
-            <Text fontFamily="heading" fontSize="3xl" fontWeight="800">{naira(balance)}</Text>
+          <Box bg="ink.950" color="white" borderRadius="l2" p={5} position="relative" overflow="hidden">
+            <Box position="absolute" top="-40px" right="-30px" w="180px" h="180px" bg="brand.500" opacity={0.25} filter="blur(70px)" borderRadius="full" />
+            <Text fontSize="sm" color="ink.300" position="relative" zIndex={1}>Available balance</Text>
+            <Text fontFamily="heading" fontSize="3xl" fontWeight="800" position="relative" zIndex={1}>{naira(balance)}</Text>
           </Box>
 
-          <Box border="1px solid" borderColor="ink.100" borderRadius="l2" p={4}>
+          <Box borderRadius="l2" boxShadow="0 1px 3px rgba(10,14,36,0.06), 0 1px 2px rgba(10,14,36,0.04)" bg="white" p={4}>
             <HStack color="brand.600" mb={2} gap={2}>
               <Icon><FaBuildingColumns /></Icon>
               <Text fontSize="sm" fontWeight="600">Paying out to</Text>

@@ -41,15 +41,18 @@ export default function AdminDashboard({ children }) {
         <Box mb={2}>
           <Logo useImage imageHeight={36} />
         </Box>
-        <Text fontSize="xs" color="ink.400" mb={8} letterSpacing="0.1em">ADMIN PANEL</Text>
+        <Text fontSize="xs" color="ink.400" mb={4} letterSpacing="0.1em">ADMIN PANEL</Text>
+        <Box h="1px" bg="ink.800" mb={6} />
         <VStack align="stretch" gap={1} flex="1">
           {nav.map((item) => (
             <NavLink key={item.to} to={item.to}>
               {({ isActive }) => (
-                <HStack px={4} py={3} borderRadius="l1" gap={3}
-                  bg={isActive ? "brand.500" : "transparent"}
+                <HStack px={4} py={3.5} borderRadius="l1" gap={3}
+                  bg={isActive ? "whiteAlpha.100" : "transparent"}
                   color={isActive ? "white" : "ink.300"}
-                  _hover={{ bg: isActive ? "brand.500" : "ink.900", color: "white" }}>
+                  borderLeft="3px solid"
+                  borderColor={isActive ? "brand.400" : "transparent"}
+                  _hover={{ bg: isActive ? "whiteAlpha.100" : "ink.900", color: "white" }}>
                   <Icon>{<item.icon />}</Icon>
                   <Text fontWeight="500" fontSize="sm">{item.label}</Text>
                 </HStack>

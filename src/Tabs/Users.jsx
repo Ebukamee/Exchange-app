@@ -65,7 +65,7 @@ export default function Users() {
         <>
           <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
             {filtered.map((u) => (
-              <Box key={u.id} bg="white" border="1px solid" borderColor="ink.100" borderRadius="l2" p={4}>
+              <Box key={u.id} bg="white" borderRadius="l2" boxShadow="0 1px 3px rgba(10,14,36,0.06), 0 1px 2px rgba(10,14,36,0.04)" p={4}>
                 <Flex justify="space-between" align="start">
                   <HStack gap={3}>
                     <Avatar.Root size="sm" colorPalette="brand"><Avatar.Fallback name={u.full_name || u.email} /></Avatar.Root>
@@ -78,7 +78,9 @@ export default function Users() {
                       <Text fontSize="xs" color="ink.400">Joined {formatDate(u.created_at)}</Text>
                     </Box>
                   </HStack>
-                  <Text fontWeight="800" color="brand.600">{naira(u.balance)}</Text>
+                  <Box bg="brand.50" px={3} py={1} borderRadius="full">
+                    <Text fontWeight="800" color="brand.600" fontSize="sm">{naira(u.balance)}</Text>
+                  </Box>
                 </Flex>
                 <Flex align="center" justify="space-between" mt={3}>
                   <VStack align="stretch" gap={0.5} fontSize="xs" color="ink.500">

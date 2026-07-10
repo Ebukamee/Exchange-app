@@ -59,7 +59,8 @@ export default function WithdrawalsAdmin() {
                   {filterBy(s).map((wd) => {
                     const meta = statusMeta(wd.status);
                     return (
-                      <Box key={wd.id} bg="white" border="1px solid" borderColor="ink.100" borderRadius="l2" p={4}>
+                      <Box key={wd.id} bg="white" borderRadius="l2" boxShadow="0 1px 3px rgba(10,14,36,0.06), 0 1px 2px rgba(10,14,36,0.04)" p={4}
+                        borderLeft="3px solid" borderColor={wd.status === "pending" ? "yellow.400" : wd.status === "confirmed" ? "green.400" : "red.400"}>
                         <Flex justify="space-between" mb={2}>
                           <Text fontWeight="800" color="brand.600">{naira(wd.amount)}</Text>
                           <Badge colorPalette={meta.palette}>{meta.label}</Badge>
