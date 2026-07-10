@@ -61,6 +61,17 @@ export async function reviewWithdrawal(wdId, status) {
   if (status === "rejected") {
     await q('update "user" set balance = balance + $1 where id = $2', [Number(wd.amount), wd.user_id]);
   }
+  const rows = await q('select email from "user" where id = $1', [wd.user_id]);
+  if (rows[0]?.email) {
+    try {
+      const msg = status === "confirmed"
+        ? `Your withdrawal of ${naira(wd.amount)} to ${wd.bank_name} (${wd.account_number}) has been confirmed and is being processed.`
+        : `Your withdrawal of ${naira(wd.amount)} has been rejected. The funds have been returned to your balance.`;
+      await sendNotice(rows[0].email, `Withdrawal ${status}`, msg);
+    } catch (e) {
+      console.error("withdrawal email failed", e.message);
+    }
+  }
 }
 
 // ---------- Users ----------

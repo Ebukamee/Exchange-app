@@ -4,7 +4,7 @@ import { Box, Flex, Image, Text, IconButton } from "@chakra-ui/react";
 import { FaCloudArrowUp, FaXmark } from "react-icons/fa6";
 
 // Multi-image picker with previews. Holds raw File objects in parent state.
-export default function FileUpload({ files, onChange }) {
+export default function FileUpload({ files, onChange, label, hint }) {
   const ref = useRef();
 
   const add = (e) => {
@@ -32,8 +32,8 @@ export default function FileUpload({ files, onChange }) {
       >
         <Flex direction="column" align="center" gap={2} color="ink.500">
           <FaCloudArrowUp size="1.6em" />
-          <Text fontWeight="600" fontSize="sm" color="ink.700">Click to upload proof</Text>
-          <Text fontSize="xs">PNG, JPG — screenshots of your transaction</Text>
+          <Text fontWeight="600" fontSize="sm" color="ink.700">{label || "Click to upload proof"}</Text>
+          <Text fontSize="xs">{hint || "PNG, JPG — you can select multiple images"}</Text>
         </Flex>
       </Box>
       <input ref={ref} type="file" accept="image/*" multiple hidden onChange={add} />

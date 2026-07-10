@@ -145,7 +145,7 @@ export default function SellGiftcard() {
                 </Box>
 
                 <Field label="Card image / proof">
-                  <FileUpload files={images} onChange={setImages} />
+                  <FileUpload files={images} onChange={setImages} label="Upload images of the gift card" hint="PNG, JPG — front, back, or receipt" />
                 </Field>
 
                 <Field label="Note (optional)">
