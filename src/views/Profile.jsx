@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Box, Heading, Text, Input, Button, VStack, SimpleGrid, HStack, Icon, Avatar } from "@chakra-ui/react";
 import { useNavigate } from "@/src/compat/router";
 import { FaArrowRightFromBracket, FaCopy } from "react-icons/fa6";
+import ScrollReveal from "../components/ScrollReveal";
 import DashboardLayout from "../components/DashboardLayout";
 import { Field } from "../components/ui/field";
 import useAuthStore from "../Store/userStore";
@@ -64,6 +65,7 @@ export default function Profile() {
   return (
     <DashboardLayout>
       <Box maxW="720px" mx="auto">
+        <ScrollReveal>
         <HStack gap={4} mb={8}>
           <Avatar.Root size="lg" colorPalette="ink">
             <Avatar.Fallback name={profile?.full_name || profile?.email} />
@@ -73,7 +75,9 @@ export default function Profile() {
             <Text color="ink.500" fontSize="sm">{profile?.email}</Text>
           </Box>
         </HStack>
+        </ScrollReveal>
         {profile?.referral_code ? (
+          <ScrollReveal delay={0.1}>
           <Box mb={6} p={4} bg="ink.50" border="1px solid" borderColor="ink.100" borderRadius="l3">
             <Text fontSize="sm" color="ink.500" mb={2}>Your referral code</Text>
             <HStack gap={3}>
@@ -84,8 +88,10 @@ export default function Profile() {
               </Button>
             </HStack>
           </Box>
+          </ScrollReveal>
         ) : null}
 
+        <ScrollReveal delay={0.15}>
         <Box as="form" onSubmit={save} bg="white" borderRadius="l3" border="1px solid" borderColor="ink.100" p={{ base: 5, md: 7 }}>
           <VStack align="stretch" gap={5}>
             <Field label="Full name">
@@ -104,6 +110,7 @@ export default function Profile() {
             <Button type="submit" colorPalette="ink" size="lg" loading={loading}>Save changes</Button>
           </VStack>
         </Box>
+        </ScrollReveal>
 
         <Button mt={6} variant="outline" colorPalette="red" onClick={signOut}>
           <Icon><FaArrowRightFromBracket /></Icon> Log out

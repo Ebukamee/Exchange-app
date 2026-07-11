@@ -1,6 +1,7 @@
 "use client";
 import { Box, Heading, Text, SimpleGrid, Flex, Icon, HStack, Badge } from "@chakra-ui/react";
 import { FaBolt, FaShieldHalved, FaMoneyBillWave, FaCircleCheck } from "react-icons/fa6";
+import ScrollReveal, { staggerDelay } from "./ScrollReveal";
 
 // Apex-style "Get started in minutes" trust row.
 const items = [
@@ -12,27 +13,32 @@ const items = [
 export default function TrustBadges() {
   return (
     <Box maxW="1200px" mx="auto" px={{ base: 5, md: 8 }} py={{ base: 14, md: 20 }}>
-      <Box textAlign="center" mb={12}>
-        <Text fontSize="sm" color="ink.400" fontWeight="700" letterSpacing="0.1em" mb={2}>
-          WHY POWERPAY
-        </Text>
-        <Heading fontFamily="heading" fontWeight="800" fontSize={{ base: "4xl", md: "5xl" }} color="ink.900" letterSpacing="-0.02em">
-          Get started in minutes
-        </Heading>
-      </Box>
+      <ScrollReveal>
+        <Box textAlign="center" mb={12}>
+          <Text fontSize="sm" color="ink.400" fontWeight="700" letterSpacing="0.1em" mb={2}>
+            WHY POWERPAY
+          </Text>
+          <Heading fontFamily="heading" fontWeight="800" fontSize={{ base: "4xl", md: "5xl" }} color="ink.900" letterSpacing="-0.02em">
+            Get started in minutes
+          </Heading>
+        </Box>
+      </ScrollReveal>
 
       <SimpleGrid columns={{ base: 1, md: 3 }} gap={6}>
-        {items.map((it) => (
-          <Box key={it.title} bg="white" border="1px solid" borderColor="ink.100" borderRadius="l2" p={7} textAlign="center">
-            <Flex w="60px" h="60px" mx="auto" align="center" justify="center" bg="ink.900" color="white" borderRadius="full" mb={4} fontSize="2xl">
-              <Icon>{<it.icon />}</Icon>
-            </Flex>
-            <Heading fontSize="lg" mb={2} color="ink.900">{it.title}</Heading>
-            <Text fontSize="sm" color="ink.500">{it.body}</Text>
-          </Box>
+        {items.map((it, i) => (
+          <ScrollReveal key={it.title} delay={staggerDelay(i)}>
+            <Box bg="white" border="1px solid" borderColor="ink.100" borderRadius="l2" p={7} textAlign="center">
+              <Flex w="60px" h="60px" mx="auto" align="center" justify="center" bg="ink.900" color="white" borderRadius="full" mb={4} fontSize="2xl">
+                <Icon>{<it.icon />}</Icon>
+              </Flex>
+              <Heading fontSize="lg" mb={2} color="ink.900">{it.title}</Heading>
+              <Text fontSize="sm" color="ink.500">{it.body}</Text>
+            </Box>
+          </ScrollReveal>
         ))}
       </SimpleGrid>
 
+      <ScrollReveal>
       <HStack justify="center" gap={{ base: 4, md: 8 }} mt={10} flexWrap="wrap">
         {["NDPR compliant", "Bank-grade security", "24/7 support"].map((t) => (
           <HStack key={t} gap={2}>
@@ -41,6 +47,7 @@ export default function TrustBadges() {
           </HStack>
         ))}
       </HStack>
+      </ScrollReveal>
     </Box>
   );
 }

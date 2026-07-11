@@ -6,6 +6,7 @@ import { DialogRoot, DialogContent, DialogHeader, DialogBody, DialogFooter, Dial
 import { Field } from "../components/ui/field";
 import TransactionStore from "../Store/TransactionStore";
 import { toast, err, naira } from "../Helper";
+import ScrollReveal, { staggerDelay } from "../components/ScrollReveal";
 
 const blankSub = { name: "", rate: "" };
 const blank = { name: "", icon_url: "", subcategories: [{ ...blankSub }], enabled: true };
@@ -89,10 +90,11 @@ export default function ManageGiftcards() {
         <Text color="ink.400" py={10} textAlign="center">No gift cards yet.</Text>
       ) : (
         <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={4}>
-          {giftcards.map((g) => {
+          {giftcards.map((g, i) => {
             const subs = Array.isArray(g.subcategories) ? g.subcategories : [];
             return (
-              <Box key={g.id} bg="white" borderRadius="l2" border="1px solid" borderColor="ink.100" p={4}>
+              <ScrollReveal key={g.id} delay={staggerDelay(i, 0.05)}>
+              <Box bg="white" borderRadius="l2" border="1px solid" borderColor="ink.100" p={4}>
                 <Flex justify="space-between" align="start">
                   <HStack gap={3}>
                     {g.icon_url ? <Image src={g.icon_url} boxSize="36px" objectFit="contain" /> :
@@ -123,6 +125,7 @@ export default function ManageGiftcards() {
                   </Switch.Root>
                 </Flex>
               </Box>
+              </ScrollReveal>
             );
           })}
         </SimpleGrid>

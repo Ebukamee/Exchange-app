@@ -3,6 +3,7 @@ import { Box, Heading, Text, SimpleGrid, Flex, HStack, Icon } from "@chakra-ui/r
 import { useNavigate } from "@/src/compat/router";
 import { FaArrowRight, FaBitcoin, FaCartShopping, FaGift, FaMoneyBillWave } from "react-icons/fa6";
 import { CoinCluster, GiftCardFan, BankCards } from "./Art";
+import ScrollReveal, { staggerDelay } from "./ScrollReveal";
 
 // Cardtonic / Apex signature: large rounded pastel "solution" cards, each with
 // an illustration-style artwork filling the lower-right corner.
@@ -45,23 +46,26 @@ export default function FeaturesSection() {
   const nav = useNavigate();
   return (
     <Box maxW="1200px" mx="auto" px={{ base: 5, md: 8 }} py={{ base: 16, md: 24 }}>
-      <Box mb={12}>
-        <Heading
-          fontFamily="heading"
-          fontWeight="800"
-          fontSize={{ base: "4xl", md: "6xl" }}
-          lineHeight="1"
-          letterSpacing="-0.03em"
-          color="ink.200"
-        >
-          One platform,
-          <br />
-          <Text as="span" color="ink.900">endless possibilities</Text>
-        </Heading>
-      </Box>
+      <ScrollReveal>
+        <Box mb={12}>
+          <Heading
+            fontFamily="heading"
+            fontWeight="800"
+            fontSize={{ base: "4xl", md: "6xl" }}
+            lineHeight="1"
+            letterSpacing="-0.03em"
+            color="ink.200"
+          >
+            One platform,
+            <br />
+            <Text as="span" color="ink.900">endless possibilities</Text>
+          </Heading>
+        </Box>
+      </ScrollReveal>
 
       <SimpleGrid columns={{ base: 1, md: 2 }} gap={{ base: 5, md: 7 }}>
-        {solutions.map((s) => (
+        {solutions.map((s, i) => (
+          <ScrollReveal key={s.title} delay={staggerDelay(i)}>
           <Box
             key={s.title}
             bg={s.bg}
@@ -97,6 +101,7 @@ export default function FeaturesSection() {
             </Box>
             {s.art}
           </Box>
+          </ScrollReveal>
         ))}
       </SimpleGrid>
     </Box>

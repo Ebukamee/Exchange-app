@@ -5,6 +5,7 @@ import { Field } from "../components/ui/field";
 import TransactionStore from "../Store/TransactionStore";
 import { toaster } from "../components/ui/toaster";
 import { toast, err } from "../Helper";
+import ScrollReveal from "../components/ScrollReveal";
 
 // The company bank account users pay into when buying crypto by transfer.
 export default function SettingsAdmin() {
@@ -37,12 +38,15 @@ export default function SettingsAdmin() {
 
   return (
     <Box maxW="560px">
-      <Heading fontFamily="heading" fontSize="2xl" color="ink.900" mb={1}>Settings</Heading>
-      <Text color="ink.500" mb={6}>The bank account users transfer to when buying crypto.</Text>
+      <ScrollReveal>
+        <Heading fontFamily="heading" fontSize="2xl" color="ink.900" mb={1}>Settings</Heading>
+        <Text color="ink.500" mb={6}>The bank account users transfer to when buying crypto.</Text>
+      </ScrollReveal>
 
       {loading ? (
         <Flex justify="center" py={16}><Spinner size="lg" color="brand.500" /></Flex>
       ) : (
+        <ScrollReveal delay={0.1}>
         <Box as="form" onSubmit={save} bg="white" borderRadius="l3" border="1px solid" borderColor="ink.100" p={6}>
           <VStack align="stretch" gap={5}>
             <Field label="Bank name"><Input value={form.bank_name} onChange={set("bank_name")} placeholder="GTBank" /></Field>
@@ -51,6 +55,7 @@ export default function SettingsAdmin() {
             <Button type="submit" colorPalette="brand" size="lg" loading={busy}>Save bank details</Button>
           </VStack>
         </Box>
+        </ScrollReveal>
       )}
     </Box>
   );

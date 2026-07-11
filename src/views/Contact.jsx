@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Box, Heading, Text, Input, Textarea, Button, SimpleGrid, VStack, HStack, Icon } from "@chakra-ui/react";
 import { FaEnvelope, FaPhone, FaLocationDot, FaWhatsapp } from "react-icons/fa6";
+import ScrollReveal from "../components/ScrollReveal";
 import Nav from "../components/nav";
 import Footer from "../components/Footer";
 import { Field } from "../components/ui/field";
@@ -18,19 +19,22 @@ export default function Contact() {
     <Box bg="white">
       <Nav />
       <Box maxW="1100px" mx="auto" px={{ base: 5, md: 8 }} py={16}>
-        <Box textAlign="center" mb={12}>
-          <Text fontSize="sm" color="ink.400" fontWeight="700" letterSpacing="0.1em" mb={3}>
-            CONTACT US
-          </Text>
-          <Heading fontFamily="heading" fontWeight="800" fontSize={{ base: "4xl", md: "6xl" }} color="ink.900" letterSpacing="-0.03em">
-            We'd love to hear from you
-          </Heading>
-          <Text mt={4} color="ink.500">
-            Questions about a trade, rates or your account? Reach out anytime.
-          </Text>
-        </Box>
+        <ScrollReveal>
+          <Box textAlign="center" mb={12}>
+            <Text fontSize="sm" color="ink.400" fontWeight="700" letterSpacing="0.1em" mb={3}>
+              CONTACT US
+            </Text>
+            <Heading fontFamily="heading" fontWeight="800" fontSize={{ base: "4xl", md: "6xl" }} color="ink.900" letterSpacing="-0.03em">
+              We'd love to hear from you
+            </Heading>
+            <Text mt={4} color="ink.500">
+              Questions about a trade, rates or your account? Reach out anytime.
+            </Text>
+          </Box>
+        </ScrollReveal>
 
         <SimpleGrid columns={{ base: 1, md: 2 }} gap={10}>
+          <ScrollReveal direction="left">
           <VStack align="stretch" gap={5}>
             <ContactRow icon={FaEnvelope} label="Email" value="support@Powerpay.com" />
             <ContactRow icon={FaPhone} label="Phone" value="+234 816 8236 123" />
@@ -43,7 +47,9 @@ export default function Contact() {
               <Text color="ink.300" fontSize="sm">Our team is online 24/7 to help with any trade or question.</Text>
             </Box>
           </VStack>
+          </ScrollReveal>
 
+          <ScrollReveal direction="right">
           <Box as="form" onSubmit={submit} bg="white" border="1px solid" borderColor="ink.100" borderRadius="l2" p={7}>
             <VStack align="stretch" gap={4}>
               <Field label="Full name">
@@ -60,6 +66,7 @@ export default function Contact() {
               </Button>
             </VStack>
           </Box>
+          </ScrollReveal>
         </SimpleGrid>
       </Box>
       <Footer />

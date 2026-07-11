@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Box, Heading, Text, Flex } from "@chakra-ui/react";
 import { FaPlus, FaMinus } from "react-icons/fa6";
+import ScrollReveal, { staggerDelay } from "./ScrollReveal";
 
 const faqItems = [
   {
@@ -26,20 +27,22 @@ export default function FAQ() {
   const [open, setOpen] = useState(0);
   return (
     <Box maxW="820px" mx="auto" px={{ base: 5, md: 8 }} py={{ base: 16, md: 24 }}>
-      <Box textAlign="center" mb={10}>
-        <Heading fontFamily="heading" fontWeight="800" fontSize={{ base: "4xl", md: "5xl" }} color="ink.900" letterSpacing="-0.02em">
-          Frequently asked questions
-        </Heading>
-        <Text mt={3} color="ink.500">
-          Everything you need to know before your first trade.
-        </Text>
-      </Box>
+      <ScrollReveal>
+        <Box textAlign="center" mb={10}>
+          <Heading fontFamily="heading" fontWeight="800" fontSize={{ base: "4xl", md: "5xl" }} color="ink.900" letterSpacing="-0.02em">
+            Frequently asked questions
+          </Heading>
+          <Text mt={3} color="ink.500">
+            Everything you need to know before your first trade.
+          </Text>
+        </Box>
+      </ScrollReveal>
 
       {faqItems.map((item, i) => {
         const active = open === i;
         return (
+          <ScrollReveal key={item.q} delay={staggerDelay(i)}>
           <Box
-            key={item.q}
             border="1px solid"
             borderColor={active ? "ink.300" : "ink.100"}
             borderRadius="l2"
@@ -65,6 +68,7 @@ export default function FAQ() {
               </Text>
             )}
           </Box>
+          </ScrollReveal>
         );
       })}
     </Box>

@@ -3,6 +3,7 @@ import { Box, Flex, Heading, Text, Button, HStack, Stack, SimpleGrid, Icon } fro
 import { useNavigate } from "@/src/compat/router";
 import { FaArrowRight, FaBitcoin, FaEthereum } from "react-icons/fa6";
 import { SiTether, SiBitcoin } from "react-icons/si";
+import ScrollReveal, { staggerDelay } from "./ScrollReveal";
 
 function FloatBadge({ children, color, ...pos }) {
   return (
@@ -36,7 +37,7 @@ export default function Hero() {
 
       <Box maxW="1200px" mx="auto" px={{ base: 5, md: 8 }} pt={{ base: 12, md: 20 }} pb={12} position="relative">
         <Flex direction={{ base: "column", lg: "row" }} align="center" gap={14}>
-          <Box flex="1">
+          <ScrollReveal direction="up" style={{ flex: 1 }}>
             <Heading
               as="h1"
               fontFamily="heading"
@@ -73,10 +74,10 @@ export default function Hero() {
                 <Flex bg="ink.900" color="white" borderRadius="full" px={3} py={1} fontSize="xs" fontWeight="700">20+</Flex>
               </HStack>
             </Box>
-          </Box>
+          </ScrollReveal>
 
           {/* estimate card */}
-          <Box flex="1" w="100%" maxW="440px" position="relative">
+          <ScrollReveal direction="up" delay={0.2} style={{ flex: 1, width: "100%", maxWidth: "440px", position: "relative" }}>
             <FloatBadge top="-24px" left="-18px" color="#F7931A"><SiBitcoin /></FloatBadge>
             <FloatBadge top="40%" right="-26px" color="#26A17B"><SiTether /></FloatBadge>
             <FloatBadge bottom="-20px" left="10%" color="#627EEA"><FaEthereum /></FloatBadge>
@@ -95,14 +96,20 @@ export default function Hero() {
                 Trade now
               </Button>
             </Box>
-          </Box>
+          </ScrollReveal>
         </Flex>
 
         <SimpleGrid columns={{ base: 2, md: 4 }} gap={6} mt={20}>
-          <Stat value="₦2.5B+" label="Traded volume" />
-          <Stat value="18k+" label="Happy traders" />
-          <Stat value="< 10 min" label="Avg. payout" />
-          <Stat value="24/7" label="Support" />
+          {[
+            { value: "₦2.5B+", label: "Traded volume" },
+            { value: "18k+", label: "Happy traders" },
+            { value: "< 10 min", label: "Avg. payout" },
+            { value: "24/7", label: "Support" },
+          ].map((s, i) => (
+            <ScrollReveal key={s.label} delay={staggerDelay(i)}>
+              <Stat value={s.value} label={s.label} />
+            </ScrollReveal>
+          ))}
         </SimpleGrid>
       </Box>
     </Box>

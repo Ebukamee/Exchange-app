@@ -4,6 +4,7 @@ import { Box, Heading, Text, Flex, HStack, VStack, Badge, Button, Spinner, Simpl
 import TransactionStore from "../Store/TransactionStore";
 import { toaster } from "../components/ui/toaster";
 import { toast, err, naira, formatDate, statusMeta } from "../Helper";
+import ScrollReveal, { staggerDelay } from "../components/ScrollReveal";
 
 export default function WithdrawalsAdmin() {
   const { withdrawals, getAllWithdrawals, reviewWithdrawal } = TransactionStore();
@@ -38,8 +39,10 @@ export default function WithdrawalsAdmin() {
 
   return (
     <Box>
-      <Heading fontFamily="heading" fontSize="2xl" color="ink.900" mb={1}>Withdrawals</Heading>
-      <Text color="ink.500" mb={6}>Approve payouts to users' bank accounts. Rejecting refunds the balance.</Text>
+      <ScrollReveal>
+        <Heading fontFamily="heading" fontSize="2xl" color="ink.900" mb={1}>Withdrawals</Heading>
+        <Text color="ink.500" mb={6}>Approve payouts to users' bank accounts. Rejecting refunds the balance.</Text>
+      </ScrollReveal>
 
       {loading ? (
         <Flex justify="center" py={16}><Spinner size="lg" color="brand.500" /></Flex>
@@ -56,10 +59,11 @@ export default function WithdrawalsAdmin() {
                 <Text color="ink.400" py={10} textAlign="center">Nothing here.</Text>
               ) : (
                 <SimpleGrid columns={{ base: 1, lg: 2 }} gap={4}>
-                  {filterBy(s).map((wd) => {
+                  {filterBy(s).map((wd, i) => {
                     const meta = statusMeta(wd.status);
                     return (
-                      <Box key={wd.id} bg="white" borderRadius="l2" border="1px solid" borderColor="ink.100" p={4}
+                      <ScrollReveal key={wd.id} delay={staggerDelay(i, 0.05)}>
+                      <Box bg="white" borderRadius="l2" border="1px solid" borderColor="ink.100" p={4}
                         borderLeft="3px solid" borderLeftColor={wd.status === "pending" ? "yellow.400" : wd.status === "confirmed" ? "green.400" : "red.400"}>
                         <Flex justify="space-between" mb={2}>
                           <Text fontWeight="800" color="brand.600">{naira(wd.amount)}</Text>
@@ -78,6 +82,7 @@ export default function WithdrawalsAdmin() {
                           </HStack>
                         )}
                       </Box>
+                      </ScrollReveal>
                     );
                   })}
                 </SimpleGrid>

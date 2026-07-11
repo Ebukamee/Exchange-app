@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Box, Flex, Heading, Text, SimpleGrid, HStack, VStack, Icon, Button, Badge, Spinner } from "@chakra-ui/react";
 import { useNavigate } from "@/src/compat/router";
 import { FaArrowTrendUp, FaCartShopping, FaGift, FaMoneyBillTransfer, FaWallet } from "react-icons/fa6";
+import ScrollReveal, { staggerDelay } from "../components/ScrollReveal";
 import DashboardLayout from "../components/DashboardLayout";
 import useAuthStore from "../Store/userStore";
 import TransactionStore from "../Store/TransactionStore";
@@ -30,14 +31,17 @@ export default function Dashboard() {
   return (
     <DashboardLayout>
       <VStack align="stretch" gap={8}>
-        <Box>
-          <Heading fontFamily="heading" fontSize="2xl" color="ink.900">
-            Welcome back, {cut(profile?.full_name)} 👋
-          </Heading>
-          <Text color="ink.500">Here's what's happening with your account.</Text>
-        </Box>
+        <ScrollReveal>
+          <Box>
+            <Heading fontFamily="heading" fontSize="2xl" color="ink.900">
+              Welcome back, {cut(profile?.full_name)} 👋
+            </Heading>
+            <Text color="ink.500">Here's what's happening with your account.</Text>
+          </Box>
+        </ScrollReveal>
 
         {/* Balance card */}
+        <ScrollReveal delay={0.1}>
         <Box
           bg="ink.950"
           color="white"
@@ -63,10 +67,12 @@ export default function Dashboard() {
             </Button>
           </HStack>
         </Box>
+        </ScrollReveal>
 
         {/* Quick actions */}
         <SimpleGrid columns={{ base: 2, md: 4 }} gap={4}>
-          {actions.map((a) => (
+          {actions.map((a, i) => (
+            <ScrollReveal key={a.to} delay={staggerDelay(i)}>
             <Box
               key={a.to}
               as="button"
@@ -85,10 +91,12 @@ export default function Dashboard() {
               </Flex>
               <Text fontWeight="600" color="ink.900" fontSize="sm">{a.label}</Text>
             </Box>
+            </ScrollReveal>
           ))}
         </SimpleGrid>
 
         {/* Recent transactions */}
+        <ScrollReveal>
         <Box bg="white" borderRadius="l2" border="1px solid" borderColor="ink.100" p={{ base: 5, md: 6 }}>
           <Flex justify="space-between" align="center" mb={4}>
             <Heading fontSize="lg" color="ink.900">Recent activity</Heading>
@@ -122,6 +130,7 @@ export default function Dashboard() {
             </VStack>
           )}
         </Box>
+        </ScrollReveal>
       </VStack>
     </DashboardLayout>
   );

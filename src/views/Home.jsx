@@ -2,6 +2,7 @@
 import { Box, Heading, Text, Button, Flex } from "@chakra-ui/react";
 import { useNavigate } from "@/src/compat/router";
 import { FaArrowRight } from "react-icons/fa6";
+import ScrollReveal from "../components/ScrollReveal";
 import Nav from "../components/nav";
 import Hero from "../components/Hero";
 import FeaturesSection from "../components/feature";
@@ -15,6 +16,7 @@ import Footer from "../components/Footer";
 function CTA() {
   const nav = useNavigate();
   return (
+    <ScrollReveal>
     <Box maxW="1200px" mx="auto" px={{ base: 5, md: 8 }} mt={4}>
       <Box
         position="relative"
@@ -41,6 +43,7 @@ function CTA() {
         </Flex>
       </Box>
     </Box>
+    </ScrollReveal>
   );
 }
 

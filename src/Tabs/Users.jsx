@@ -4,6 +4,7 @@ import { Box, Heading, Text, Flex, HStack, VStack, Spinner, SimpleGrid, Badge, A
 import { adminGetUsers, toggleAdmin } from "@/app/actions/admin";
 import { naira, formatDate } from "../Helper";
 import { toast } from "../Helper";
+import ScrollReveal, { staggerDelay } from "../components/ScrollReveal";
 
 const PAGE_LIMIT = 50;
 
@@ -52,10 +53,12 @@ export default function Users() {
   return (
     <Box>
       <Flex justify="space-between" align="center" mb={6} wrap="wrap" gap={3}>
-        <Box>
-          <Heading fontFamily="heading" fontSize="2xl" color="ink.900">Users</Heading>
-          <Text color="ink.500">{users.length} registered {users.length === 1 ? "user" : "users"}.</Text>
-        </Box>
+        <ScrollReveal>
+          <Box>
+            <Heading fontFamily="heading" fontSize="2xl" color="ink.900">Users</Heading>
+            <Text color="ink.500">{users.length} registered {users.length === 1 ? "user" : "users"}.</Text>
+          </Box>
+        </ScrollReveal>
         <Input maxW="260px" placeholder="Search name or email" value={q} onChange={(e) => setQ(e.target.value)} />
       </Flex>
 
@@ -64,8 +67,9 @@ export default function Users() {
       ) : (
         <>
           <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
-            {filtered.map((u) => (
-              <Box key={u.id} bg="white" borderRadius="l2" border="1px solid" borderColor="ink.100" p={4}>
+            {filtered.map((u, i) => (
+              <ScrollReveal key={u.id} delay={staggerDelay(i, 0.05)}>
+              <Box bg="white" borderRadius="l2" border="1px solid" borderColor="ink.100" p={4}>
                 <Flex justify="space-between" align="start">
                   <HStack gap={3}>
                     <Avatar.Root size="sm" colorPalette="brand"><Avatar.Fallback name={u.full_name || u.email} /></Avatar.Root>
@@ -95,6 +99,7 @@ export default function Users() {
                   </Button>
                 </Flex>
               </Box>
+              </ScrollReveal>
             ))}
           </SimpleGrid>
           {hasMore && (

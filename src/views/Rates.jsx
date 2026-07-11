@@ -5,6 +5,7 @@ import Nav from "../components/nav";
 import Footer from "../components/Footer";
 import TransactionStore from "../Store/TransactionStore";
 import { naira } from "../Helper";
+import ScrollReveal, { staggerDelay } from "../components/ScrollReveal";
 
 export default function RatesPage() {
   const { cryptos, giftcards, fetchCryptos, fetchGiftcards } = TransactionStore();
@@ -20,17 +21,19 @@ export default function RatesPage() {
     <Box bg="white" minH="100vh">
       <Nav />
       <Box maxW="1200px" mx="auto" px={{ base: 5, md: 8 }} py={16}>
-        <Box textAlign="center" mb={10}>
-          <Text fontSize="sm" color="ink.400" fontWeight="700" letterSpacing="0.1em" mb={3}>
-            LIVE RATES
-          </Text>
-          <Heading fontFamily="heading" fontWeight="800" fontSize={{ base: "4xl", md: "6xl" }} color="ink.900" letterSpacing="-0.03em">
-            Today's best rates
-          </Heading>
-          <Text mt={4} color="ink.500">
-            Rates are set by our team and updated regularly. Sign up to lock in your trade.
-          </Text>
-        </Box>
+        <ScrollReveal>
+          <Box textAlign="center" mb={10}>
+            <Text fontSize="sm" color="ink.400" fontWeight="700" letterSpacing="0.1em" mb={3}>
+              LIVE RATES
+            </Text>
+            <Heading fontFamily="heading" fontWeight="800" fontSize={{ base: "4xl", md: "6xl" }} color="ink.900" letterSpacing="-0.03em">
+              Today's best rates
+            </Heading>
+            <Text mt={4} color="ink.500">
+              Rates are set by our team and updated regularly. Sign up to lock in your trade.
+            </Text>
+          </Box>
+        </ScrollReveal>
 
         {loading ? (
           <Flex justify="center" py={20}>
@@ -48,8 +51,10 @@ export default function RatesPage() {
                 <Empty label="No cryptocurrencies listed yet." />
               ) : (
                 <SimpleGrid columns={{ base: 1, sm: 2, lg: 3 }} gap={5}>
-                  {cryptos.filter((c) => c.enabled).map((c) => (
-                    <CryptoCalcCard key={c.id} crypto={c} />
+                  {cryptos.filter((c) => c.enabled).map((c, i) => (
+                    <ScrollReveal key={c.id} delay={staggerDelay(i)}>
+                      <CryptoCalcCard crypto={c} />
+                    </ScrollReveal>
                   ))}
                 </SimpleGrid>
               )}
@@ -60,8 +65,10 @@ export default function RatesPage() {
                 <Empty label="No gift cards listed yet." />
               ) : (
                 <SimpleGrid columns={{ base: 1, sm: 2, lg: 3 }} gap={5}>
-                  {giftcards.filter((g) => g.enabled).map((g) => (
-                    <GiftcardCalcCard key={g.id} card={g} />
+                  {giftcards.filter((g) => g.enabled).map((g, i) => (
+                    <ScrollReveal key={g.id} delay={staggerDelay(i)}>
+                      <GiftcardCalcCard card={g} />
+                    </ScrollReveal>
                   ))}
                 </SimpleGrid>
               )}

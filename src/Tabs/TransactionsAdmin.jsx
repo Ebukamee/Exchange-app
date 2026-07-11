@@ -5,6 +5,7 @@ import { DialogRoot, DialogContent, DialogHeader, DialogBody, DialogFooter, Dial
 import TransactionStore from "../Store/TransactionStore";
 import { toaster } from "../components/ui/toaster";
 import { toast, err, naira, formatDate, statusMeta, txTypeLabel } from "../Helper";
+import ScrollReveal, { staggerDelay } from "../components/ScrollReveal";
 
 export default function TransactionsAdmin() {
   const { transactions, getAllTransactions, reviewTransaction, getAdminProofUrls } = TransactionStore();
@@ -52,8 +53,10 @@ export default function TransactionsAdmin() {
 
   return (
     <Box>
-      <Heading fontFamily="heading" fontSize="2xl" color="ink.900" mb={1}>Transactions</Heading>
-      <Text color="ink.500" mb={6}>Review proof and approve or reject trades.</Text>
+      <ScrollReveal>
+        <Heading fontFamily="heading" fontSize="2xl" color="ink.900" mb={1}>Transactions</Heading>
+        <Text color="ink.500" mb={6}>Review proof and approve or reject trades.</Text>
+      </ScrollReveal>
 
       {loading ? (
         <Flex justify="center" py={16}><Spinner size="lg" color="brand.500" /></Flex>
@@ -70,8 +73,10 @@ export default function TransactionsAdmin() {
                 <Text color="ink.400" py={10} textAlign="center">Nothing here.</Text>
               ) : (
                 <SimpleGrid columns={{ base: 1, lg: 2 }} gap={4}>
-                  {filterBy(s).map((tx) => (
-                    <TxCard key={tx.id} tx={tx} onOpen={() => setActive(tx)} />
+                  {filterBy(s).map((tx, i) => (
+                    <ScrollReveal key={tx.id} delay={staggerDelay(i, 0.05)}>
+                      <TxCard tx={tx} onOpen={() => setActive(tx)} />
+                    </ScrollReveal>
                   ))}
                 </SimpleGrid>
               )}

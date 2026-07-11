@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Box, Text, Input, Button, VStack, HStack, Flex, Icon } from "@chakra-ui/react";
 import { useNavigate } from "@/src/compat/router";
 import { FaBuildingColumns } from "react-icons/fa6";
+import ScrollReveal from "../components/ScrollReveal";
 import DashboardLayout from "../components/DashboardLayout";
 import { Field } from "../components/ui/field";
 import { TradeCard } from "./SellCrypto";
@@ -51,11 +52,14 @@ export default function Withdraw() {
     <DashboardLayout>
       <TradeCard title="Withdraw" subtitle="Cash out your Powerpay balance to your bank account.">
         <VStack align="stretch" gap={6}>
+          <ScrollReveal>
           <Box bg="ink.950" color="white" borderRadius="l2" p={5}>
             <Text fontSize="sm" color="ink.300">Available balance</Text>
             <Text fontFamily="heading" fontSize="3xl" fontWeight="800">{naira(balance)}</Text>
           </Box>
+          </ScrollReveal>
 
+          <ScrollReveal delay={0.1}>
           <Box borderRadius="l2" border="1px solid" borderColor="ink.100" bg="white" p={4}>
             <HStack color="brand.600" mb={2} gap={2}>
               <Icon><FaBuildingColumns /></Icon>
@@ -74,6 +78,7 @@ export default function Withdraw() {
               </Text>
             )}
           </Box>
+          </ScrollReveal>
 
           <Field label="Amount to withdraw" helperText="Minimum ₦1,000" errorText={amount && !valid ? (numAmt < 1000 ? "Minimum withdrawal is ₦1,000" : "Amount exceeds your balance") : undefined} invalid={!!amount && !valid}>
             <Input type="number" min="0" step="any" placeholder="0.00" value={amount} onChange={(e) => setAmount(e.target.value)} />

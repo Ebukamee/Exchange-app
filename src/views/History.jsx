@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Box, Heading, Text, Tabs, VStack, Flex, HStack, Badge, Image, Spinner, Link as CLink } from "@chakra-ui/react";
+import ScrollReveal, { staggerDelay } from "../components/ScrollReveal";
 import DashboardLayout from "../components/DashboardLayout";
 import TransactionStore from "../Store/TransactionStore";
 import { naira, formatDate, statusMeta, txTypeLabel } from "../Helper";
@@ -18,7 +19,9 @@ export default function History() {
   return (
     <DashboardLayout>
       <Box maxW="820px" mx="auto">
-        <Heading fontFamily="heading" fontSize="2xl" color="ink.900" mb={6}>History</Heading>
+        <ScrollReveal>
+          <Heading fontFamily="heading" fontSize="2xl" color="ink.900" mb={6}>History</Heading>
+        </ScrollReveal>
         {loading ? (
           <Flex justify="center" py={16}><Spinner size="lg" color="brand.500" /></Flex>
         ) : (
@@ -33,7 +36,7 @@ export default function History() {
                 <Empty label="No transactions yet." />
               ) : (
                 <VStack align="stretch" gap={3}>
-                  {transactions.map((tx) => <TxRow key={tx.id} tx={tx} />)}
+                  {transactions.map((tx, i) => <ScrollReveal key={tx.id} delay={staggerDelay(i, 0.05)}><TxRow tx={tx} /></ScrollReveal>)}
                 </VStack>
               )}
             </Tabs.Content>
@@ -43,7 +46,7 @@ export default function History() {
                 <Empty label="No withdrawals yet." />
               ) : (
                 <VStack align="stretch" gap={3}>
-                  {withdrawals.map((wd) => <WdRow key={wd.id} wd={wd} />)}
+                  {withdrawals.map((wd, i) => <ScrollReveal key={wd.id} delay={staggerDelay(i, 0.05)}><WdRow wd={wd} /></ScrollReveal>)}
                 </VStack>
               )}
             </Tabs.Content>

@@ -7,6 +7,7 @@ import { Field } from "../components/ui/field";
 import TransactionStore from "../Store/TransactionStore";
 import { toaster } from "../components/ui/toaster";
 import { toast, err, naira } from "../Helper";
+import ScrollReveal, { staggerDelay } from "../components/ScrollReveal";
 
 const blank = { name: "", symbol: "", icon_url: "", buy_price: "", sell_price: "", deposit_address: "", enabled: true };
 
@@ -75,8 +76,9 @@ export default function ManageCrypto() {
         <Text color="ink.400" py={10} textAlign="center">No cryptocurrencies yet.</Text>
       ) : (
         <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
-          {cryptos.map((c) => (
-            <Box key={c.id} bg="white" borderRadius="l2" border="1px solid" borderColor="ink.100" p={4}>
+          {cryptos.map((c, i) => (
+            <ScrollReveal key={c.id} delay={staggerDelay(i, 0.05)}>
+            <Box bg="white" borderRadius="l2" border="1px solid" borderColor="ink.100" p={4}>
               <Flex justify="space-between" align="start">
                 <HStack gap={3}>
                   {c.icon_url ? <Image src={c.icon_url} boxSize="36px" objectFit="contain" /> :
@@ -98,6 +100,7 @@ export default function ManageCrypto() {
                 </Switch.Root>
               </Flex>
             </Box>
+            </ScrollReveal>
           ))}
         </SimpleGrid>
       )}

@@ -1,6 +1,7 @@
 "use client";
 import { Box, Flex, Heading, Text, SimpleGrid, HStack, Icon } from "@chakra-ui/react";
 import { FaCircleCheck } from "react-icons/fa6";
+import ScrollReveal, { staggerDelay } from "./ScrollReveal";
 
 const reasons = [
   "Best rates in Naira",
@@ -21,17 +22,20 @@ export default function Other() {
   return (
     <Box maxW="1200px" mx="auto" px={{ base: 5, md: 8 }}>
       {/* How it works */}
-      <Box textAlign="center" mb={12}>
-        <Text fontSize="sm" color="ink.400" fontWeight="700" letterSpacing="0.1em" mb={2}>
-          HOW IT WORKS
-        </Text>
-        <Heading fontFamily="heading" fontWeight="800" fontSize={{ base: "4xl", md: "5xl" }} color="ink.900" letterSpacing="-0.02em">
-          Trade in three simple steps
-        </Heading>
-      </Box>
+      <ScrollReveal>
+        <Box textAlign="center" mb={12}>
+          <Text fontSize="sm" color="ink.400" fontWeight="700" letterSpacing="0.1em" mb={2}>
+            HOW IT WORKS
+          </Text>
+          <Heading fontFamily="heading" fontWeight="800" fontSize={{ base: "4xl", md: "5xl" }} color="ink.900" letterSpacing="-0.02em">
+            Trade in three simple steps
+          </Heading>
+        </Box>
+      </ScrollReveal>
       <SimpleGrid columns={{ base: 1, md: 3 }} gap={6} mb={20}>
-        {steps.map((s) => (
-          <Box key={s.n} bg="white" border="1px solid" borderColor="ink.100" borderRadius="l2" p={7}>
+        {steps.map((s, i) => (
+          <ScrollReveal key={s.n} delay={staggerDelay(i)}>
+          <Box bg="white" border="1px solid" borderColor="ink.100" borderRadius="l2" p={7}>
             <Flex
               w="44px"
               h="44px"
@@ -53,10 +57,12 @@ export default function Other() {
               {s.body}
             </Text>
           </Box>
+          </ScrollReveal>
         ))}
       </SimpleGrid>
 
       {/* Why us */}
+      <ScrollReveal>
       <Box bg="ink.950" borderRadius="l3" p={{ base: 8, md: 12 }} color="white">
         <Flex direction={{ base: "column", md: "row" }} gap={10} align="center">
           <Box flex="1">
@@ -78,6 +84,7 @@ export default function Other() {
           </SimpleGrid>
         </Flex>
       </Box>
+      </ScrollReveal>
     </Box>
   );
 }
