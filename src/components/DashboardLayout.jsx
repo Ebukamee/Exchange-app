@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import { Box, Flex, HStack, VStack, Text, Icon, Button } from "@chakra-ui/react";
 import { NavLink, useNavigate, useLocation } from "@/src/compat/router";
 import {
@@ -11,6 +12,8 @@ import {
   FaUser,
   FaArrowRightFromBracket,
   FaUsers,
+  FaBars,
+  FaXmark,
 } from "react-icons/fa6";
 import Logo from "./Logo";
 import useAuthStore from "../Store/userStore";
@@ -27,10 +30,25 @@ const nav = [
   { to: "/dashboard/profile", label: "Profile", icon: FaUser },
 ];
 
+const mobileNav = [
+  { to: "/dashboard", label: "Home", icon: FaHouse, end: true },
+  { to: "/dashboard/sell-crypto", label: "Sell", icon: FaArrowTrendUp },
+  { to: "/dashboard/buy-crypto", label: "Buy", icon: FaCartShopping },
+  { to: "/dashboard/history", label: "History", icon: FaClockRotateLeft },
+];
+
+const moreMenuItems = [
+  { to: "/dashboard/sell-giftcard", label: "Sell Gift Card", icon: FaGift },
+  { to: "/dashboard/withdraw", label: "Withdraw", icon: FaMoneyBillTransfer },
+  { to: "/dashboard/referral", label: "Referral", icon: FaUsers },
+  { to: "/dashboard/profile", label: "Profile", icon: FaUser },
+];
+
 export default function DashboardLayout({ children }) {
   const { profile, logout } = useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
+  const [moreOpen, setMoreOpen] = useState(false);
 
   const signOut = async () => {
     await logout();
@@ -119,6 +137,68 @@ export default function DashboardLayout({ children }) {
         </Box>
       </Flex>
 
+      {/* More menu overlay (mobile) */}
+      {moreOpen && (
+        <Box
+          display={{ base: "block", md: "none" }}
+          position="fixed"
+          bottom="0"
+          left="0"
+          right="0"
+          top="0"
+          zIndex="25"
+        >
+          <Box position="absolute" inset="0" bg="blackAlpha.400" onClick={() => setMoreOpen(false)} />
+          <Box
+            position="absolute"
+            bottom="60px"
+            left="0"
+            right="0"
+            bg="white"
+            borderTop="1px solid"
+            borderColor="ink.100"
+            borderTopRadius="2xl"
+            p={4}
+            pb={5}
+          >
+            <VStack align="stretch" gap={1}>
+              {moreMenuItems.map((item) => {
+                const isActive = location.pathname === item.to || location.pathname.startsWith(item.to + "/");
+                return (
+                  <Box
+                    key={item.to}
+                    as="button"
+                    onClick={() => { navigate(item.to); setMoreOpen(false); }}
+                    w="100%"
+                    textAlign="left"
+                  >
+                    <HStack
+                      px={4}
+                      py={3}
+                      borderRadius="xl"
+                      gap={3}
+                      bg={isActive ? "brand.50" : "transparent"}
+                      color={isActive ? "brand.500" : "ink.600"}
+                      _hover={{ bg: "ink.50" }}
+                    >
+                      <Icon fontSize="md"><item.icon /></Icon>
+                      <Text fontWeight="600" fontSize="sm">{item.label}</Text>
+                    </HStack>
+                  </Box>
+                );
+              })}
+              <Box h="1px" bg="ink.100" my={1} />
+              <Box as="button" onClick={signOut} w="100%" textAlign="left">
+                <HStack px={4} py={3} borderRadius="xl" gap={3} color="red.500" _hover={{ bg: "red.50" }}>
+                  <Icon fontSize="md"><FaArrowRightFromBracket /></Icon>
+                  <Text fontWeight="600" fontSize="sm">Logout</Text>
+                </HStack>
+              </Box>
+            </VStack>
+          </Box>
+        </Box>
+      )}
+
       {/* Bottom nav (mobile) */}
       <Flex
         display={{ base: "flex", md: "none" }}
@@ -131,18 +211,28 @@ export default function DashboardLayout({ children }) {
         borderColor="ink.100"
         justify="space-around"
         py={2}
-        zIndex="20"
+        zIndex="30"
       >
-        {nav.filter((n) => n.to !== "/dashboard/profile").slice(0, 5).map((item) => (
+        {mobileNav.map((item) => (
           <NavLink key={item.to} to={item.to} end={item.end}>
             {({ isActive }) => (
               <VStack gap={0.5} color={isActive ? "brand.500" : "ink.400"} px={2}>
-                <Icon fontSize="lg">{<item.icon />}</Icon>
-                <Text fontSize="9px">{item.label.split(" ")[0]}</Text>
+                <Icon fontSize="lg"><item.icon /></Icon>
+                <Text fontSize="9px">{item.label}</Text>
               </VStack>
             )}
           </NavLink>
         ))}
+        <VStack
+          as="button"
+          gap={0.5}
+          color={moreOpen ? "brand.500" : "ink.400"}
+          px={2}
+          onClick={() => setMoreOpen(!moreOpen)}
+        >
+          <Icon fontSize="lg">{moreOpen ? <FaXmark /> : <FaBars />}</Icon>
+          <Text fontSize="9px">More</Text>
+        </VStack>
       </Flex>
     </Flex>
   );
