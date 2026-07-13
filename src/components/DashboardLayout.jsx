@@ -10,6 +10,7 @@ import {
   FaClockRotateLeft,
   FaUser,
   FaArrowRightFromBracket,
+  FaUsers,
 } from "react-icons/fa6";
 import Logo from "./Logo";
 import useAuthStore from "../Store/userStore";
@@ -22,6 +23,7 @@ const nav = [
   { to: "/dashboard/sell-giftcard", label: "Sell Gift Card", icon: FaGift },
   { to: "/dashboard/withdraw", label: "Withdraw", icon: FaMoneyBillTransfer },
   { to: "/dashboard/history", label: "History", icon: FaClockRotateLeft },
+  { to: "/dashboard/referral", label: "Referral", icon: FaUsers },
   { to: "/dashboard/profile", label: "Profile", icon: FaUser },
 ];
 
@@ -51,7 +53,7 @@ export default function DashboardLayout({ children }) {
         p={6}
       >
         <Box mb={10}>
-          <Logo useImage imageHeight={36} />
+          <Logo useImage imageHeight={28} />
         </Box>
         <VStack align="stretch" gap={1} flex="1">
           {nav.map((item) => (
@@ -94,7 +96,7 @@ export default function DashboardLayout({ children }) {
           zIndex="10"
         >
           <Box display={{ base: "block", md: "none" }}>
-            <Logo useImage imageHeight={28} />
+            <Logo useImage imageHeight={22} />
           </Box>
           <Text display={{ base: "none", md: "block" }} fontWeight="700" color="ink.900" fontFamily="heading">
             {nav.find((n) => (n.end ? location.pathname === n.to : location.pathname.startsWith(n.to)))?.label || "Dashboard"}

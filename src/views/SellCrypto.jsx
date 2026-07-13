@@ -5,6 +5,17 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate } from "@/src/compat/router";
 import { FaCircleInfo, FaRegCopy } from "react-icons/fa6";
+
+const CARD_COLORS = [
+  { bg: "linear-gradient(135deg, #f97316, #ea580c)", light: "rgba(249,115,22,0.12)", accent: "#f97316" },
+  { bg: "linear-gradient(135deg, #8b5cf6, #7c3aed)", light: "rgba(139,92,246,0.12)", accent: "#8b5cf6" },
+  { bg: "linear-gradient(135deg, #06b6d4, #0891b2)", light: "rgba(6,182,212,0.12)", accent: "#06b6d4" },
+  { bg: "linear-gradient(135deg, #10b981, #059669)", light: "rgba(16,185,129,0.12)", accent: "#10b981" },
+  { bg: "linear-gradient(135deg, #ec4899, #db2777)", light: "rgba(236,72,153,0.12)", accent: "#ec4899" },
+  { bg: "linear-gradient(135deg, #f59e0b, #d97706)", light: "rgba(245,158,11,0.12)", accent: "#f59e0b" },
+  { bg: "linear-gradient(135deg, #3b82f6, #2563eb)", light: "rgba(59,130,246,0.12)", accent: "#3b82f6" },
+  { bg: "linear-gradient(135deg, #ef4444, #dc2626)", light: "rgba(239,68,68,0.12)", accent: "#ef4444" },
+];
 import DashboardLayout from "../components/DashboardLayout";
 import FileUpload from "../components/FileUpload";
 import { Field } from "../components/ui/field";
@@ -69,57 +80,47 @@ export default function SellCrypto() {
           <VStack align="stretch" gap={6}>
             <Field label="Choose cryptocurrency">
               <SimpleGrid columns={{ base: 2, md: 3 }} gap={4}>
-                {list.map((c) => {
+                {list.map((c, idx) => {
                   const active = selected?.id === c.id;
                   const symbol = c.symbol || c.name;
+                  const clr = CARD_COLORS[idx % CARD_COLORS.length];
                   return (
                     <Box
                       key={c.id}
                       as="button"
                       type="button"
                       onClick={() => setSelected(c)}
-                      bg="#1B1C20"
+                      bg="white"
                       borderRadius="xl"
                       border="2px solid"
-                      borderColor={active ? "brand.500" : "#2a2b30"}
-                      p={5}
-                      position="relative"
+                      borderColor={active ? clr.accent : "#e5e5e5"}
                       overflow="hidden"
                       transition="all .25s"
-                      _hover={{ borderColor: active ? "brand.500" : "#5C5C5C", transform: "translateY(-2px)", boxShadow: "0 8px 24px rgba(0,0,0,0.3)" }}
-                      boxShadow={active ? "0 0 0 3px rgba(239,68,68,0.2)" : "none"}
+                      _hover={{ transform: "translateY(-3px)", boxShadow: `0 8px 24px ${clr.light}`, borderColor: clr.accent }}
+                      boxShadow={active ? `0 0 0 3px ${clr.light}` : "none"}
                       textAlign="left"
                     >
-                      <Text
-                        position="absolute"
-                        bottom="-12px"
-                        right="-8px"
-                        fontSize="90px"
-                        fontWeight="900"
-                        color="#797B89"
-                        opacity={0.08}
-                        lineHeight="1"
-                        userSelect="none"
-                        pointerEvents="none"
-                      >
-                        {symbol?.[0]}
-                      </Text>
-                      <HStack gap={3} mb={3} position="relative">
-                        {c.icon_url ? (
-                          <Image src={c.icon_url} boxSize="36px" objectFit="contain" />
-                        ) : (
-                          <Flex boxSize="36px" bg="brand.500" color="white" borderRadius="full" align="center" justify="center" fontWeight="800" fontSize="sm">
-                            {c.name?.[0]}
-                          </Flex>
-                        )}
-                        <Box>
-                          <Text fontWeight="800" fontSize="md" color="#fff" lineHeight="1.2">{c.name}</Text>
-                          <Text fontSize="xs" color="#797B89" fontWeight="500">{symbol}</Text>
-                        </Box>
-                      </HStack>
-                      <Box position="relative" mt={1}>
-                        <Text fontSize="xs" color="#5C5C5C" mb={0.5}>Rate</Text>
-                        <Text fontSize="sm" fontWeight="700" color="brand.400">{naira(c.sell_price)}/USD</Text>
+                      <Box style={{ background: active ? clr.bg : clr.light }} p={4} position="relative" overflow="hidden" transition="all .25s">
+                        <Box position="absolute" top="-15px" right="-15px" w="50px" h="50px" bg={active ? "rgba(255,255,255,0.15)" : clr.light} borderRadius="full" />
+                        <HStack gap={3}>
+                          {c.icon_url ? (
+                            <Flex boxSize="40px" bg={active ? "rgba(255,255,255,0.2)" : "white"} borderRadius="xl" align="center" justify="center" transition="all .25s">
+                              <Image src={c.icon_url} boxSize="28px" objectFit="contain" />
+                            </Flex>
+                          ) : (
+                            <Flex boxSize="40px" bg={active ? "rgba(255,255,255,0.2)" : clr.light} color={active ? "white" : clr.accent} borderRadius="xl" align="center" justify="center" fontWeight="800" fontSize="sm" transition="all .25s">
+                              {c.name?.[0]}
+                            </Flex>
+                          )}
+                          <Box>
+                            <Text fontWeight="800" fontSize="md" color={active ? "white" : "#1B1C20"} lineHeight="1.2" transition="all .25s">{c.name}</Text>
+                            <Text fontSize="xs" color={active ? "rgba(255,255,255,0.7)" : "#797B89"} fontWeight="500" transition="all .25s">{symbol}</Text>
+                          </Box>
+                        </HStack>
+                      </Box>
+                      <Box px={4} py={3}>
+                        <Text fontSize="xs" color="#797B89" mb={0.5}>Rate</Text>
+                        <Text fontSize="sm" fontWeight="700" color={clr.accent}>{naira(c.sell_price)}/USD</Text>
                       </Box>
                     </Box>
                   );

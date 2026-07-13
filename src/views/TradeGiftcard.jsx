@@ -11,6 +11,17 @@ import { TradeCard } from "./SellCrypto";
 import TransactionStore from "../Store/TransactionStore";
 import { toast, err, naira } from "../Helper";
 
+const CARD_COLORS = [
+  { bg: "linear-gradient(135deg, #06b6d4, #0891b2)", light: "rgba(6,182,212,0.12)", accent: "#06b6d4" },
+  { bg: "linear-gradient(135deg, #f97316, #ea580c)", light: "rgba(249,115,22,0.12)", accent: "#f97316" },
+  { bg: "linear-gradient(135deg, #8b5cf6, #7c3aed)", light: "rgba(139,92,246,0.12)", accent: "#8b5cf6" },
+  { bg: "linear-gradient(135deg, #10b981, #059669)", light: "rgba(16,185,129,0.12)", accent: "#10b981" },
+  { bg: "linear-gradient(135deg, #ec4899, #db2777)", light: "rgba(236,72,153,0.12)", accent: "#ec4899" },
+  { bg: "linear-gradient(135deg, #f59e0b, #d97706)", light: "rgba(245,158,11,0.12)", accent: "#f59e0b" },
+  { bg: "linear-gradient(135deg, #3b82f6, #2563eb)", light: "rgba(59,130,246,0.12)", accent: "#3b82f6" },
+  { bg: "linear-gradient(135deg, #ef4444, #dc2626)", light: "rgba(239,68,68,0.12)", accent: "#ef4444" },
+];
+
 export default function SellGiftcard() {
   const { giftcards, fetchGiftcards, uploadImages, createTransaction } = TransactionStore();
   const [booting, setBooting] = useState(true);
@@ -77,42 +88,46 @@ export default function SellGiftcard() {
           <VStack align="stretch" gap={6}>
             <Field label="Choose gift card">
               <SimpleGrid columns={{ base: 2, md: 3, lg: 4 }} gap={4}>
-                {list.map((g) => {
+                {list.map((g, idx) => {
                   const active = selected?.id === g.id;
+                  const clr = CARD_COLORS[idx % CARD_COLORS.length];
                   return (
                     <Box
                       key={g.id}
                       as="button"
                       type="button"
                       onClick={() => selectCard(g)}
-                      bg="#1B1C20"
+                      bg="white"
                       borderRadius="xl"
                       border="2px solid"
-                      borderColor={active ? "brand.500" : "#2a2b30"}
+                      borderColor={active ? clr.accent : "#e5e5e5"}
                       overflow="hidden"
                       transition="all .25s"
-                      _hover={{ borderColor: active ? "brand.500" : "#5C5C5C", transform: "translateY(-2px)", boxShadow: "0 8px 24px rgba(0,0,0,0.3)" }}
-                      boxShadow={active ? "0 0 0 3px rgba(239,68,68,0.2)" : "none"}
+                      _hover={{ transform: "translateY(-3px)", boxShadow: `0 8px 24px ${clr.light}`, borderColor: clr.accent }}
+                      boxShadow={active ? `0 0 0 3px ${clr.light}` : "none"}
                     >
-                      {g.icon_url ? (
-                        <Box bg="#060809" p={4}>
-                          <Image
-                            src={g.icon_url}
-                            w="100%"
-                            h="110px"
-                            objectFit="contain"
-                            borderRadius="lg"
-                          />
-                        </Box>
-                      ) : (
-                        <Flex bg="#060809" h="110px" align="center" justify="center">
-                          <Text fontSize="4xl" fontWeight="900" color="brand.400">
-                            {g.name?.[0]}
-                          </Text>
-                        </Flex>
-                      )}
-                      <Box px={3} py={3} bg={active ? "brand.500" : "#1B1C20"} transition="all .2s">
-                        <Text fontWeight="700" fontSize="sm" color="white" textAlign="center" lineClamp={1}>
+                      <Box style={{ background: active ? clr.bg : clr.light }} p={4} position="relative" overflow="hidden" transition="all .25s">
+                        <Box position="absolute" top="-20px" right="-20px" w="60px" h="60px" bg={active ? "rgba(255,255,255,0.12)" : clr.light} borderRadius="full" />
+                        {g.icon_url ? (
+                          <Flex justify="center">
+                            <Image
+                              src={g.icon_url}
+                              w="100%"
+                              h="80px"
+                              objectFit="contain"
+                              borderRadius="lg"
+                            />
+                          </Flex>
+                        ) : (
+                          <Flex h="80px" align="center" justify="center">
+                            <Text fontSize="4xl" fontWeight="900" color={active ? "white" : clr.accent} transition="all .25s">
+                              {g.name?.[0]}
+                            </Text>
+                          </Flex>
+                        )}
+                      </Box>
+                      <Box px={3} py={3} style={{ background: active ? clr.bg : "white" }} transition="all .2s">
+                        <Text fontWeight="700" fontSize="sm" color={active ? "white" : "#1B1C20"} textAlign="center" lineClamp={1} transition="all .25s">
                           {g.name}
                         </Text>
                       </Box>
