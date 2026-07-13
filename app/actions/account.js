@@ -30,3 +30,12 @@ export async function updateProfile(fields) {
   return getProfile();
 }
 
+export async function getReferrals() {
+  const u = await requireUser();
+  const rows = await q(
+    `SELECT id, full_name, email, created_at FROM "user" WHERE referred_by = $1 ORDER BY created_at DESC`,
+    [u.id]
+  );
+  return rows;
+}
+

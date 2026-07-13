@@ -1,22 +1,27 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Box, Heading, Text, Button, VStack, SimpleGrid, HStack, Icon, Flex } from "@chakra-ui/react";
+import { Box, Heading, Text, Button, VStack, SimpleGrid, HStack, Icon, Flex, Avatar, Spinner } from "@chakra-ui/react";
 import { FaCopy, FaWhatsapp, FaXTwitter, FaGift, FaUsers, FaChartLine } from "react-icons/fa6";
 import ScrollReveal from "../components/ScrollReveal";
 import DashboardLayout from "../components/DashboardLayout";
 import useAuthStore from "../Store/userStore";
+import { getReferrals } from "@/app/actions/account";
+import { formatDate } from "../Helper";
 
 export default function Referral() {
   const { profile, fetchProfile } = useAuthStore();
   const [copied, setCopied] = useState(false);
+  const [referrals, setReferrals] = useState([]);
+  const [loadingRefs, setLoadingRefs] = useState(true);
 
   useEffect(() => {
     if (!profile) fetchProfile();
+    getReferrals().then(setReferrals).catch(() => {}).finally(() => setLoadingRefs(false));
   }, [profile, fetchProfile]);
 
   const copyLink = async () => {
     if (profile?.referral_code) {
-      await navigator.clipboard.writeText(`https://powerpay.com/signup?ref=${profile.referral_code}`);
+      await navigator.clipboard.writeText(`https://powerpaytech.com/signup?ref=${profile.referral_code}`);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
@@ -32,13 +37,13 @@ export default function Referral() {
 
   const shareWhatsApp = () => {
     if (profile?.referral_code) {
-      window.open(`https://wa.me/?text=${encodeURIComponent(`Join Powerpay with my referral code: ${profile.referral_code}\nhttps://powerpay.com/signup?ref=${profile.referral_code}`)}`, "_blank");
+      window.open(`https://wa.me/?text=${encodeURIComponent(`Join Powerpay with my referral code: ${profile.referral_code}\nhttps://powerpaytech.com/signup?ref=${profile.referral_code}`)}`, "_blank");
     }
   };
 
   const shareTwitter = () => {
     if (profile?.referral_code) {
-      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Trade crypto & gift cards on Powerpay! Use my referral code: ${profile.referral_code}`)}&url=${encodeURIComponent(`https://powerpay.com/signup?ref=${profile.referral_code}`)}`, "_blank");
+      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Trade crypto & gift cards on Powerpay! Use my referral code: ${profile.referral_code}`)}&url=${encodeURIComponent(`https://powerpaytech.com/signup?ref=${profile.referral_code}`)}`, "_blank");
     }
   };
 
@@ -89,14 +94,14 @@ export default function Referral() {
               <Flex w="40px" h="40px" bg="rgba(139,92,246,0.1)" borderRadius="lg" align="center" justify="center" mx="auto" mb={3}>
                 <Icon color="#8b5cf6" fontSize="md"><FaUsers /></Icon>
               </Flex>
-              <Text fontWeight="800" fontSize="xl" color="#1B1C20">0</Text>
+              <Text fontWeight="800" fontSize="xl" color="#1B1C20">{referrals.length}</Text>
               <Text fontSize="xs" color="#797B89" fontWeight="500">Total Signups</Text>
             </Box>
             <Box bg="white" borderRadius="xl" border="1px solid" borderColor="#e5e5e5" p={5} textAlign="center">
               <Flex w="40px" h="40px" bg="rgba(249,115,22,0.1)" borderRadius="lg" align="center" justify="center" mx="auto" mb={3}>
                 <Icon color="#f97316" fontSize="md"><FaGift /></Icon>
               </Flex>
-              <Text fontWeight="800" fontSize="xl" color="#1B1C20">0</Text>
+              <Text fontWeight="800" fontSize="xl" color="#1B1C20">{referrals.length}</Text>
               <Text fontSize="xs" color="#797B89" fontWeight="500">Active Traders</Text>
             </Box>
           </SimpleGrid>
@@ -108,7 +113,7 @@ export default function Referral() {
             <Text fontWeight="800" color="#1B1C20" fontSize="md" mb={4}>Your Referral Link</Text>
             <Box bg="ink.50" borderRadius="xl" px={4} py={3} border="1px solid" borderColor="#e5e5e5" mb={4}>
               <Text fontSize="sm" color="#797B89" wordBreak="break-all" fontWeight="500">
-                powerpay.com/signup?ref={profile?.referral_code || "..."}
+                powerpaytech.com/signup?ref={profile?.referral_code || "..."}
               </Text>
             </Box>
             <HStack gap={3} flexWrap="wrap">
@@ -154,8 +159,43 @@ export default function Referral() {
           </Box>
         </ScrollReveal>
 
-        {/* How it works */}
+        {/* Referred users list */}
         <ScrollReveal delay={0.25}>
+          <Box bg="white" borderRadius="xl" border="1px solid" borderColor="#e5e5e5" p={{ base: 5, md: 7 }} mb={6}>
+            <HStack justify="space-between" align="center" mb={5}>
+              <Text fontWeight="800" color="#1B1C20" fontSize="md">People you referred</Text>
+              <Text fontSize="xs" color="#797B89" fontWeight="600">{referrals.length} {referrals.length === 1 ? "person" : "people"}</Text>
+            </HStack>
+            {loadingRefs ? (
+              <Flex justify="center" py={8}><Spinner color="brand.500" /></Flex>
+            ) : referrals.length === 0 ? (
+              <Flex direction="column" align="center" py={8} gap={3}>
+                <Flex w="52px" h="52px" bg="rgba(139,92,246,0.1)" borderRadius="full" align="center" justify="center">
+                  <Icon color="#8b5cf6" fontSize="xl"><FaUsers /></Icon>
+                </Flex>
+                <Text color="#797B89" fontSize="sm" textAlign="center">No referrals yet. Share your link to start inviting friends!</Text>
+              </Flex>
+            ) : (
+              <VStack align="stretch" gap={0} divideY="1px" divideColor="#f0f0f0">
+                {referrals.map((r) => (
+                  <HStack key={r.id} gap={3} py={3}>
+                    <Avatar.Root size="sm" colorPalette="brand">
+                      <Avatar.Fallback name={r.full_name || r.email} />
+                    </Avatar.Root>
+                    <Box flex="1">
+                      <Text fontWeight="600" fontSize="sm" color="#1B1C20">{r.full_name || "Unnamed user"}</Text>
+                      <Text fontSize="xs" color="#797B89">{r.email}</Text>
+                    </Box>
+                    <Text fontSize="xs" color="#797B89">{formatDate(r.created_at)}</Text>
+                  </HStack>
+                ))}
+              </VStack>
+            )}
+          </Box>
+        </ScrollReveal>
+
+        {/* How it works */}
+        <ScrollReveal delay={0.3}>
           <Box bg="white" borderRadius="xl" border="1px solid" borderColor="#e5e5e5" p={{ base: 5, md: 7 }}>
             <Text fontWeight="800" color="#1B1C20" fontSize="md" mb={5}>How it works</Text>
             <VStack align="stretch" gap={4}>
