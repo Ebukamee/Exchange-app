@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Box, Heading, Text, Input, Button, VStack, SimpleGrid, HStack, Icon, Avatar } from "@chakra-ui/react";
+import { Box, Heading, Text, Input, Button, VStack, SimpleGrid, HStack, Icon, Avatar, Flex } from "@chakra-ui/react";
 import { useNavigate } from "@/src/compat/router";
-import { FaArrowRightFromBracket, FaCopy } from "react-icons/fa6";
+import { FaArrowRightFromBracket, FaCopy, FaWhatsapp, FaXTwitter, FaGift } from "react-icons/fa6";
 import ScrollReveal from "../components/ScrollReveal";
 import DashboardLayout from "../components/DashboardLayout";
 import { Field } from "../components/ui/field";
@@ -62,35 +62,143 @@ export default function Profile() {
     }
   };
 
+  const shareWhatsApp = () => {
+    if (profile?.referral_code) {
+      window.open(`https://wa.me/?text=${encodeURIComponent(`Join Powerpay with my referral code: ${profile.referral_code}\nhttps://powerpay.com/signup?ref=${profile.referral_code}`)}`, "_blank");
+    }
+  };
+
+  const shareTwitter = () => {
+    if (profile?.referral_code) {
+      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Trade crypto & gift cards on Powerpay! Use my referral code: ${profile.referral_code}`)}&url=${encodeURIComponent(`https://powerpay.com/signup?ref=${profile.referral_code}`)}`, "_blank");
+    }
+  };
+
   return (
     <DashboardLayout>
-      <Box maxW="720px" mx="auto">
+      <Box maxW="800px" mx="auto">
+        {/* Profile header */}
         <ScrollReveal>
-        <HStack gap={4} mb={8}>
-          <Avatar.Root size="lg" colorPalette="ink">
-            <Avatar.Fallback name={profile?.full_name || profile?.email} />
-          </Avatar.Root>
-          <Box>
-            <Heading fontFamily="heading" fontSize="xl" color="ink.900">{profile?.full_name || "Your profile"}</Heading>
-            <Text color="ink.500" fontSize="sm">{profile?.email}</Text>
-          </Box>
-        </HStack>
+          <HStack gap={4} mb={8}>
+            <Avatar.Root size="lg" colorPalette="ink">
+              <Avatar.Fallback name={profile?.full_name || profile?.email} />
+            </Avatar.Root>
+            <Box>
+              <Heading fontFamily="heading" fontSize="xl" color="ink.900">{profile?.full_name || "Your profile"}</Heading>
+              <Text color="ink.500" fontSize="sm">{profile?.email}</Text>
+            </Box>
+          </HStack>
         </ScrollReveal>
-        {profile?.referral_code ? (
-          <ScrollReveal delay={0.1}>
-          <Box mb={6} p={4} bg="ink.50" border="1px solid" borderColor="ink.100" borderRadius="l3">
-            <Text fontSize="sm" color="ink.500" mb={2}>Your referral code</Text>
-            <HStack gap={3}>
-              <Text fontWeight="700" fontSize="lg" color="ink.900" letterSpacing="0.08em">{profile.referral_code}</Text>
-              <Button size="sm" variant="ghost" onClick={copyReferralCode}>
-                <Icon><FaCopy /></Icon>
-                <Text>{copied ? "Copied!" : "Copy"}</Text>
-              </Button>
-            </HStack>
-          </Box>
-          </ScrollReveal>
-        ) : null}
 
+        {/* Referral section — Apex-style */}
+        {profile?.referral_code && (
+          <ScrollReveal delay={0.1}>
+            <Box mb={8}>
+              {/* Gradient banner */}
+              <Box
+                bg="brand.500"
+                bgGradient="to-r"
+                gradientFrom="brand.500"
+                gradientTo="brand.600"
+                borderRadius="l3"
+                p={{ base: 6, md: 8 }}
+                position="relative"
+                overflow="hidden"
+                mb={4}
+              >
+                <Box position="absolute" top="-30px" right="-20px" opacity={0.15}>
+                  <Icon fontSize="160px" color="white"><FaGift /></Icon>
+                </Box>
+                <Box position="relative" zIndex={1}>
+                  <Heading fontFamily="heading" fontSize={{ base: "2xl", md: "3xl" }} color="white" mb={2}>
+                    Refer & Earn!
+                  </Heading>
+                  <Text color="whiteAlpha.800" fontSize="sm" maxW="400px">
+                    Invite your friends to Powerpay and earn rewards when they sign up and start trading.
+                  </Text>
+                </Box>
+              </Box>
+
+              {/* Referral link row */}
+              <Box bg="ink.950" borderRadius="l2" p={4} mb={4}>
+                <Text fontSize="xs" color="ink.400" mb={2} fontWeight="600">YOUR REFERRAL LINK</Text>
+                <HStack gap={3}>
+                  <Box flex="1" bg="ink.900" borderRadius="l1" px={4} py={2.5}>
+                    <Text fontSize="sm" color="ink.200" wordBreak="break-all">
+                      powerpay.com/signup?ref={profile.referral_code}
+                    </Text>
+                  </Box>
+                  <Button
+                    colorPalette="brand"
+                    size="sm"
+                    onClick={copyReferralCode}
+                    px={5}
+                  >
+                    <Icon><FaCopy /></Icon>
+                    {copied ? "Copied!" : "Copy link"}
+                  </Button>
+                </HStack>
+              </Box>
+
+              {/* Stats + Share cards */}
+              <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
+                {/* Details card */}
+                <Box bg="ink.950" borderRadius="l2" p={5}>
+                  <Text fontWeight="700" color="white" mb={4}>Details</Text>
+                  <VStack align="stretch" gap={3}>
+                    <Flex justify="space-between" align="center">
+                      <Text fontSize="sm" color="ink.400">Total Earnings</Text>
+                      <Text fontWeight="700" color="brand.400">₦0.00</Text>
+                    </Flex>
+                    <Box h="1px" bg="ink.800" />
+                    <Flex justify="space-between" align="center">
+                      <Text fontSize="sm" color="ink.400">Total Signups</Text>
+                      <Text fontWeight="700" color="white">0</Text>
+                    </Flex>
+                    <Box h="1px" bg="ink.800" />
+                    <Flex justify="space-between" align="center">
+                      <Text fontSize="sm" color="ink.400">Signups who transacted</Text>
+                      <Text fontWeight="700" color="white">0</Text>
+                    </Flex>
+                  </VStack>
+                </Box>
+
+                {/* Share card */}
+                <Box bg="ink.950" borderRadius="l2" p={5}>
+                  <Text fontWeight="700" color="white" mb={4}>Share</Text>
+                  <VStack align="stretch" gap={4}>
+                    <Box>
+                      <Text fontSize="xs" color="ink.400" mb={1}>Referral Code</Text>
+                      <Text fontWeight="800" fontSize="xl" color="white" letterSpacing="0.1em">
+                        {profile.referral_code}
+                      </Text>
+                    </Box>
+                    <Box h="1px" bg="ink.800" />
+                    <Box>
+                      <Text fontSize="xs" color="ink.400" mb={3}>Invite Friends</Text>
+                      <HStack gap={3}>
+                        <Button size="sm" bg="#25D366" color="white" _hover={{ bg: "#1da851" }} onClick={shareWhatsApp}>
+                          <Icon><FaWhatsapp /></Icon>
+                          WhatsApp
+                        </Button>
+                        <Button size="sm" bg="ink.800" color="white" _hover={{ bg: "ink.700" }} onClick={shareTwitter}>
+                          <Icon><FaXTwitter /></Icon>
+                          Twitter
+                        </Button>
+                        <Button size="sm" variant="outline" borderColor="ink.700" color="ink.300" _hover={{ bg: "ink.800" }} onClick={copyReferralCode}>
+                          <Icon><FaCopy /></Icon>
+                          Copy
+                        </Button>
+                      </HStack>
+                    </Box>
+                  </VStack>
+                </Box>
+              </SimpleGrid>
+            </Box>
+          </ScrollReveal>
+        )}
+
+        {/* Profile form */}
         <ScrollReveal delay={0.15}>
         <Box as="form" onSubmit={save} bg="white" borderRadius="l3" border="1px solid" borderColor="ink.100" p={{ base: 5, md: 7 }}>
           <VStack align="stretch" gap={5}>
@@ -119,4 +227,3 @@ export default function Profile() {
     </DashboardLayout>
   );
 }
-

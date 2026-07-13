@@ -80,12 +80,41 @@ export default function SellGiftcard() {
                 {list.map((g) => {
                   const active = selected?.id === g.id;
                   return (
-                    <Box key={g.id} as="button" type="button" onClick={() => selectCard(g)}
-                      border="2px solid" borderColor={active ? "brand.500" : "ink.100"} bg={active ? "brand.50" : "white"} borderRadius="l2" p={4}>
-                      <HStack gap={2}>
-                        {g.icon_url ? <Image src={g.icon_url} boxSize="26px" objectFit="contain" /> : null}
-                        <Text fontWeight="600" fontSize="sm">{g.name}</Text>
-                      </HStack>
+                    <Box
+                      key={g.id}
+                      as="button"
+                      type="button"
+                      onClick={() => selectCard(g)}
+                      bg="ink.950"
+                      borderRadius="l2"
+                      border="2px solid"
+                      borderColor={active ? "brand.500" : "transparent"}
+                      overflow="hidden"
+                      transition="all .2s"
+                      _hover={{ borderColor: active ? "brand.500" : "ink.700" }}
+                    >
+                      {g.icon_url ? (
+                        <Box bg="ink.900" p={3}>
+                          <Image
+                            src={g.icon_url}
+                            w="100%"
+                            h="80px"
+                            objectFit="contain"
+                            borderRadius="md"
+                          />
+                        </Box>
+                      ) : (
+                        <Flex bg="ink.900" h="80px" align="center" justify="center">
+                          <Text fontSize="3xl" fontWeight="800" color="brand.400">
+                            {g.name?.[0]}
+                          </Text>
+                        </Flex>
+                      )}
+                      <Box px={3} py={2.5}>
+                        <Text fontWeight="600" fontSize="sm" color="white" textAlign="center" lineClamp={1}>
+                          {g.name}
+                        </Text>
+                      </Box>
                     </Box>
                   );
                 })}

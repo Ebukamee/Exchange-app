@@ -71,23 +71,53 @@ export default function SellCrypto() {
               <SimpleGrid columns={{ base: 2, md: 3 }} gap={3}>
                 {list.map((c) => {
                   const active = selected?.id === c.id;
+                  const symbol = c.symbol || c.name;
                   return (
                     <Box
                       key={c.id}
                       as="button"
                       type="button"
                       onClick={() => setSelected(c)}
-                      border="2px solid"
-                      borderColor={active ? "brand.500" : "ink.100"}
-                      bg={active ? "brand.50" : "white"}
+                      bg="ink.950"
                       borderRadius="l2"
+                      border="2px solid"
+                      borderColor={active ? "brand.500" : "transparent"}
                       p={4}
+                      position="relative"
+                      overflow="hidden"
+                      transition="all .2s"
+                      _hover={{ borderColor: active ? "brand.500" : "ink.700" }}
+                      textAlign="left"
                     >
-                      <HStack gap={2}>
-                        {c.icon_url ? <Image src={c.icon_url} boxSize="26px" objectFit="contain" /> : null}
-                        <Text fontWeight="600" fontSize="sm">{c.name}</Text>
+                      {/* Watermark symbol */}
+                      <Text
+                        position="absolute"
+                        bottom="-8px"
+                        right="-4px"
+                        fontSize="80px"
+                        fontWeight="900"
+                        color="ink.300"
+                        opacity={0.06}
+                        lineHeight="1"
+                        userSelect="none"
+                        pointerEvents="none"
+                      >
+                        {symbol?.[0]}
+                      </Text>
+                      <HStack gap={2} mb={2} position="relative">
+                        {c.icon_url ? (
+                          <Image src={c.icon_url} boxSize="28px" objectFit="contain" />
+                        ) : (
+                          <Flex boxSize="28px" bg="brand.500" color="white" borderRadius="full" align="center" justify="center" fontWeight="700" fontSize="xs">
+                            {c.name?.[0]}
+                          </Flex>
+                        )}
+                        <Box>
+                          <Text fontWeight="700" fontSize="sm" color="white" lineHeight="1.2">{c.name}</Text>
+                          <Text fontSize="xs" color="ink.400">{symbol}</Text>
+                        </Box>
                       </HStack>
-                      <Text fontSize="xs" color="ink.500" mt={1}>{naira(c.sell_price)}/unit</Text>
+                      <Text fontSize="xs" color="ink.400" position="relative">{naira(c.sell_price)}/USD</Text>
                     </Box>
                   );
                 })}
