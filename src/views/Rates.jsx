@@ -108,11 +108,11 @@ function CryptoCalcCard({ crypto }) {
       </HStack>
       <Flex justify="space-between" py={1.5}>
         <Text fontSize="sm" color="ink.500">We buy at</Text>
-        <Text fontSize="sm" fontWeight="700" color="ink.900">{naira(crypto.sell_price)}<Text as="span" color="ink.400" fontWeight="400">/USD</Text></Text>
+        <Text fontSize="sm" fontWeight="700" color="ink.900">{naira(crypto.sell_price)}<Text as="span" color="ink.400" fontWeight="400">/{crypto.symbol || crypto.name}</Text></Text>
       </Flex>
       <Flex justify="space-between" py={1.5} mb={3}>
         <Text fontSize="sm" color="ink.500">We sell at</Text>
-        <Text fontSize="sm" fontWeight="700" color="ink.900">{naira(crypto.buy_price)}<Text as="span" color="ink.400" fontWeight="400">/USD</Text></Text>
+        <Text fontSize="sm" fontWeight="700" color="ink.900">{naira(crypto.buy_price)}<Text as="span" color="ink.400" fontWeight="400">/{crypto.symbol || crypto.name}</Text></Text>
       </Flex>
       <Box bg="ink.50" borderRadius="l1" p={3}>
         <Text fontSize="xs" color="ink.500" mb={2} fontWeight="600">Quick calculator</Text>

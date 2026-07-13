@@ -120,7 +120,7 @@ export default function SellCrypto() {
                       </Box>
                       <Box px={4} py={3}>
                         <Text fontSize="xs" color="#797B89" mb={0.5}>Rate</Text>
-                        <Text fontSize="sm" fontWeight="700" color={clr.accent}>{naira(c.sell_price)}/USD</Text>
+                        <Text fontSize="sm" fontWeight="700" color={clr.accent}>{naira(c.sell_price)}/{c.symbol || c.name}</Text>
                       </Box>
                     </Box>
                   );
