@@ -96,35 +96,35 @@ export default function Profile() {
             <Box mb={8}>
               {/* Gradient banner */}
               <Box
-                bg="brand.500"
-                bgGradient="to-r"
-                gradientFrom="brand.500"
-                gradientTo="brand.600"
-                borderRadius="l3"
+                style={{ background: "linear-gradient(135deg, #dc2626 0%, #b91c1c 50%, #991b1b 100%)" }}
+                borderRadius="xl"
                 p={{ base: 6, md: 8 }}
                 position="relative"
                 overflow="hidden"
                 mb={4}
               >
-                <Box position="absolute" top="-30px" right="-20px" opacity={0.15}>
-                  <Icon fontSize="160px" color="white"><FaGift /></Icon>
+                <Box position="absolute" top="-40px" right="-20px" opacity={0.12}>
+                  <Icon fontSize="180px" color="white"><FaGift /></Icon>
+                </Box>
+                <Box position="absolute" bottom="-20px" left="-30px" opacity={0.06}>
+                  <Icon fontSize="120px" color="white"><FaGift /></Icon>
                 </Box>
                 <Box position="relative" zIndex={1}>
-                  <Heading fontFamily="heading" fontSize={{ base: "2xl", md: "3xl" }} color="white" mb={2}>
+                  <Heading fontFamily="heading" fontSize={{ base: "2xl", md: "3xl" }} color="white" mb={2} letterSpacing="-0.02em">
                     Refer & Earn!
                   </Heading>
-                  <Text color="whiteAlpha.800" fontSize="sm" maxW="400px">
+                  <Text color="whiteAlpha.800" fontSize="sm" maxW="400px" lineHeight="1.6">
                     Invite your friends to Powerpay and earn rewards when they sign up and start trading.
                   </Text>
                 </Box>
               </Box>
 
               {/* Referral link row */}
-              <Box bg="ink.950" borderRadius="l2" p={4} mb={4}>
-                <Text fontSize="xs" color="ink.400" mb={2} fontWeight="600">YOUR REFERRAL LINK</Text>
+              <Box bg="ink.950" borderRadius="xl" p={5} mb={4}>
+                <Text fontSize="xs" color="ink.400" mb={3} fontWeight="700" letterSpacing="0.08em">YOUR REFERRAL LINK</Text>
                 <HStack gap={3}>
-                  <Box flex="1" bg="ink.900" borderRadius="l1" px={4} py={2.5}>
-                    <Text fontSize="sm" color="ink.200" wordBreak="break-all">
+                  <Box flex="1" bg="ink.900" borderRadius="lg" px={4} py={3} border="1px solid" borderColor="ink.800">
+                    <Text fontSize="sm" color="ink.200" wordBreak="break-all" fontWeight="500">
                       powerpay.com/signup?ref={profile.referral_code}
                     </Text>
                   </Box>
@@ -132,7 +132,8 @@ export default function Profile() {
                     colorPalette="brand"
                     size="sm"
                     onClick={copyReferralCode}
-                    px={5}
+                    px={6}
+                    fontWeight="700"
                   >
                     <Icon><FaCopy /></Icon>
                     {copied ? "Copied!" : "Copy link"}
@@ -143,8 +144,8 @@ export default function Profile() {
               {/* Stats + Share cards */}
               <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
                 {/* Details card */}
-                <Box bg="ink.950" borderRadius="l2" p={5}>
-                  <Text fontWeight="700" color="white" mb={4}>Details</Text>
+                <Box bg="ink.950" borderRadius="xl" p={5} border="1px solid" borderColor="ink.800">
+                  <Text fontWeight="800" color="white" mb={4} fontSize="md">Details</Text>
                   <VStack align="stretch" gap={3}>
                     <Flex justify="space-between" align="center">
                       <Text fontSize="sm" color="ink.400">Total Earnings</Text>
@@ -164,8 +165,8 @@ export default function Profile() {
                 </Box>
 
                 {/* Share card */}
-                <Box bg="ink.950" borderRadius="l2" p={5}>
-                  <Text fontWeight="700" color="white" mb={4}>Share</Text>
+                <Box bg="ink.950" borderRadius="xl" p={5} border="1px solid" borderColor="ink.800">
+                  <Text fontWeight="800" color="white" mb={4} fontSize="md">Share</Text>
                   <VStack align="stretch" gap={4}>
                     <Box>
                       <Text fontSize="xs" color="ink.400" mb={1}>Referral Code</Text>

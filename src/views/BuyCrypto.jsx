@@ -89,7 +89,7 @@ export default function BuyCrypto() {
         ) : (
           <VStack align="stretch" gap={6}>
             <Field label="Choose cryptocurrency">
-              <SimpleGrid columns={{ base: 2, md: 3 }} gap={3}>
+              <SimpleGrid columns={{ base: 2, md: 3 }} gap={4}>
                 {list.map((c) => {
                   const active = selected?.id === c.id;
                   const symbol = c.symbol || c.name;
@@ -100,44 +100,48 @@ export default function BuyCrypto() {
                       type="button"
                       onClick={() => setSelected(c)}
                       bg="ink.950"
-                      borderRadius="l2"
+                      borderRadius="xl"
                       border="2px solid"
-                      borderColor={active ? "brand.500" : "transparent"}
-                      p={4}
+                      borderColor={active ? "brand.500" : "ink.800"}
+                      p={5}
                       position="relative"
                       overflow="hidden"
-                      transition="all .2s"
-                      _hover={{ borderColor: active ? "brand.500" : "ink.700" }}
+                      transition="all .25s"
+                      _hover={{ borderColor: active ? "brand.500" : "brand.300", transform: "translateY(-2px)", boxShadow: "0 8px 24px rgba(0,0,0,0.2)" }}
+                      boxShadow={active ? "0 0 0 3px rgba(239,68,68,0.2)" : "none"}
                       textAlign="left"
                     >
                       <Text
                         position="absolute"
-                        bottom="-8px"
-                        right="-4px"
-                        fontSize="80px"
+                        bottom="-12px"
+                        right="-8px"
+                        fontSize="90px"
                         fontWeight="900"
                         color="ink.300"
-                        opacity={0.06}
+                        opacity={0.08}
                         lineHeight="1"
                         userSelect="none"
                         pointerEvents="none"
                       >
                         {symbol?.[0]}
                       </Text>
-                      <HStack gap={2} mb={2} position="relative">
+                      <HStack gap={3} mb={3} position="relative">
                         {c.icon_url ? (
-                          <Image src={c.icon_url} boxSize="28px" objectFit="contain" />
+                          <Image src={c.icon_url} boxSize="36px" objectFit="contain" />
                         ) : (
-                          <Flex boxSize="28px" bg="brand.500" color="white" borderRadius="full" align="center" justify="center" fontWeight="700" fontSize="xs">
+                          <Flex boxSize="36px" bg="brand.500" color="white" borderRadius="full" align="center" justify="center" fontWeight="800" fontSize="sm">
                             {c.name?.[0]}
                           </Flex>
                         )}
                         <Box>
-                          <Text fontWeight="700" fontSize="sm" color="white" lineHeight="1.2">{c.name}</Text>
-                          <Text fontSize="xs" color="ink.400">{symbol}</Text>
+                          <Text fontWeight="800" fontSize="md" color="white" lineHeight="1.2">{c.name}</Text>
+                          <Text fontSize="xs" color="ink.400" fontWeight="500">{symbol}</Text>
                         </Box>
                       </HStack>
-                      <Text fontSize="xs" color="ink.400" position="relative">{naira(c.buy_price)}/USD</Text>
+                      <Box position="relative" mt={1}>
+                        <Text fontSize="xs" color="ink.500" mb={0.5}>Rate</Text>
+                        <Text fontSize="sm" fontWeight="700" color="brand.400">{naira(c.buy_price)}/USD</Text>
+                      </Box>
                     </Box>
                   );
                 })}

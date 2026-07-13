@@ -76,7 +76,7 @@ export default function SellGiftcard() {
         ) : (
           <VStack align="stretch" gap={6}>
             <Field label="Choose gift card">
-              <SimpleGrid columns={{ base: 2, md: 3 }} gap={3}>
+              <SimpleGrid columns={{ base: 2, md: 3, lg: 4 }} gap={4}>
                 {list.map((g) => {
                   const active = selected?.id === g.id;
                   return (
@@ -86,32 +86,33 @@ export default function SellGiftcard() {
                       type="button"
                       onClick={() => selectCard(g)}
                       bg="ink.950"
-                      borderRadius="l2"
+                      borderRadius="xl"
                       border="2px solid"
-                      borderColor={active ? "brand.500" : "transparent"}
+                      borderColor={active ? "brand.500" : "ink.800"}
                       overflow="hidden"
-                      transition="all .2s"
-                      _hover={{ borderColor: active ? "brand.500" : "ink.700" }}
+                      transition="all .25s"
+                      _hover={{ borderColor: active ? "brand.500" : "brand.300", transform: "translateY(-2px)", boxShadow: "0 8px 24px rgba(0,0,0,0.2)" }}
+                      boxShadow={active ? "0 0 0 3px rgba(239,68,68,0.2)" : "none"}
                     >
                       {g.icon_url ? (
-                        <Box bg="ink.900" p={3}>
+                        <Box bg="ink.900" p={4}>
                           <Image
                             src={g.icon_url}
                             w="100%"
-                            h="80px"
+                            h="110px"
                             objectFit="contain"
-                            borderRadius="md"
+                            borderRadius="lg"
                           />
                         </Box>
                       ) : (
-                        <Flex bg="ink.900" h="80px" align="center" justify="center">
-                          <Text fontSize="3xl" fontWeight="800" color="brand.400">
+                        <Flex bg="ink.900" h="110px" align="center" justify="center">
+                          <Text fontSize="4xl" fontWeight="900" color="brand.400">
                             {g.name?.[0]}
                           </Text>
                         </Flex>
                       )}
-                      <Box px={3} py={2.5}>
-                        <Text fontWeight="600" fontSize="sm" color="white" textAlign="center" lineClamp={1}>
+                      <Box px={3} py={3} bg={active ? "brand.500" : "ink.950"} transition="all .2s">
+                        <Text fontWeight="700" fontSize="sm" color="white" textAlign="center" lineClamp={1}>
                           {g.name}
                         </Text>
                       </Box>
@@ -128,9 +129,11 @@ export default function SellGiftcard() {
                     const active = selectedSub?.name === s.name;
                     return (
                       <Box key={i} as="button" type="button" onClick={() => setSelectedSub(s)}
-                        border="2px solid" borderColor={active ? "brand.500" : "ink.100"} bg={active ? "brand.50" : "white"} borderRadius="l2" p={3} textAlign="left">
-                        <Text fontWeight="600" fontSize="sm" color="ink.900">{s.name}</Text>
-                        <Text fontSize="xs" color="ink.500">{naira(s.rate)}/$</Text>
+                        border="2px solid" borderColor={active ? "brand.500" : "ink.100"} bg={active ? "brand.50" : "white"} borderRadius="xl" p={4} textAlign="left"
+                        transition="all .2s" _hover={{ borderColor: active ? "brand.500" : "brand.200" }}
+                        boxShadow={active ? "0 0 0 3px rgba(239,68,68,0.15)" : "none"}>
+                        <Text fontWeight="700" fontSize="sm" color={active ? "brand.600" : "ink.900"}>{s.name}</Text>
+                        <Text fontSize="xs" color={active ? "brand.500" : "ink.500"} fontWeight="600">{naira(s.rate)}/$</Text>
                       </Box>
                     );
                   })}
