@@ -12,12 +12,13 @@ import { toast, err, isValidPassword } from "../Helper";
 
 export default function Signup() {
   const { signup } = useAuthStore();
-  const [form, setForm] = useState({ fullname: "", email: "", password: "", confirm: "", referralCode: "" });
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState("");
   const nav = useNavigate();
   const searchParams = useSearchParams();
+  const refCode = searchParams.get("ref") || "";
   const redirectUrl = searchParams.get("next");
+  const [form, setForm] = useState({ fullname: "", email: "", password: "", confirm: "", referralCode: refCode });
   const domain = process.env.NEXT_PUBLIC_DOMAIN || "powerpaytech.com";
   const safeRedirectUrl = (() => {
     if (!redirectUrl) return null;
