@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Box, Heading, Text, SimpleGrid, Flex, Image, Badge, Spinner, Tabs, HStack, Input } from "@chakra-ui/react";
 import Nav from "../components/nav";
 import Footer from "../components/Footer";
+import WhatsAppBubble from "../components/WhatsAppBubble";
 import TransactionStore from "../Store/TransactionStore";
 import { naira } from "../Helper";
 import ScrollReveal, { staggerDelay } from "../components/ScrollReveal";
@@ -77,6 +78,7 @@ export default function RatesPage() {
         )}
       </Box>
       <Footer />
+      <WhatsAppBubble />
     </Box>
   );
 }

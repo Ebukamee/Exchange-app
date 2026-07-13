@@ -12,6 +12,7 @@ import Other from "../components/othersection";
 import Testimonials from "../components/Testimonials";
 import FAQ from "../components/FAQ";
 import Footer from "../components/Footer";
+import WhatsAppBubble from "../components/WhatsAppBubble";
 
 function CTA() {
   const nav = useNavigate();
@@ -60,6 +61,7 @@ export default function Home() {
       <FAQ />
       <CTA />
       <Footer />
+      <WhatsAppBubble />
     </Box>
   );
 }

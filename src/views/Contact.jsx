@@ -5,6 +5,7 @@ import { FaEnvelope, FaPhone, FaLocationDot, FaWhatsapp } from "react-icons/fa6"
 import ScrollReveal from "../components/ScrollReveal";
 import Nav from "../components/nav";
 import Footer from "../components/Footer";
+import WhatsAppBubble from "../components/WhatsAppBubble";
 import { Field } from "../components/ui/field";
 import { toast } from "../Helper";
 
@@ -70,6 +71,7 @@ export default function Contact() {
         </SimpleGrid>
       </Box>
       <Footer />
+      <WhatsAppBubble />
     </Box>
   );
 }

@@ -4,6 +4,7 @@ import { FaBullseye, FaHandshake, FaLock } from "react-icons/fa6";
 import ScrollReveal, { staggerDelay } from "../components/ScrollReveal";
 import Nav from "../components/nav";
 import Footer from "../components/Footer";
+import WhatsAppBubble from "../components/WhatsAppBubble";
 
 const values = [
   { icon: FaBullseye, title: "Best rates", body: "We constantly track the market so you always get top value for your crypto and gift cards." },
@@ -64,6 +65,7 @@ export default function About() {
       </ScrollReveal>
 
       <Footer />
+      <WhatsAppBubble />
     </Box>
   );
 }
