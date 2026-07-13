@@ -99,15 +99,15 @@ export default function BuyCrypto() {
                       as="button"
                       type="button"
                       onClick={() => setSelected(c)}
-                      bg="ink.950"
+                      bg="#1B1C20"
                       borderRadius="xl"
                       border="2px solid"
-                      borderColor={active ? "brand.500" : "ink.800"}
+                      borderColor={active ? "brand.500" : "#2a2b30"}
                       p={5}
                       position="relative"
                       overflow="hidden"
                       transition="all .25s"
-                      _hover={{ borderColor: active ? "brand.500" : "brand.300", transform: "translateY(-2px)", boxShadow: "0 8px 24px rgba(0,0,0,0.2)" }}
+                      _hover={{ borderColor: active ? "brand.500" : "#5C5C5C", transform: "translateY(-2px)", boxShadow: "0 8px 24px rgba(0,0,0,0.3)" }}
                       boxShadow={active ? "0 0 0 3px rgba(239,68,68,0.2)" : "none"}
                       textAlign="left"
                     >
@@ -117,7 +117,7 @@ export default function BuyCrypto() {
                         right="-8px"
                         fontSize="90px"
                         fontWeight="900"
-                        color="ink.300"
+                        color="#797B89"
                         opacity={0.08}
                         lineHeight="1"
                         userSelect="none"
@@ -134,12 +134,12 @@ export default function BuyCrypto() {
                           </Flex>
                         )}
                         <Box>
-                          <Text fontWeight="800" fontSize="md" color="white" lineHeight="1.2">{c.name}</Text>
-                          <Text fontSize="xs" color="ink.400" fontWeight="500">{symbol}</Text>
+                          <Text fontWeight="800" fontSize="md" color="#fff" lineHeight="1.2">{c.name}</Text>
+                          <Text fontSize="xs" color="#797B89" fontWeight="500">{symbol}</Text>
                         </Box>
                       </HStack>
                       <Box position="relative" mt={1}>
-                        <Text fontSize="xs" color="ink.500" mb={0.5}>Rate</Text>
+                        <Text fontSize="xs" color="#5C5C5C" mb={0.5}>Rate</Text>
                         <Text fontSize="sm" fontWeight="700" color="brand.400">{naira(c.buy_price)}/USD</Text>
                       </Box>
                     </Box>
@@ -153,25 +153,25 @@ export default function BuyCrypto() {
                 <Field label={mode === "unit" ? `Amount of ${selected.symbol || selected.name} to buy` : "Amount in Naira"}>
                   <Input type="number" min="0" step="any" placeholder={mode === "unit" ? "0.00" : "0"} value={amount} onChange={(e) => setAmount(e.target.value)} />
                 </Field>
-                <Text as="button" type="button" fontSize="xs" color="brand.600" fontWeight="600" mt={-4} onClick={() => { setAmount(""); setMode(mode === "unit" ? "naira" : "unit"); }}>
+                <Text as="button" type="button" fontSize="xs" color="brand.500" fontWeight="600" mt={-4} onClick={() => { setAmount(""); setMode(mode === "unit" ? "naira" : "unit"); }}>
                   Switch to {mode === "unit" ? "Naira (₦)" : selected.symbol || selected.name}
                 </Text>
 
-                <Box bg="ink.50" borderRadius="l2" p={4}>
+                <Box bg="#1B1C20" borderRadius="xl" p={4}>
                   <VStack align="stretch" gap={1}>
                     {mode === "naira" && raw > 0 && (
                       <Flex justify="space-between">
-                        <Text color="ink.500" fontSize="sm">You're buying</Text>
-                        <Text fontWeight="700" color="ink.900" fontSize="sm">{unitQty.toLocaleString("en", { maximumFractionDigits: 7 })} {selected.symbol || selected.name}</Text>
+                        <Text color="#797B89" fontSize="sm">You're buying</Text>
+                        <Text fontWeight="700" color="#fff" fontSize="sm">{unitQty.toLocaleString("en", { maximumFractionDigits: 7 })} {selected.symbol || selected.name}</Text>
                       </Flex>
                     )}
                     <Flex justify="space-between">
-                      <Text color="ink.500" fontSize="sm">You'll pay</Text>
-                      <Text fontWeight="800" color="brand.600">{naira(cost)}</Text>
+                      <Text color="#797B89" fontSize="sm">You'll pay</Text>
+                      <Text fontWeight="800" color="brand.500">{naira(cost)}</Text>
                     </Flex>
                     <Flex justify="space-between">
-                      <Text color="ink.400" fontSize="xs">Sent to your wallet</Text>
-                      <Text color="ink.500" fontSize="xs" wordBreak="break-all">{profile?.wallet_address || "—"}</Text>
+                      <Text color="#5C5C5C" fontSize="xs">Sent to your wallet</Text>
+                      <Text color="#797B89" fontSize="xs" wordBreak="break-all">{profile?.wallet_address || "—"}</Text>
                     </Flex>
                   </VStack>
                 </Box>
@@ -194,26 +194,26 @@ export default function BuyCrypto() {
                 {method === "bank" && (
                   <>
                     {depositBank?.account_number ? (
-                      <Box bg="brand.50" border="1px solid" borderColor="brand.100" borderRadius="l2" p={4}>
-                        <HStack color="brand.700" mb={3} gap={2}>
+                      <Box bg="#1B1C20" border="1px solid" borderColor="#2a2b30" borderRadius="xl" p={4}>
+                        <HStack color="brand.500" mb={3} gap={2}>
                           <Icon><FaCircleInfo /></Icon>
-                          <Text fontSize="sm" fontWeight="600">Transfer {naira(cost)} to:</Text>
+                          <Text fontSize="sm" fontWeight="600" color="#fff">Transfer {naira(cost)} to:</Text>
                         </HStack>
                         <VStack align="stretch" gap={1} fontSize="sm">
-                          <Flex justify="space-between"><Text color="ink.500">Bank</Text><Text fontWeight="600">{depositBank.bank_name}</Text></Flex>
-                          <Flex justify="space-between"><Text color="ink.500">Name</Text><Text fontWeight="600">{depositBank.account_name}</Text></Flex>
+                          <Flex justify="space-between"><Text color="#797B89">Bank</Text><Text fontWeight="600" color="#fff">{depositBank.bank_name}</Text></Flex>
+                          <Flex justify="space-between"><Text color="#797B89">Name</Text><Text fontWeight="600" color="#fff">{depositBank.account_name}</Text></Flex>
                           <Clipboard.Root value={depositBank.account_number}>
                             <Flex justify="space-between" align="center">
-                              <Text color="ink.500">Account</Text>
-                              <HStack><Text fontWeight="600">{depositBank.account_number}</Text>
-                                <Clipboard.Trigger asChild><Button size="2xs" variant="ghost" colorPalette="ink"><FaRegCopy /></Button></Clipboard.Trigger>
+                              <Text color="#797B89">Account</Text>
+                              <HStack><Text fontWeight="600" color="#fff">{depositBank.account_number}</Text>
+                                <Clipboard.Trigger asChild><Button size="2xs" variant="ghost" color="#797B89"><FaRegCopy /></Button></Clipboard.Trigger>
                               </HStack>
                             </Flex>
                           </Clipboard.Root>
                         </VStack>
                       </Box>
                     ) : (
-                      <Text fontSize="sm" color="ink.400">Bank details not set yet — please try the balance option or contact support.</Text>
+                      <Text fontSize="sm" color="#5C5C5C">Bank details not set yet — please try the balance option or contact support.</Text>
                     )}
                     <Field label="Proof of payment">
                       <FileUpload files={images} onChange={setImages} />
@@ -221,7 +221,7 @@ export default function BuyCrypto() {
                   </>
                 )}
 
-                <Button colorPalette="ink" size="lg" disabled={!valid} loading={loading} onClick={submit}>
+                <Button colorPalette="brand" size="lg" disabled={!valid} loading={loading} onClick={submit}>
                   {method === "balance" ? "Buy now" : "Submit trade"}
                 </Button>
               </>
@@ -238,17 +238,19 @@ function MethodOption({ value, active, icon, title, desc }) {
     <RadioGroup.Item value={value}>
       <RadioGroup.ItemHiddenInput />
       <HStack
-        border="1px solid"
-        borderColor={active ? "brand.500" : "ink.100"}
-        bg={active ? "brand.50" : "white"}
-        borderRadius="l2"
+        border="2px solid"
+        borderColor={active ? "brand.500" : "#e5e5e5"}
+        bg={active ? "#fff5f5" : "white"}
+        borderRadius="xl"
         p={4}
         w="100%"
+        transition="all .2s"
+        _hover={{ borderColor: active ? "brand.500" : "#5C5C5C" }}
       >
         <Icon color="brand.500">{<icon />}</Icon>
         <Box flex="1">
-          <Text fontWeight="600" fontSize="sm" color="ink.900">{title}</Text>
-          <Text fontSize="xs" color="ink.500">{desc}</Text>
+          <Text fontWeight="600" fontSize="sm" color="#1B1C20">{title}</Text>
+          <Text fontSize="xs" color="#5C5C5C">{desc}</Text>
         </Box>
         <RadioGroup.ItemIndicator />
       </HStack>

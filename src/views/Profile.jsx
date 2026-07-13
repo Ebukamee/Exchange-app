@@ -80,12 +80,12 @@ export default function Profile() {
         {/* Profile header */}
         <ScrollReveal>
           <HStack gap={4} mb={8}>
-            <Avatar.Root size="lg" colorPalette="ink">
+            <Avatar.Root size="lg" colorPalette="brand">
               <Avatar.Fallback name={profile?.full_name || profile?.email} />
             </Avatar.Root>
             <Box>
-              <Heading fontFamily="heading" fontSize="xl" color="ink.900">{profile?.full_name || "Your profile"}</Heading>
-              <Text color="ink.500" fontSize="sm">{profile?.email}</Text>
+              <Heading fontFamily="heading" fontSize="xl" color="#1B1C20">{profile?.full_name || "Your profile"}</Heading>
+              <Text color="#5C5C5C" fontSize="sm">{profile?.email}</Text>
             </Box>
           </HStack>
         </ScrollReveal>
@@ -113,18 +113,18 @@ export default function Profile() {
                   <Heading fontFamily="heading" fontSize={{ base: "2xl", md: "3xl" }} color="white" mb={2} letterSpacing="-0.02em">
                     Refer & Earn!
                   </Heading>
-                  <Text color="whiteAlpha.800" fontSize="sm" maxW="400px" lineHeight="1.6">
+                  <Text color="rgba(255,255,255,0.8)" fontSize="sm" maxW="400px" lineHeight="1.6">
                     Invite your friends to Powerpay and earn rewards when they sign up and start trading.
                   </Text>
                 </Box>
               </Box>
 
               {/* Referral link row */}
-              <Box bg="ink.950" borderRadius="xl" p={5} mb={4}>
-                <Text fontSize="xs" color="ink.400" mb={3} fontWeight="700" letterSpacing="0.08em">YOUR REFERRAL LINK</Text>
+              <Box bg="#1B1C20" borderRadius="xl" p={5} mb={4}>
+                <Text fontSize="xs" color="#797B89" mb={3} fontWeight="700" letterSpacing="0.08em">YOUR REFERRAL LINK</Text>
                 <HStack gap={3}>
-                  <Box flex="1" bg="ink.900" borderRadius="lg" px={4} py={3} border="1px solid" borderColor="ink.800">
-                    <Text fontSize="sm" color="ink.200" wordBreak="break-all" fontWeight="500">
+                  <Box flex="1" bg="#060809" borderRadius="lg" px={4} py={3} border="1px solid" borderColor="#2a2b30">
+                    <Text fontSize="sm" color="#797B89" wordBreak="break-all" fontWeight="500">
                       powerpay.com/signup?ref={profile.referral_code}
                     </Text>
                   </Box>
@@ -144,49 +144,49 @@ export default function Profile() {
               {/* Stats + Share cards */}
               <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
                 {/* Details card */}
-                <Box bg="ink.950" borderRadius="xl" p={5} border="1px solid" borderColor="ink.800">
+                <Box bg="#1B1C20" borderRadius="xl" p={5} border="1px solid" borderColor="#2a2b30">
                   <Text fontWeight="800" color="white" mb={4} fontSize="md">Details</Text>
                   <VStack align="stretch" gap={3}>
                     <Flex justify="space-between" align="center">
-                      <Text fontSize="sm" color="ink.400">Total Earnings</Text>
+                      <Text fontSize="sm" color="#797B89">Total Earnings</Text>
                       <Text fontWeight="700" color="brand.400">₦0.00</Text>
                     </Flex>
-                    <Box h="1px" bg="ink.800" />
+                    <Box h="1px" bg="#2a2b30" />
                     <Flex justify="space-between" align="center">
-                      <Text fontSize="sm" color="ink.400">Total Signups</Text>
+                      <Text fontSize="sm" color="#797B89">Total Signups</Text>
                       <Text fontWeight="700" color="white">0</Text>
                     </Flex>
-                    <Box h="1px" bg="ink.800" />
+                    <Box h="1px" bg="#2a2b30" />
                     <Flex justify="space-between" align="center">
-                      <Text fontSize="sm" color="ink.400">Signups who transacted</Text>
+                      <Text fontSize="sm" color="#797B89">Signups who transacted</Text>
                       <Text fontWeight="700" color="white">0</Text>
                     </Flex>
                   </VStack>
                 </Box>
 
                 {/* Share card */}
-                <Box bg="ink.950" borderRadius="xl" p={5} border="1px solid" borderColor="ink.800">
+                <Box bg="#1B1C20" borderRadius="xl" p={5} border="1px solid" borderColor="#2a2b30">
                   <Text fontWeight="800" color="white" mb={4} fontSize="md">Share</Text>
                   <VStack align="stretch" gap={4}>
                     <Box>
-                      <Text fontSize="xs" color="ink.400" mb={1}>Referral Code</Text>
+                      <Text fontSize="xs" color="#797B89" mb={1}>Referral Code</Text>
                       <Text fontWeight="800" fontSize="xl" color="white" letterSpacing="0.1em">
                         {profile.referral_code}
                       </Text>
                     </Box>
-                    <Box h="1px" bg="ink.800" />
+                    <Box h="1px" bg="#2a2b30" />
                     <Box>
-                      <Text fontSize="xs" color="ink.400" mb={3}>Invite Friends</Text>
+                      <Text fontSize="xs" color="#797B89" mb={3}>Invite Friends</Text>
                       <HStack gap={3}>
                         <Button size="sm" bg="#25D366" color="white" _hover={{ bg: "#1da851" }} onClick={shareWhatsApp}>
                           <Icon><FaWhatsapp /></Icon>
                           WhatsApp
                         </Button>
-                        <Button size="sm" bg="ink.800" color="white" _hover={{ bg: "ink.700" }} onClick={shareTwitter}>
+                        <Button size="sm" bg="#383A47" color="white" _hover={{ bg: "#5C5C5C" }} onClick={shareTwitter}>
                           <Icon><FaXTwitter /></Icon>
                           Twitter
                         </Button>
-                        <Button size="sm" variant="outline" borderColor="ink.700" color="ink.300" _hover={{ bg: "ink.800" }} onClick={copyReferralCode}>
+                        <Button size="sm" variant="outline" borderColor="#2a2b30" color="#797B89" _hover={{ bg: "#2a2b30" }} onClick={copyReferralCode}>
                           <Icon><FaCopy /></Icon>
                           Copy
                         </Button>
@@ -201,7 +201,7 @@ export default function Profile() {
 
         {/* Profile form */}
         <ScrollReveal delay={0.15}>
-        <Box as="form" onSubmit={save} bg="white" borderRadius="l3" border="1px solid" borderColor="ink.100" p={{ base: 5, md: 7 }}>
+        <Box as="form" onSubmit={save} bg="white" borderRadius="xl" border="1px solid" borderColor="#e5e5e5" p={{ base: 5, md: 7 }}>
           <VStack align="stretch" gap={5}>
             <Field label="Full name">
               <Input value={form.full_name} onChange={set("full_name")} />
@@ -209,14 +209,14 @@ export default function Profile() {
             <Field label="Crypto wallet address" helperText="Where you receive crypto you buy.">
               <Input value={form.wallet_address} onChange={set("wallet_address")} />
             </Field>
-            <Box h="1px" bg="ink.100" />
-            <Text fontWeight="700" fontSize="sm" color="brand.600" letterSpacing="0.04em">BANK ACCOUNT</Text>
+            <Box h="1px" bg="#e5e5e5" />
+            <Text fontWeight="700" fontSize="sm" color="brand.500" letterSpacing="0.04em">BANK ACCOUNT</Text>
             <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
               <Field label="Bank name"><Input value={form.bank_name} onChange={set("bank_name")} /></Field>
               <Field label="Account name"><Input value={form.account_name} onChange={set("account_name")} /></Field>
             </SimpleGrid>
             <Field label="Account number"><Input value={form.account_number} onChange={set("account_number")} /></Field>
-            <Button type="submit" colorPalette="ink" size="lg" loading={loading}>Save changes</Button>
+            <Button type="submit" colorPalette="brand" size="lg" loading={loading}>Save changes</Button>
           </VStack>
         </Box>
         </ScrollReveal>

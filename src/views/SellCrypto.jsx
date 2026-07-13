@@ -78,15 +78,15 @@ export default function SellCrypto() {
                       as="button"
                       type="button"
                       onClick={() => setSelected(c)}
-                      bg="ink.950"
+                      bg="#1B1C20"
                       borderRadius="xl"
                       border="2px solid"
-                      borderColor={active ? "brand.500" : "ink.800"}
+                      borderColor={active ? "brand.500" : "#2a2b30"}
                       p={5}
                       position="relative"
                       overflow="hidden"
                       transition="all .25s"
-                      _hover={{ borderColor: active ? "brand.500" : "brand.300", transform: "translateY(-2px)", boxShadow: "0 8px 24px rgba(0,0,0,0.2)" }}
+                      _hover={{ borderColor: active ? "brand.500" : "#5C5C5C", transform: "translateY(-2px)", boxShadow: "0 8px 24px rgba(0,0,0,0.3)" }}
                       boxShadow={active ? "0 0 0 3px rgba(239,68,68,0.2)" : "none"}
                       textAlign="left"
                     >
@@ -96,7 +96,7 @@ export default function SellCrypto() {
                         right="-8px"
                         fontSize="90px"
                         fontWeight="900"
-                        color="ink.300"
+                        color="#797B89"
                         opacity={0.08}
                         lineHeight="1"
                         userSelect="none"
@@ -113,12 +113,12 @@ export default function SellCrypto() {
                           </Flex>
                         )}
                         <Box>
-                          <Text fontWeight="800" fontSize="md" color="white" lineHeight="1.2">{c.name}</Text>
-                          <Text fontSize="xs" color="ink.400" fontWeight="500">{symbol}</Text>
+                          <Text fontWeight="800" fontSize="md" color="#fff" lineHeight="1.2">{c.name}</Text>
+                          <Text fontSize="xs" color="#797B89" fontWeight="500">{symbol}</Text>
                         </Box>
                       </HStack>
                       <Box position="relative" mt={1}>
-                        <Text fontSize="xs" color="ink.500" mb={0.5}>Rate</Text>
+                        <Text fontSize="xs" color="#5C5C5C" mb={0.5}>Rate</Text>
                         <Text fontSize="sm" fontWeight="700" color="brand.400">{naira(c.sell_price)}/USD</Text>
                       </Box>
                     </Box>
@@ -136,38 +136,38 @@ export default function SellCrypto() {
                   Switch to {mode === "unit" ? "Naira (₦)" : selected.symbol || selected.name}
                 </Text>
 
-                <Box bg="ink.50" borderRadius="l2" p={4}>
+                <Box bg="#1B1C20" borderRadius="xl" p={4}>
                   <VStack align="stretch" gap={1}>
                     {mode === "naira" && raw > 0 && (
                       <Flex justify="space-between">
-                        <Text color="ink.500" fontSize="sm">You're selling</Text>
-                        <Text fontWeight="700" color="ink.900" fontSize="sm">{unitQty.toLocaleString("en", { maximumFractionDigits: 7 })} {selected.symbol || selected.name}</Text>
+                        <Text color="#797B89" fontSize="sm">You're selling</Text>
+                        <Text fontWeight="700" color="#fff" fontSize="sm">{unitQty.toLocaleString("en", { maximumFractionDigits: 7 })} {selected.symbol || selected.name}</Text>
                       </Flex>
                     )}
                     {mode === "unit" && raw > 0 && (
                       <Flex justify="space-between">
-                        <Text color="ink.500" fontSize="sm">You're selling</Text>
-                        <Text fontWeight="700" color="ink.900" fontSize="sm">{raw} {selected.symbol || selected.name}</Text>
+                        <Text color="#797B89" fontSize="sm">You're selling</Text>
+                        <Text fontWeight="700" color="#fff" fontSize="sm">{raw} {selected.symbol || selected.name}</Text>
                       </Flex>
                     )}
                     <Flex justify="space-between">
-                      <Text color="ink.500" fontSize="sm">You'll receive</Text>
-                      <Text fontWeight="800" color="brand.600">{naira(payout)}</Text>
+                      <Text color="#797B89" fontSize="sm">You'll receive</Text>
+                      <Text fontWeight="800" color="brand.500">{naira(payout)}</Text>
                     </Flex>
                   </VStack>
                 </Box>
 
                 {selected.deposit_address && (
-                  <Box bg="brand.50" border="1px solid" borderColor="brand.100" borderRadius="l2" p={4}>
-                    <HStack color="brand.700" mb={2} gap={2}>
+                  <Box bg="#1B1C20" border="1px solid" borderColor="#2a2b30" borderRadius="xl" p={4}>
+                    <HStack color="brand.500" mb={2} gap={2}>
                       <Icon><FaCircleInfo /></Icon>
-                      <Text fontSize="sm" fontWeight="600">Send {selected.name} to this address, then upload proof:</Text>
+                      <Text fontSize="sm" fontWeight="600" color="#fff">Send {selected.name} to this address, then upload proof:</Text>
                     </HStack>
                     <Clipboard.Root value={selected.deposit_address}>
-                      <HStack bg="white" borderRadius="l1" p={3} justify="space-between">
-                        <Text fontSize="sm" wordBreak="break-all">{selected.deposit_address}</Text>
+                      <HStack bg="#060809" borderRadius="lg" p={3} justify="space-between">
+                        <Text fontSize="sm" wordBreak="break-all" color="#797B89">{selected.deposit_address}</Text>
                         <Clipboard.Trigger asChild>
-                          <Button size="xs" variant="ghost" colorPalette="ink"><FaRegCopy /></Button>
+                          <Button size="xs" variant="ghost" color="#797B89"><FaRegCopy /></Button>
                         </Clipboard.Trigger>
                       </HStack>
                     </Clipboard.Root>
@@ -198,10 +198,10 @@ export function TradeCard({ title, subtitle, children }) {
   return (
     <Box maxW="640px" mx="auto">
       <Box mb={6}>
-        <Heading fontFamily="heading" fontSize="2xl" color="ink.900">{title}</Heading>
-        {subtitle && <Text color="ink.500">{subtitle}</Text>}
+        <Heading fontFamily="heading" fontSize="2xl" color="#1B1C20">{title}</Heading>
+        {subtitle && <Text color="#5C5C5C">{subtitle}</Text>}
       </Box>
-      <Box bg="white" borderRadius="l3" border="1px solid" borderColor="ink.100" p={{ base: 5, md: 7 }}>
+      <Box bg="white" borderRadius="xl" border="1px solid" borderColor="#e5e5e5" p={{ base: 5, md: 7 }}>
         {children}
       </Box>
     </Box>

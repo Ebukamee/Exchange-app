@@ -72,7 +72,7 @@ export default function SellGiftcard() {
         {booting ? (
           <Flex justify="center" py={10}><Spinner color="brand.500" /></Flex>
         ) : list.length === 0 ? (
-          <Text color="ink.400" py={6} textAlign="center">No gift cards accepted right now.</Text>
+          <Text color="#5C5C5C" py={6} textAlign="center">No gift cards accepted right now.</Text>
         ) : (
           <VStack align="stretch" gap={6}>
             <Field label="Choose gift card">
@@ -85,17 +85,17 @@ export default function SellGiftcard() {
                       as="button"
                       type="button"
                       onClick={() => selectCard(g)}
-                      bg="ink.950"
+                      bg="#1B1C20"
                       borderRadius="xl"
                       border="2px solid"
-                      borderColor={active ? "brand.500" : "ink.800"}
+                      borderColor={active ? "brand.500" : "#2a2b30"}
                       overflow="hidden"
                       transition="all .25s"
-                      _hover={{ borderColor: active ? "brand.500" : "brand.300", transform: "translateY(-2px)", boxShadow: "0 8px 24px rgba(0,0,0,0.2)" }}
+                      _hover={{ borderColor: active ? "brand.500" : "#5C5C5C", transform: "translateY(-2px)", boxShadow: "0 8px 24px rgba(0,0,0,0.3)" }}
                       boxShadow={active ? "0 0 0 3px rgba(239,68,68,0.2)" : "none"}
                     >
                       {g.icon_url ? (
-                        <Box bg="ink.900" p={4}>
+                        <Box bg="#060809" p={4}>
                           <Image
                             src={g.icon_url}
                             w="100%"
@@ -105,13 +105,13 @@ export default function SellGiftcard() {
                           />
                         </Box>
                       ) : (
-                        <Flex bg="ink.900" h="110px" align="center" justify="center">
+                        <Flex bg="#060809" h="110px" align="center" justify="center">
                           <Text fontSize="4xl" fontWeight="900" color="brand.400">
                             {g.name?.[0]}
                           </Text>
                         </Flex>
                       )}
-                      <Box px={3} py={3} bg={active ? "brand.500" : "ink.950"} transition="all .2s">
+                      <Box px={3} py={3} bg={active ? "brand.500" : "#1B1C20"} transition="all .2s">
                         <Text fontWeight="700" fontSize="sm" color="white" textAlign="center" lineClamp={1}>
                           {g.name}
                         </Text>
@@ -129,11 +129,11 @@ export default function SellGiftcard() {
                     const active = selectedSub?.name === s.name;
                     return (
                       <Box key={i} as="button" type="button" onClick={() => setSelectedSub(s)}
-                        border="2px solid" borderColor={active ? "brand.500" : "ink.100"} bg={active ? "brand.50" : "white"} borderRadius="xl" p={4} textAlign="left"
-                        transition="all .2s" _hover={{ borderColor: active ? "brand.500" : "brand.200" }}
+                        border="2px solid" borderColor={active ? "brand.500" : "#e5e5e5"} bg={active ? "#fff5f5" : "white"} borderRadius="xl" p={4} textAlign="left"
+                        transition="all .2s" _hover={{ borderColor: active ? "brand.500" : "#5C5C5C" }}
                         boxShadow={active ? "0 0 0 3px rgba(239,68,68,0.15)" : "none"}>
-                        <Text fontWeight="700" fontSize="sm" color={active ? "brand.600" : "ink.900"}>{s.name}</Text>
-                        <Text fontSize="xs" color={active ? "brand.500" : "ink.500"} fontWeight="600">{naira(s.rate)}/$</Text>
+                        <Text fontWeight="700" fontSize="sm" color={active ? "brand.500" : "#1B1C20"}>{s.name}</Text>
+                        <Text fontSize="xs" color={active ? "brand.500" : "#5C5C5C"} fontWeight="600">{naira(s.rate)}/$</Text>
                       </Box>
                     );
                   })}
@@ -148,7 +148,7 @@ export default function SellGiftcard() {
                     <Field label={mode === "unit" ? "Card value ($)" : "Amount in Naira"}>
                       <Input type="number" min="0" step="any" placeholder={mode === "unit" ? "e.g. 100" : "0"} value={amount} onChange={(e) => setAmount(e.target.value)} />
                     </Field>
-                    <Text as="button" type="button" fontSize="xs" color="brand.600" fontWeight="600" mt={1} onClick={() => { setAmount(""); setMode(mode === "unit" ? "naira" : "unit"); }}>
+                    <Text as="button" type="button" fontSize="xs" color="brand.500" fontWeight="600" mt={1} onClick={() => { setAmount(""); setMode(mode === "unit" ? "naira" : "unit"); }}>
                       Switch to {mode === "unit" ? "Naira (₦)" : "USD ($)"}
                     </Text>
                   </Box>
@@ -157,21 +157,21 @@ export default function SellGiftcard() {
                   </Field>
                 </SimpleGrid>
 
-                <Box bg="ink.50" borderRadius="l2" p={4}>
+                <Box bg="#1B1C20" borderRadius="xl" p={4}>
                   <VStack align="stretch" gap={1}>
                     <Flex justify="space-between">
-                      <Text color="ink.500" fontSize="sm">Rate ({selectedSub.name})</Text>
-                      <Text fontWeight="600" color="ink.700" fontSize="sm">{naira(rate)}/$</Text>
+                      <Text color="#797B89" fontSize="sm">Rate ({selectedSub.name})</Text>
+                      <Text fontWeight="600" color="#fff" fontSize="sm">{naira(rate)}/$</Text>
                     </Flex>
                     {mode === "naira" && raw > 0 && (
                       <Flex justify="space-between">
-                        <Text color="ink.500" fontSize="sm">Card value</Text>
-                        <Text fontWeight="700" color="ink.900" fontSize="sm">${usdQty.toLocaleString("en", { maximumFractionDigits: 2 })}</Text>
+                        <Text color="#797B89" fontSize="sm">Card value</Text>
+                        <Text fontWeight="700" color="#fff" fontSize="sm">${usdQty.toLocaleString("en", { maximumFractionDigits: 2 })}</Text>
                       </Flex>
                     )}
                     <Flex justify="space-between">
-                      <Text color="ink.500" fontSize="sm">You'll receive</Text>
-                      <Text fontWeight="800" color="brand.600">{naira(payout)}</Text>
+                      <Text color="#797B89" fontSize="sm">You'll receive</Text>
+                      <Text fontWeight="800" color="brand.500">{naira(payout)}</Text>
                     </Flex>
                   </VStack>
                 </Box>
@@ -184,7 +184,7 @@ export default function SellGiftcard() {
                   <Textarea placeholder="Card code or extra details" value={description} onChange={(e) => setDescription(e.target.value)} rows={3} />
                 </Field>
 
-                <Button colorPalette="ink" size="lg" disabled={!valid} loading={loading} onClick={submit}>
+                <Button colorPalette="brand" size="lg" disabled={!valid} loading={loading} onClick={submit}>
                   Submit gift card
                 </Button>
               </>
