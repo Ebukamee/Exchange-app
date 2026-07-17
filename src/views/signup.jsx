@@ -48,7 +48,7 @@ export default function Signup() {
     }
 
     if (!isValidPassword(form.password)) {
-      const message = "Password must be at least 8 characters and include uppercase, lowercase, a number, and one of: _ - #";
+      const message = "Password must be at least 8 characters";
       setFormError(message);
       toast("error", message, "Invalid password");
       return;
@@ -98,7 +98,7 @@ export default function Signup() {
             <Input type="email" placeholder="you@email.com" value={form.email} onChange={set("email")} required />
           </Field>
           <Field label="Password">
-            <PasswordInput placeholder="At least 8 characters and include upper, lower, number, and _ - #" value={form.password} onChange={set("password")} required />
+            <PasswordInput placeholder="At least 8 characters" value={form.password} onChange={set("password")} required />
           </Field>
           <Field label="Confirm password">
             <PasswordInput placeholder="Re-enter password" value={form.confirm} onChange={set("confirm")} required />
