@@ -33,7 +33,7 @@ export async function updateProfile(fields) {
 export async function getReferrals() {
   const u = await requireUser();
   const rows = await q(
-    `SELECT id, full_name, email, created_at FROM "user" WHERE referred_by = $1 ORDER BY created_at DESC`,
+    `SELECT id, full_name, email, "createdAt" AS created_at FROM "user" WHERE referred_by = $1 ORDER BY "createdAt" DESC`,
     [u.id]
   );
   return rows;
