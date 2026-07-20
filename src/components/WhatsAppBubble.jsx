@@ -1,12 +1,24 @@
 "use client";
+import { useEffect, useState } from "react";
 import { Box, Icon } from "@chakra-ui/react";
 import { FaWhatsapp } from "react-icons/fa6";
+import { getWhatsapp } from "@/app/actions/catalog";
+
+const DEFAULT_NUMBER = "8168236123";
 
 export default function WhatsAppBubble() {
+  const [number, setNumber] = useState(DEFAULT_NUMBER);
+
+  useEffect(() => {
+    getWhatsapp().then((v) => {
+      if (v?.number) setNumber(v.number);
+    }).catch(() => {});
+  }, []);
+
   return (
     <Box
       as="a"
-      href="https://wa.me/8168236123"
+      href={`https://wa.me/${number}`}
       target="_blank"
       rel="noopener noreferrer"
       position="fixed"

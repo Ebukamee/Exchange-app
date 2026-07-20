@@ -176,3 +176,19 @@ export async function saveDepositBank(value) {
   await requireAdmin();
   await q("update settings set value = $1 where key = 'deposit_bank'", [JSON.stringify(value)]);
 }
+
+export async function saveHeroRates(value) {
+  await requireAdmin();
+  await q(
+    `INSERT INTO settings (key, value) VALUES ('hero_rates', $1) ON CONFLICT (key) DO UPDATE SET value = $1`,
+    [JSON.stringify(value)]
+  );
+}
+
+export async function saveWhatsapp(value) {
+  await requireAdmin();
+  await q(
+    `INSERT INTO settings (key, value) VALUES ('whatsapp', $1) ON CONFLICT (key) DO UPDATE SET value = $1`,
+    [JSON.stringify(value)]
+  );
+}

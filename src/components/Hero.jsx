@@ -1,9 +1,18 @@
 "use client";
-import { Box, Flex, Heading, Text, Button, HStack, Stack, SimpleGrid, Icon } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { Box, Flex, Heading, Text, Button, HStack, Stack, SimpleGrid, Icon, Spinner } from "@chakra-ui/react";
 import { useNavigate } from "@/src/compat/router";
 import { FaArrowRight, FaBitcoin, FaEthereum } from "react-icons/fa6";
 import { SiTether, SiBitcoin } from "react-icons/si";
 import ScrollReveal, { staggerDelay } from "./ScrollReveal";
+import { getHeroRates } from "@/app/actions/catalog";
+
+const DEFAULT_RATES = [
+  { asset: "Bitcoin (BTC)", price: "₦1,650 / $" },
+  { asset: "USDT (TRC20)", price: "₦1,610 / $" },
+  { asset: "Amazon Gift Card", price: "₦1,150 / $" },
+  { asset: "Steam Gift Card", price: "₦1,080 / $" },
+];
 
 function FloatBadge({ children, color, ...pos }) {
   return (
@@ -29,6 +38,14 @@ function FloatBadge({ children, color, ...pos }) {
 
 export default function Hero() {
   const nav = useNavigate();
+  const [rates, setRates] = useState(DEFAULT_RATES);
+
+  useEffect(() => {
+    getHeroRates().then((v) => {
+      if (Array.isArray(v) && v.length > 0) setRates(v);
+    }).catch(() => {});
+  }, []);
+
   return (
     <Box position="relative" overflow="hidden">
       {/* soft neutral glows (Cardtonic-style), red used only faintly */}
@@ -87,10 +104,9 @@ export default function Hero() {
                 <Text fontSize="sm" color="brand.500" fontWeight="700">Live rates</Text>
               </Flex>
               <Stack gap={3}>
-                <RateRow asset="Bitcoin (BTC)" price="₦1,650 / $" />
-                <RateRow asset="USDT (TRC20)" price="₦1,610 / $" />
-                <RateRow asset="Amazon Gift Card" price="₦1,150 / $" />
-                <RateRow asset="Steam Gift Card" price="₦1,080 / $" />
+                {rates.map((r, i) => (
+                  <RateRow key={i} asset={r.asset} price={r.price} />
+                ))}
               </Stack>
               <Button mt={6} w="100%" colorPalette="ink" rounded="full" fontWeight="700" onClick={() => nav("/signup")}>
                 Trade now
@@ -135,4 +151,3 @@ function Stat({ value, label }) {
     </Box>
   );
 }
-

@@ -16,3 +16,13 @@ export async function getDepositBank() {
   return rows[0]?.value ?? null;
 }
 
+export async function getHeroRates() {
+  const rows = await q("select value from settings where key='hero_rates'");
+  return rows[0]?.value ?? null;
+}
+
+export async function getWhatsapp() {
+  const rows = await q("select value from settings where key='whatsapp'");
+  return rows[0]?.value ?? null;
+}
+

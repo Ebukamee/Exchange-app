@@ -1,10 +1,16 @@
 "use client";
+import { useEffect, useState } from "react";
 import { Box, Flex, HStack, VStack, Text, SimpleGrid, Icon } from "@chakra-ui/react";
 import { Link } from "@/src/compat/router";
 import { FaXTwitter, FaInstagram, FaFacebook, FaWhatsapp, FaShieldHalved } from "react-icons/fa6";
 import Logo from "./Logo";
+import { getWhatsapp } from "@/app/actions/catalog";
 
 export default function Footer() {
+  const [waNumber, setWaNumber] = useState("8168236123");
+  useEffect(() => {
+    getWhatsapp().then((v) => { if (v?.number) setWaNumber(v.number); }).catch(() => {});
+  }, []);
   return (
     <Box bg="ink.950" color="ink.200" mt={20} borderTopRadius={{ base: "l3", md: "40px" }}>
       <Box maxW="1200px" mx="auto" px={{ base: 5, md: 8 }} py={16}>
@@ -19,7 +25,7 @@ export default function Footer() {
               <FaXTwitter />
               <FaInstagram />
               <FaFacebook />
-              <a href="https://wa.me/8168236123" target="_blank" rel="noopener noreferrer"><FaWhatsapp /></a>
+              <a href={`https://wa.me/${waNumber}`} target="_blank" rel="noopener noreferrer"><FaWhatsapp /></a>
             </HStack>
           </VStack>
 

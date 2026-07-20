@@ -1,7 +1,7 @@
 "use client";
 
 import { create } from "zustand";
-import { getCryptos, getGiftcards, getDepositBank } from "@/app/actions/catalog";
+import { getCryptos, getGiftcards, getDepositBank, getHeroRates, getWhatsapp } from "@/app/actions/catalog";
 import {
   uploadProofs,
   createTransaction as createTx,
@@ -22,6 +22,8 @@ import {
   saveGiftcard as saveGiftcardAction,
   deleteGiftcard as deleteGiftcardAction,
   saveDepositBank as saveDepositBankAction,
+  saveHeroRates as saveHeroRatesAction,
+  saveWhatsapp as saveWhatsappAction,
 } from "@/app/actions/admin";
 
 const PAGE_LIMIT = 50;
@@ -32,6 +34,8 @@ const TransactionStore = create((set, get) => ({
   transactions: [],
   withdrawals: [],
   depositBank: null,
+  heroRates: null,
+  whatsapp: null,
 
   // ---------- Storage ----------
   uploadImages: async (files) => {
@@ -110,6 +114,10 @@ const TransactionStore = create((set, get) => ({
   saveGiftcard: async (payload) => { await saveGiftcardAction(payload); await get().fetchGiftcards(); },
   deleteGiftcard: async (id) => { await deleteGiftcardAction(id); await get().fetchGiftcards(); },
   saveDepositBank: async (value) => { await saveDepositBankAction(value); set({ depositBank: value }); },
+  fetchHeroRates: async () => { const v = await getHeroRates(); set({ heroRates: v }); return v; },
+  fetchWhatsapp: async () => { const v = await getWhatsapp(); set({ whatsapp: v }); return v; },
+  saveHeroRates: async (value) => { await saveHeroRatesAction(value); set({ heroRates: value }); },
+  saveWhatsapp: async (value) => { await saveWhatsappAction(value); set({ whatsapp: value }); },
 }));
 
 export default TransactionStore;
