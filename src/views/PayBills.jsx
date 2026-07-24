@@ -49,23 +49,23 @@ const SERVICES = [
 ];
 
 const TELCO_PROVIDERS = [
-  { id: "mtn", name: "MTN", color: "#FFCB05", bg: "linear-gradient(135deg,#FFCB05,#E6B800)", textColor: "#1a1a1a", letter: "M" },
-  { id: "glo", name: "GLO", color: "#50B651", bg: "linear-gradient(135deg,#50B651,#3D8E3E)", textColor: "#fff", letter: "G" },
-  { id: "airtel", name: "Airtel", color: "#ED1C24", bg: "linear-gradient(135deg,#ED1C24,#C4161D)", textColor: "#fff", letter: "A" },
-  { id: "etisalat", name: "9mobile", color: "#006B3F", bg: "linear-gradient(135deg,#006B3F,#004D2D)", textColor: "#fff", letter: "9" },
+  { id: "mtn", name: "MTN", color: "#FFCB05", bg: "linear-gradient(135deg,#FFCB05,#E6B800)", textColor: "#1a1a1a", logo: "https://cdn.vtpass.com/resources/products/200X200/MTN-Airtime.jpg" },
+  { id: "glo", name: "GLO", color: "#50B651", bg: "linear-gradient(135deg,#50B651,#3D8E3E)", textColor: "#fff", logo: "https://cdn.vtpass.com/resources/products/200X200/GLO-Airtime.jpg" },
+  { id: "airtel", name: "Airtel", color: "#ED1C24", bg: "linear-gradient(135deg,#ED1C24,#C4161D)", textColor: "#fff", logo: "https://cdn.vtpass.com/resources/products/200X200/Airtel-Airtime.jpg" },
+  { id: "etisalat", name: "9mobile", color: "#006B3F", bg: "linear-gradient(135deg,#006B3F,#004D2D)", textColor: "#fff", logo: "https://cdn.vtpass.com/resources/products/200X200/9mobile-Airtime.jpg" },
 ];
 
 const DISCO_PROVIDERS = [
-  { id: "ikeja-electric", name: "Ikeja", color: "#E8430C", letter: "IE" },
-  { id: "eko-electric", name: "Eko", color: "#1B4F72", letter: "EK" },
-  { id: "abuja-electric", name: "Abuja", color: "#2E86C1", letter: "AB" },
-  { id: "kano-electric", name: "Kano", color: "#27AE60", letter: "KN" },
-  { id: "portharcourt-electric", name: "PH", color: "#8E44AD", letter: "PH" },
-  { id: "jos-electric", name: "Jos", color: "#D4AC0D", letter: "JE" },
-  { id: "kaduna-electric", name: "Kaduna", color: "#CA6F1E", letter: "KD" },
-  { id: "ibadan-electric", name: "Ibadan", color: "#1ABC9C", letter: "IB" },
-  { id: "enugu-electric", name: "Enugu", color: "#2C3E50", letter: "EN" },
-  { id: "benin-electric", name: "Benin", color: "#C0392B", letter: "BE" },
+  { id: "ikeja-electric", name: "Ikeja Electric", color: "#E8430C", logo: "https://cdn.vtpass.com/resources/products/200X200/Ikeja-Electric-Payment.jpg" },
+  { id: "eko-electric", name: "Eko Electric", color: "#1B4F72", logo: "https://cdn.vtpass.com/resources/products/200X200/Eko-Electric-Payment.jpg" },
+  { id: "abuja-electric", name: "Abuja Electric", color: "#2E86C1", logo: "https://cdn.vtpass.com/resources/products/200X200/AEDC-Electricity-Bills-Payment.jpg" },
+  { id: "kano-electric", name: "Kano Electric", color: "#27AE60", logo: "https://cdn.vtpass.com/resources/products/200X200/KEDCO-Electric-Bills-Payment.jpg" },
+  { id: "portharcourt-electric", name: "PH Electric", color: "#8E44AD", logo: "https://cdn.vtpass.com/resources/products/200X200/PHED-Electric-Bills-Payment.jpg" },
+  { id: "jos-electric", name: "Jos Electric", color: "#D4AC0D", logo: "https://cdn.vtpass.com/resources/products/200X200/JOS-Electric-Bills-Payment.jpg" },
+  { id: "kaduna-electric", name: "Kaduna Electric", color: "#CA6F1E", logo: "https://cdn.vtpass.com/resources/products/200X200/Kaduna-Electric-KAEDCO.jpg" },
+  { id: "ibadan-electric", name: "Ibadan Electric", color: "#1ABC9C", logo: "https://cdn.vtpass.com/resources/products/200X200/IBEDC-Electricity-Bill.jpg" },
+  { id: "enugu-electric", name: "Enugu Electric", color: "#2C3E50", logo: "https://cdn.vtpass.com/resources/products/200X200/Enugu-Electric-EEDC.jpg" },
+  { id: "benin-electric", name: "Benin Electric", color: "#C0392B", logo: "https://cdn.vtpass.com/resources/products/200X200/BEDC-Bills-Payment.jpg" },
 ];
 
 const QUICK_AMOUNTS = [100, 200, 500, 1000, 2000, 5000];
@@ -521,7 +521,7 @@ function DataTab({ onDone }) {
           {plans.length > 0 && (
             <Box>
               <Text fontSize="xs" fontWeight="700" color="ink.400" letterSpacing="0.08em" mb={3}>CHOOSE PLAN</Text>
-              <VStack align="stretch" gap={2} maxH="280px" overflowY="auto" pr={1}>
+              <SimpleGrid columns={{ base: 1, sm: 2 }} gap={2} maxH="320px" overflowY="auto" pr={1}>
                 {plans.map((p) => {
                   const sel = selectedPlan?.code === p.code;
                   return (
@@ -538,23 +538,21 @@ function DataTab({ onDone }) {
                       px={4}
                       py={3}
                       transition="all .2s"
-                      _hover={{ borderColor: "purple.300", transform: "translateX(4px)" }}
+                      _hover={{ borderColor: "purple.300", bg: sel ? "purple.50" : "ink.50" }}
                       position="relative"
                       overflow="hidden"
                     >
                       {sel && (
-                        <Flex position="absolute" top="50%" right="12px" transform="translateY(-50%)" w="22px" h="22px" bg="purple.500" borderRadius="full" align="center" justify="center">
-                          <Icon fontSize="10px" color="white"><FaCheck /></Icon>
+                        <Flex position="absolute" top="8px" right="8px" w="20px" h="20px" bg="purple.500" borderRadius="full" align="center" justify="center">
+                          <Icon fontSize="9px" color="white"><FaCheck /></Icon>
                         </Flex>
                       )}
-                      <Flex justify="space-between" align="center" pr={sel ? "36px" : "0"}>
-                        <Text fontSize="sm" fontWeight="600" color="ink.800">{p.name}</Text>
-                        <Text fontSize="sm" fontWeight="800" color={sel ? "purple.600" : "ink.600"}>{naira(p.amount)}</Text>
-                      </Flex>
+                      <Text fontSize="xs" fontWeight="600" color="ink.500" mb={0.5} pr={sel ? "24px" : "0"}>{p.name}</Text>
+                      <Text fontSize="md" fontWeight="800" color={sel ? "purple.600" : "ink.900"}>{naira(p.amount)}</Text>
                     </Box>
                   );
                 })}
-              </VStack>
+              </SimpleGrid>
             </Box>
           )}
 
@@ -703,46 +701,54 @@ function ElectricityTab({ onDone }) {
 
       <Box px={{ base: 5, md: 7 }} py={6}>
         <Text fontSize="xs" fontWeight="700" color="ink.400" letterSpacing="0.08em" mb={3}>SELECT DISCO</Text>
-        <SimpleGrid columns={{ base: 3, sm: 5 }} gap={2} mb={6}>
-          {DISCO_PROVIDERS.map((p) => (
-            <Box
-              key={p.id}
-              as="button"
-              onClick={() => { setProvider(p.id); setVerified(false); setCustomerName(""); }}
-              borderRadius="xl"
-              py={3}
-              px={2}
-              textAlign="center"
-              transition="all .2s"
-              border="2px solid"
-              borderColor={provider === p.id ? p.color : "ink.100"}
-              bg={provider === p.id ? p.color : "white"}
-              color={provider === p.id ? "white" : "ink.600"}
-              _hover={{ borderColor: p.color, transform: "scale(1.03)" }}
-              position="relative"
-              overflow="hidden"
-            >
-              {provider === p.id && (
-                <Box position="absolute" top="4px" right="4px">
-                  <Flex w="16px" h="16px" bg="rgba(255,255,255,0.3)" borderRadius="full" align="center" justify="center">
-                    <Icon fontSize="8px"><FaCheck /></Icon>
-                  </Flex>
-                </Box>
-              )}
-              <Flex
-                w="32px" h="32px"
-                bg={provider === p.id ? "rgba(255,255,255,0.2)" : `${p.color}15`}
-                borderRadius="lg"
-                align="center"
-                justify="center"
-                mx="auto"
-                mb={1}
+        <SimpleGrid columns={{ base: 2, sm: 3, md: 5 }} gap={3} mb={6}>
+          {DISCO_PROVIDERS.map((p) => {
+            const sel = provider === p.id;
+            return (
+              <Box
+                key={p.id}
+                as="button"
+                onClick={() => { setProvider(p.id); setVerified(false); setCustomerName(""); }}
+                borderRadius="xl"
+                py={3}
+                px={2}
+                textAlign="center"
+                transition="all .2s"
+                border="2px solid"
+                borderColor={sel ? p.color : "ink.100"}
+                bg="white"
+                _hover={{ borderColor: p.color, transform: "scale(1.03)", boxShadow: `0 6px 16px ${p.color}20` }}
+                position="relative"
+                overflow="hidden"
               >
-                <Text fontSize="xs" fontWeight="900" color={provider === p.id ? "white" : p.color}>{p.letter}</Text>
-              </Flex>
-              <Text fontSize="xs" fontWeight="700">{p.name}</Text>
-            </Box>
-          ))}
+                {sel && (
+                  <Box position="absolute" top="0" left="0" right="0" h="3px" bg={p.color} />
+                )}
+                <Box
+                  w="40px"
+                  h="40px"
+                  borderRadius="lg"
+                  overflow="hidden"
+                  mx="auto"
+                  mb={1.5}
+                  border="1px solid"
+                  borderColor={sel ? p.color : "ink.100"}
+                >
+                  <img
+                    src={p.logo}
+                    alt={p.name}
+                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  />
+                </Box>
+                <Text fontSize="xs" fontWeight="700" color={sel ? "ink.900" : "ink.500"}>{p.name}</Text>
+                {sel && (
+                  <Flex position="absolute" top="6px" right="6px" w="16px" h="16px" bg={p.color} borderRadius="full" align="center" justify="center">
+                    <Icon fontSize="7px" color="white"><FaCheck /></Icon>
+                  </Flex>
+                )}
+              </Box>
+            );
+          })}
         </SimpleGrid>
 
         <VStack align="stretch" gap={5}>
@@ -851,15 +857,16 @@ function TelcoCard({ provider, selected, onClick }) {
       as="button"
       onClick={onClick}
       borderRadius="xl"
-      py={3}
+      py={{ base: 3, md: 4 }}
+      px={2}
       textAlign="center"
       transition="all .2s cubic-bezier(.4,0,.2,1)"
       border="2px solid"
       borderColor={selected ? provider.color : "ink.100"}
-      bg={selected ? "white" : "white"}
+      bg="white"
       position="relative"
       overflow="hidden"
-      _hover={{ borderColor: provider.color, transform: "scale(1.04)" }}
+      _hover={{ borderColor: provider.color, transform: "scale(1.04)", boxShadow: `0 8px 20px ${provider.color}25` }}
     >
       {/* Colored top bar */}
       <Box
@@ -871,27 +878,24 @@ function TelcoCard({ provider, selected, onClick }) {
         style={{ background: provider.bg }}
         transition="height .2s"
       />
-      {/* Circle logo */}
-      <Flex
-        w="40px"
-        h="40px"
-        style={{ background: selected ? provider.bg : "none" }}
-        bg={selected ? undefined : "ink.50"}
+      {/* Logo image */}
+      <Box
+        w="48px"
+        h="48px"
         borderRadius="full"
-        align="center"
-        justify="center"
+        overflow="hidden"
         mx="auto"
-        mb={1.5}
+        mb={2}
+        border="2px solid"
+        borderColor={selected ? provider.color : "ink.100"}
         transition="all .2s"
       >
-        <Text
-          fontSize="sm"
-          fontWeight="900"
-          color={selected ? (provider.textColor || "white") : provider.color}
-        >
-          {provider.letter}
-        </Text>
-      </Flex>
+        <img
+          src={provider.logo}
+          alt={provider.name}
+          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+        />
+      </Box>
       <Text fontWeight="700" fontSize="xs" color={selected ? "ink.900" : "ink.500"}>
         {provider.name}
       </Text>
