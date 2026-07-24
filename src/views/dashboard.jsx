@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { Box, Flex, Heading, Text, SimpleGrid, HStack, VStack, Icon, Button, Badge, Spinner } from "@chakra-ui/react";
 import { useNavigate } from "@/src/compat/router";
-import { FaArrowTrendUp, FaCartShopping, FaGift, FaMoneyBillTransfer, FaWallet, FaArrowRight, FaUsers } from "react-icons/fa6";
+import { FaArrowTrendUp, FaCartShopping, FaGift, FaMoneyBillTransfer, FaWallet, FaArrowRight, FaUsers, FaReceipt } from "react-icons/fa6";
 import ScrollReveal, { staggerDelay } from "../components/ScrollReveal";
 import DashboardLayout from "../components/DashboardLayout";
 import useAuthStore from "../Store/userStore";
@@ -14,6 +14,7 @@ const actions = [
   { to: "/dashboard/buy-crypto", label: "Buy Crypto", icon: FaCartShopping, gradient: "linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)", iconBg: "rgba(139,92,246,0.15)", iconColor: "#8b5cf6" },
   { to: "/dashboard/sell-giftcard", label: "Sell Gift Card", icon: FaGift, gradient: "linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)", iconBg: "rgba(6,182,212,0.15)", iconColor: "#06b6d4" },
   { to: "/dashboard/withdraw", label: "Withdraw", icon: FaMoneyBillTransfer, gradient: "linear-gradient(135deg, #10b981 0%, #059669 100%)", iconBg: "rgba(16,185,129,0.15)", iconColor: "#10b981" },
+  { to: "/dashboard/pay-bills", label: "Pay Bills", icon: FaReceipt, gradient: "linear-gradient(135deg, #ec4899 0%, #db2777 100%)", iconBg: "rgba(236,72,153,0.15)", iconColor: "#ec4899" },
 ];
 
 export default function Dashboard() {
@@ -75,7 +76,7 @@ export default function Dashboard() {
         </ScrollReveal>
 
         {/* Quick actions */}
-        <SimpleGrid columns={{ base: 2, md: 4 }} gap={4}>
+        <SimpleGrid columns={{ base: 2, md: 5 }} gap={4}>
           {actions.map((a, i) => (
             <ScrollReveal key={a.to} delay={staggerDelay(i)}>
               <Box

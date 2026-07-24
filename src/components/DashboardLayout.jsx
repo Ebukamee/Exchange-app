@@ -12,6 +12,7 @@ import {
   FaUser,
   FaArrowRightFromBracket,
   FaUsers,
+  FaReceipt,
   FaBars,
   FaXmark,
 } from "react-icons/fa6";
@@ -25,6 +26,7 @@ const nav = [
   { to: "/dashboard/buy-crypto", label: "Buy Crypto", icon: FaCartShopping },
   { to: "/dashboard/sell-giftcard", label: "Sell Gift Card", icon: FaGift },
   { to: "/dashboard/withdraw", label: "Withdraw", icon: FaMoneyBillTransfer },
+  { to: "/dashboard/pay-bills", label: "Pay Bills", icon: FaReceipt },
   { to: "/dashboard/history", label: "History", icon: FaClockRotateLeft },
   { to: "/dashboard/referral", label: "Referral", icon: FaUsers },
   { to: "/dashboard/profile", label: "Profile", icon: FaUser },
@@ -40,6 +42,7 @@ const mobileNav = [
 const moreMenuItems = [
   { to: "/dashboard/sell-giftcard", label: "Sell Gift Card", icon: FaGift },
   { to: "/dashboard/withdraw", label: "Withdraw", icon: FaMoneyBillTransfer },
+  { to: "/dashboard/pay-bills", label: "Pay Bills", icon: FaReceipt },
   { to: "/dashboard/referral", label: "Referral", icon: FaUsers },
   { to: "/dashboard/profile", label: "Profile", icon: FaUser },
 ];
