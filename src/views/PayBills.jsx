@@ -5,6 +5,7 @@ import {
 } from "@chakra-ui/react";
 import {
   FaBolt, FaWifi, FaPhone, FaCheck, FaCopy, FaClockRotateLeft,
+  FaArrowRight, FaWallet, FaCircleCheck, FaRotate,
 } from "react-icons/fa6";
 import DashboardLayout from "../components/DashboardLayout";
 import ScrollReveal from "../components/ScrollReveal";
@@ -16,37 +17,62 @@ import {
   getDataPlans, verifyMeterNumber, getBillHistory,
 } from "@/app/actions/bills";
 
-const TABS = [
-  { key: "airtime", label: "Airtime", icon: FaPhone, color: "#f59e0b" },
-  { key: "data", label: "Data", icon: FaWifi, color: "#8b5cf6" },
-  { key: "electricity", label: "Electricity", icon: FaBolt, color: "#06b6d4" },
+/* ─── Service categories shown as hero cards ─── */
+const SERVICES = [
+  {
+    key: "airtime",
+    label: "Airtime",
+    desc: "Recharge any network instantly",
+    icon: FaPhone,
+    gradient: "linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%)",
+    glow: "rgba(245,158,11,0.35)",
+    iconBg: "rgba(255,255,255,0.2)",
+  },
+  {
+    key: "data",
+    label: "Data Bundle",
+    desc: "Browse without limits",
+    icon: FaWifi,
+    gradient: "linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #6d28d9 100%)",
+    glow: "rgba(139,92,246,0.35)",
+    iconBg: "rgba(255,255,255,0.2)",
+  },
+  {
+    key: "electricity",
+    label: "Electricity",
+    desc: "Pay power bills & get tokens",
+    icon: FaBolt,
+    gradient: "linear-gradient(135deg, #06b6d4 0%, #0891b2 50%, #0e7490 100%)",
+    glow: "rgba(6,182,212,0.35)",
+    iconBg: "rgba(255,255,255,0.2)",
+  },
 ];
 
 const TELCO_PROVIDERS = [
-  { id: "mtn", name: "MTN", color: "#FFCB05", textColor: "#1a1a1a" },
-  { id: "glo", name: "GLO", color: "#50B651", textColor: "#fff" },
-  { id: "airtel", name: "Airtel", color: "#ED1C24", textColor: "#fff" },
-  { id: "etisalat", name: "9mobile", color: "#006B3F", textColor: "#fff" },
+  { id: "mtn", name: "MTN", color: "#FFCB05", bg: "linear-gradient(135deg,#FFCB05,#E6B800)", textColor: "#1a1a1a", letter: "M" },
+  { id: "glo", name: "GLO", color: "#50B651", bg: "linear-gradient(135deg,#50B651,#3D8E3E)", textColor: "#fff", letter: "G" },
+  { id: "airtel", name: "Airtel", color: "#ED1C24", bg: "linear-gradient(135deg,#ED1C24,#C4161D)", textColor: "#fff", letter: "A" },
+  { id: "etisalat", name: "9mobile", color: "#006B3F", bg: "linear-gradient(135deg,#006B3F,#004D2D)", textColor: "#fff", letter: "9" },
 ];
 
 const DISCO_PROVIDERS = [
-  { id: "ikeja-electric", name: "Ikeja Electric", color: "#E8430C" },
-  { id: "eko-electric", name: "Eko Electric", color: "#1B4F72" },
-  { id: "abuja-electric", name: "Abuja Electric", color: "#2E86C1" },
-  { id: "kano-electric", name: "Kano Electric", color: "#27AE60" },
-  { id: "portharcourt-electric", name: "PH Electric", color: "#8E44AD" },
-  { id: "jos-electric", name: "Jos Electric", color: "#D4AC0D" },
-  { id: "kaduna-electric", name: "Kaduna Electric", color: "#CA6F1E" },
-  { id: "ibadan-electric", name: "Ibadan Electric", color: "#1ABC9C" },
-  { id: "enugu-electric", name: "Enugu Electric", color: "#2C3E50" },
-  { id: "benin-electric", name: "Benin Electric", color: "#C0392B" },
+  { id: "ikeja-electric", name: "Ikeja", color: "#E8430C", letter: "IE" },
+  { id: "eko-electric", name: "Eko", color: "#1B4F72", letter: "EK" },
+  { id: "abuja-electric", name: "Abuja", color: "#2E86C1", letter: "AB" },
+  { id: "kano-electric", name: "Kano", color: "#27AE60", letter: "KN" },
+  { id: "portharcourt-electric", name: "PH", color: "#8E44AD", letter: "PH" },
+  { id: "jos-electric", name: "Jos", color: "#D4AC0D", letter: "JE" },
+  { id: "kaduna-electric", name: "Kaduna", color: "#CA6F1E", letter: "KD" },
+  { id: "ibadan-electric", name: "Ibadan", color: "#1ABC9C", letter: "IB" },
+  { id: "enugu-electric", name: "Enugu", color: "#2C3E50", letter: "EN" },
+  { id: "benin-electric", name: "Benin", color: "#C0392B", letter: "BE" },
 ];
 
 const QUICK_AMOUNTS = [100, 200, 500, 1000, 2000, 5000];
 
 export default function PayBills() {
   const { profile, getProfile } = useAuthStore();
-  const [tab, setTab] = useState("airtime");
+  const [tab, setTab] = useState(null);
   const [history, setHistory] = useState([]);
   const [loadingHistory, setLoadingHistory] = useState(true);
 
@@ -62,82 +88,195 @@ export default function PayBills() {
   return (
     <DashboardLayout>
       <VStack align="stretch" gap={6}>
+        {/* Hero header */}
         <ScrollReveal>
-          <Box>
-            <Heading fontFamily="heading" fontSize={{ base: "xl", md: "2xl" }} color="ink.900" mb={1}>
-              Pay Bills
-            </Heading>
-            <Text color="ink.500" fontSize="sm">Buy airtime, data bundles, and pay electricity bills instantly.</Text>
+          <Box
+            style={{ background: "linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #4c1d95 100%)" }}
+            borderRadius="2xl"
+            p={{ base: 5, md: 7 }}
+            position="relative"
+            overflow="hidden"
+            color="white"
+          >
+            {/* Decorative elements */}
+            <Box position="absolute" top="-50px" right="-30px" w="180px" h="180px" bg="white" opacity={0.04} borderRadius="full" />
+            <Box position="absolute" bottom="-40px" left="20%" w="140px" h="140px" bg="white" opacity={0.03} borderRadius="full" />
+            <Box position="absolute" top="10px" left="-20px" w="80px" h="80px" bg="rgba(139,92,246,0.3)" borderRadius="full" filter="blur(30px)" />
+            <Box position="absolute" bottom="10px" right="15%" w="100px" h="100px" bg="rgba(6,182,212,0.2)" borderRadius="full" filter="blur(40px)" />
+
+            <Box position="relative" zIndex={1}>
+              <HStack gap={2} mb={1}>
+                <Icon fontSize="sm" color="rgba(255,255,255,0.6)"><FaWallet /></Icon>
+                <Text fontSize="xs" fontWeight="600" color="rgba(255,255,255,0.6)" letterSpacing="0.08em">BILL PAYMENTS</Text>
+              </HStack>
+              <Heading fontFamily="heading" fontSize={{ base: "xl", md: "2xl" }} fontWeight="800" mb={1}>
+                Pay Bills Instantly
+              </Heading>
+              <Text fontSize="sm" color="rgba(255,255,255,0.7)">
+                Airtime, data & electricity — powered by your Powerpay balance
+              </Text>
+            </Box>
           </Box>
         </ScrollReveal>
 
-        {/* Tab selector */}
-        <ScrollReveal delay={0.05}>
-          <HStack gap={2} flexWrap="wrap">
-            {TABS.map((t) => (
-              <Button
-                key={t.key}
-                size="sm"
-                variant={tab === t.key ? "solid" : "outline"}
-                colorPalette={tab === t.key ? "brand" : "gray"}
-                borderRadius="full"
-                onClick={() => setTab(t.key)}
-                gap={2}
-              >
-                <Icon color={tab === t.key ? "white" : t.color}><t.icon /></Icon>
-                {t.label}
-              </Button>
-            ))}
-          </HStack>
-        </ScrollReveal>
+        {/* Service selector cards */}
+        {!tab && (
+          <SimpleGrid columns={{ base: 1, sm: 3 }} gap={4}>
+            {SERVICES.map((s, i) => (
+              <ScrollReveal key={s.key} delay={i * 0.08}>
+                <Box
+                  as="button"
+                  w="100%"
+                  onClick={() => setTab(s.key)}
+                  style={{ background: s.gradient }}
+                  borderRadius="2xl"
+                  p={{ base: 5, md: 6 }}
+                  position="relative"
+                  overflow="hidden"
+                  textAlign="left"
+                  color="white"
+                  transition="all .3s cubic-bezier(.4,0,.2,1)"
+                  _hover={{ transform: "translateY(-6px)", boxShadow: `0 20px 40px -12px ${s.glow}` }}
+                >
+                  {/* Glow circle */}
+                  <Box position="absolute" top="-30px" right="-20px" w="100px" h="100px" bg="white" opacity={0.08} borderRadius="full" />
+                  <Box position="absolute" bottom="-20px" left="-10px" w="60px" h="60px" bg="white" opacity={0.05} borderRadius="full" />
 
-        <ScrollReveal delay={0.1}>
-          {tab === "airtime" && <AirtimeTab onDone={refreshAfter} />}
-          {tab === "data" && <DataTab onDone={refreshAfter} />}
-          {tab === "electricity" && <ElectricityTab onDone={refreshAfter} />}
-        </ScrollReveal>
+                  <Flex
+                    w={{ base: "48px", md: "56px" }}
+                    h={{ base: "48px", md: "56px" }}
+                    bg={s.iconBg}
+                    borderRadius="xl"
+                    align="center"
+                    justify="center"
+                    mb={4}
+                    backdropFilter="blur(10px)"
+                  >
+                    <Icon fontSize={{ base: "xl", md: "2xl" }}><s.icon /></Icon>
+                  </Flex>
+                  <Text fontWeight="800" fontSize={{ base: "lg", md: "xl" }} mb={1}>{s.label}</Text>
+                  <Text fontSize="sm" color="rgba(255,255,255,0.8)">{s.desc}</Text>
+                  <Flex
+                    mt={4}
+                    w="32px" h="32px"
+                    bg="rgba(255,255,255,0.15)"
+                    borderRadius="full"
+                    align="center"
+                    justify="center"
+                    backdropFilter="blur(4px)"
+                  >
+                    <Icon fontSize="xs"><FaArrowRight /></Icon>
+                  </Flex>
+                </Box>
+              </ScrollReveal>
+            ))}
+          </SimpleGrid>
+        )}
+
+        {/* Active tab content */}
+        {tab && (
+          <ScrollReveal>
+            <Box>
+              {/* Back button */}
+              <Button
+                variant="ghost"
+                size="sm"
+                mb={4}
+                color="ink.500"
+                fontWeight="600"
+                onClick={() => setTab(null)}
+                _hover={{ color: "ink.900" }}
+              >
+                &larr; All services
+              </Button>
+
+              {tab === "airtime" && <AirtimeTab onDone={refreshAfter} />}
+              {tab === "data" && <DataTab onDone={refreshAfter} />}
+              {tab === "electricity" && <ElectricityTab onDone={refreshAfter} />}
+            </Box>
+          </ScrollReveal>
+        )}
 
         {/* Bill history */}
         <ScrollReveal delay={0.15}>
-          <Box bg="white" borderRadius="xl" border="1px solid" borderColor="ink.100" p={{ base: 5, md: 6 }}>
-            <HStack gap={2} mb={4}>
-              <Icon color="ink.400"><FaClockRotateLeft /></Icon>
-              <Heading fontSize="lg" color="ink.900" fontFamily="heading">Recent Bills</Heading>
-            </HStack>
-            {loadingHistory ? (
-              <Flex justify="center" py={10}><Spinner color="brand.500" /></Flex>
-            ) : history.length === 0 ? (
-              <Text color="ink.400" textAlign="center" py={8} fontSize="sm">No bill payments yet.</Text>
-            ) : (
-              <VStack align="stretch" gap={0} divideY="1px" divideColor="ink.100">
-                {history.map((b) => (
-                  <Flex key={b.id} justify="space-between" align="center" py={3} flexWrap="wrap" gap={2}>
-                    <HStack gap={3}>
-                      <Flex
-                        w="36px" h="36px" borderRadius="lg" align="center" justify="center"
-                        bg={b.type === "airtime" ? "rgba(245,158,11,0.1)" : b.type === "data" ? "rgba(139,92,246,0.1)" : "rgba(6,182,212,0.1)"}
-                      >
-                        <Icon fontSize="sm" color={b.type === "airtime" ? "#f59e0b" : b.type === "data" ? "#8b5cf6" : "#06b6d4"}>
-                          {b.type === "airtime" ? <FaPhone /> : b.type === "data" ? <FaWifi /> : <FaBolt />}
-                        </Icon>
-                      </Flex>
-                      <Box>
-                        <Text fontWeight="600" color="ink.900" fontSize="sm" textTransform="capitalize">
-                          {b.type} • {b.provider}
-                        </Text>
-                        <Text fontSize="xs" color="ink.400">{b.phone_or_meter} • {formatDate(b.created_at)}</Text>
-                      </Box>
-                    </HStack>
-                    <HStack gap={2}>
-                      <Text fontWeight="700" fontSize="sm" color="ink.900">{naira(b.amount)}</Text>
-                      <Badge colorPalette={b.vtpass_status === "delivered" ? "green" : b.vtpass_status === "failed" ? "red" : "yellow"}>
-                        {b.vtpass_status}
-                      </Badge>
-                    </HStack>
+          <Box bg="white" borderRadius="2xl" border="1px solid" borderColor="ink.100" overflow="hidden">
+            <Flex
+              px={{ base: 5, md: 6 }}
+              py={4}
+              bg="ink.950"
+              align="center"
+              gap={3}
+            >
+              <Flex w="32px" h="32px" bg="rgba(255,255,255,0.1)" borderRadius="lg" align="center" justify="center">
+                <Icon color="white" fontSize="sm"><FaClockRotateLeft /></Icon>
+              </Flex>
+              <Heading fontSize="md" color="white" fontFamily="heading">Recent Payments</Heading>
+            </Flex>
+            <Box px={{ base: 5, md: 6 }} py={4}>
+              {loadingHistory ? (
+                <Flex justify="center" py={10}><Spinner color="brand.500" /></Flex>
+              ) : history.length === 0 ? (
+                <Flex direction="column" align="center" py={10} gap={3}>
+                  <Flex w="56px" h="56px" bg="ink.50" borderRadius="full" align="center" justify="center">
+                    <Icon color="ink.300" fontSize="xl"><FaWallet /></Icon>
                   </Flex>
-                ))}
-              </VStack>
-            )}
+                  <Text color="ink.400" fontSize="sm">No bill payments yet. Choose a service above to start.</Text>
+                </Flex>
+              ) : (
+                <VStack align="stretch" gap={0}>
+                  {history.map((b, idx) => {
+                    const meta = billMeta(b.type);
+                    const isDelivered = b.vtpass_status === "delivered";
+                    const isFailed = b.vtpass_status === "failed";
+                    return (
+                      <Flex
+                        key={b.id}
+                        justify="space-between"
+                        align="center"
+                        py={3}
+                        px={2}
+                        flexWrap="wrap"
+                        gap={2}
+                        borderBottom={idx < history.length - 1 ? "1px solid" : "none"}
+                        borderColor="ink.100"
+                        borderRadius="lg"
+                        _hover={{ bg: "ink.50" }}
+                        transition="background .15s"
+                      >
+                        <HStack gap={3}>
+                          <Flex
+                            w="40px" h="40px" borderRadius="xl" align="center" justify="center"
+                            style={{ background: meta.gradient }}
+                          >
+                            <Icon fontSize="sm" color="white"><meta.icon /></Icon>
+                          </Flex>
+                          <Box>
+                            <Text fontWeight="700" color="ink.900" fontSize="sm" textTransform="capitalize">
+                              {b.type} &middot; {b.provider.replace("-", " ")}
+                            </Text>
+                            <Text fontSize="xs" color="ink.400">{b.phone_or_meter} &middot; {formatDate(b.created_at)}</Text>
+                          </Box>
+                        </HStack>
+                        <HStack gap={2}>
+                          <Text fontWeight="800" fontSize="sm" color="ink.900">{naira(b.amount)}</Text>
+                          <Badge
+                            px={2}
+                            py={0.5}
+                            borderRadius="full"
+                            fontSize="10px"
+                            fontWeight="700"
+                            bg={isDelivered ? "rgba(16,185,129,0.1)" : isFailed ? "rgba(239,68,68,0.1)" : "rgba(245,158,11,0.1)"}
+                            color={isDelivered ? "#059669" : isFailed ? "#dc2626" : "#d97706"}
+                          >
+                            {b.vtpass_status}
+                          </Badge>
+                        </HStack>
+                      </Flex>
+                    );
+                  })}
+                </VStack>
+              )}
+            </Box>
           </Box>
         </ScrollReveal>
       </VStack>
@@ -145,7 +284,15 @@ export default function PayBills() {
   );
 }
 
-/* ──────────── Airtime Tab ──────────── */
+function billMeta(type) {
+  if (type === "airtime") return { icon: FaPhone, gradient: "linear-gradient(135deg,#f59e0b,#d97706)" };
+  if (type === "data") return { icon: FaWifi, gradient: "linear-gradient(135deg,#8b5cf6,#7c3aed)" };
+  return { icon: FaBolt, gradient: "linear-gradient(135deg,#06b6d4,#0891b2)" };
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   AIRTIME TAB
+   ════════════════════════════════════════════════════════════════════ */
 function AirtimeTab({ onDone }) {
   const [provider, setProvider] = useState("");
   const [phone, setPhone] = useState("");
@@ -168,55 +315,110 @@ function AirtimeTab({ onDone }) {
     }
   };
 
-  if (done) return <SuccessCard message="Airtime delivered!" onReset={() => { setDone(false); setPhone(""); setAmount(""); setProvider(""); }} />;
+  if (done) {
+    return (
+      <SuccessCard
+        title="Airtime Delivered!"
+        subtitle={`₦${Number(amount).toLocaleString()} sent to ${phone}`}
+        gradient="linear-gradient(135deg,#f59e0b,#d97706)"
+        onReset={() => { setDone(false); setPhone(""); setAmount(""); setProvider(""); }}
+      />
+    );
+  }
 
   return (
-    <Box bg="white" borderRadius="xl" border="1px solid" borderColor="ink.100" p={{ base: 5, md: 7 }}>
-      <Text fontWeight="800" color="ink.900" mb={4}>Buy Airtime</Text>
+    <Box bg="white" borderRadius="2xl" border="1px solid" borderColor="ink.100" overflow="hidden">
+      {/* Card header */}
+      <Box
+        style={{ background: "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)" }}
+        px={{ base: 5, md: 7 }}
+        py={5}
+        color="white"
+      >
+        <HStack gap={3}>
+          <Flex w="44px" h="44px" bg="rgba(255,255,255,0.2)" borderRadius="xl" align="center" justify="center" backdropFilter="blur(8px)">
+            <Icon fontSize="xl"><FaPhone /></Icon>
+          </Flex>
+          <Box>
+            <Text fontWeight="800" fontSize="lg">Buy Airtime</Text>
+            <Text fontSize="xs" color="rgba(255,255,255,0.8)">Instant recharge to any network</Text>
+          </Box>
+        </HStack>
+      </Box>
 
-      <Text fontSize="sm" fontWeight="600" color="ink.600" mb={2}>Select network</Text>
-      <SimpleGrid columns={4} gap={3} mb={5}>
-        {TELCO_PROVIDERS.map((p) => (
-          <ProviderCard key={p.id} provider={p} selected={provider === p.id} onClick={() => setProvider(p.id)} />
-        ))}
-      </SimpleGrid>
+      <Box px={{ base: 5, md: 7 }} py={6}>
+        {/* Network selector */}
+        <Text fontSize="xs" fontWeight="700" color="ink.400" letterSpacing="0.08em" mb={3}>SELECT NETWORK</Text>
+        <SimpleGrid columns={4} gap={3} mb={6}>
+          {TELCO_PROVIDERS.map((p) => (
+            <TelcoCard key={p.id} provider={p} selected={provider === p.id} onClick={() => setProvider(p.id)} />
+          ))}
+        </SimpleGrid>
 
-      <VStack align="stretch" gap={4}>
-        <Field label="Phone number">
-          <Input placeholder="08012345678" value={phone} onChange={(e) => setPhone(e.target.value)} maxLength={11} />
-        </Field>
+        <VStack align="stretch" gap={5}>
+          <Field label="Phone number">
+            <Input
+              placeholder="08012345678"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              maxLength={11}
+              size="lg"
+              borderRadius="xl"
+              fontSize="md"
+              fontWeight="600"
+            />
+          </Field>
 
-        <Box>
-          <Text fontSize="sm" fontWeight="600" color="ink.600" mb={2}>Quick amount</Text>
-          <SimpleGrid columns={3} gap={2}>
-            {QUICK_AMOUNTS.map((a) => (
-              <Button
-                key={a}
-                size="sm"
-                variant={Number(amount) === a ? "solid" : "outline"}
-                colorPalette={Number(amount) === a ? "brand" : "gray"}
-                borderRadius="lg"
-                onClick={() => setAmount(String(a))}
-              >
-                ₦{a.toLocaleString()}
-              </Button>
-            ))}
-          </SimpleGrid>
-        </Box>
+          {/* Amount grid */}
+          <Box>
+            <Text fontSize="xs" fontWeight="700" color="ink.400" letterSpacing="0.08em" mb={3}>AMOUNT</Text>
+            <SimpleGrid columns={3} gap={2}>
+              {QUICK_AMOUNTS.map((a) => (
+                <Box
+                  key={a}
+                  as="button"
+                  onClick={() => setAmount(String(a))}
+                  bg={Number(amount) === a ? "ink.900" : "ink.50"}
+                  color={Number(amount) === a ? "white" : "ink.700"}
+                  borderRadius="xl"
+                  py={3}
+                  fontWeight="800"
+                  fontSize="sm"
+                  textAlign="center"
+                  transition="all .2s"
+                  border="2px solid"
+                  borderColor={Number(amount) === a ? "ink.900" : "transparent"}
+                  _hover={{ borderColor: "ink.300", transform: "scale(1.02)" }}
+                >
+                  ₦{a.toLocaleString()}
+                </Box>
+              ))}
+            </SimpleGrid>
+          </Box>
 
-        <Field label="Or enter amount">
-          <Input type="number" placeholder="₦100" value={amount} onChange={(e) => setAmount(e.target.value)} />
-        </Field>
+          <Field label="Or enter custom amount">
+            <Input
+              type="number"
+              placeholder="₦0"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              size="lg"
+              borderRadius="xl"
+              fontSize="lg"
+              fontWeight="700"
+            />
+          </Field>
 
-        <Button colorPalette="brand" size="lg" borderRadius="xl" loading={busy} onClick={submit}>
-          Pay from balance
-        </Button>
-      </VStack>
+          <PayButton loading={busy} onClick={submit} amount={amount} />
+        </VStack>
+      </Box>
     </Box>
   );
 }
 
-/* ──────────── Data Tab ──────────── */
+/* ════════════════════════════════════════════════════════════════════
+   DATA TAB
+   ════════════════════════════════════════════════════════════════════ */
 function DataTab({ onDone }) {
   const [provider, setProvider] = useState("");
   const [phone, setPhone] = useState("");
@@ -257,73 +459,133 @@ function DataTab({ onDone }) {
     }
   };
 
-  if (done) return <SuccessCard message="Data bundle delivered!" onReset={() => { setDone(false); setPhone(""); setProvider(""); setSelectedPlan(null); setPlans([]); }} />;
+  if (done) {
+    return (
+      <SuccessCard
+        title="Data Bundle Activated!"
+        subtitle={`${selectedPlan?.name} sent to ${phone}`}
+        gradient="linear-gradient(135deg,#8b5cf6,#7c3aed)"
+        onReset={() => { setDone(false); setPhone(""); setProvider(""); setSelectedPlan(null); setPlans([]); }}
+      />
+    );
+  }
 
   return (
-    <Box bg="white" borderRadius="xl" border="1px solid" borderColor="ink.100" p={{ base: 5, md: 7 }}>
-      <Text fontWeight="800" color="ink.900" mb={4}>Buy Data</Text>
-
-      <Text fontSize="sm" fontWeight="600" color="ink.600" mb={2}>Select network</Text>
-      <SimpleGrid columns={4} gap={3} mb={5}>
-        {TELCO_PROVIDERS.map((p) => (
-          <ProviderCard key={p.id} provider={p} selected={provider === p.id} onClick={() => pickProvider(p.id)} />
-        ))}
-      </SimpleGrid>
-
-      <VStack align="stretch" gap={4}>
-        <Field label="Phone number">
-          <Input placeholder="08012345678" value={phone} onChange={(e) => setPhone(e.target.value)} maxLength={11} />
-        </Field>
-
-        {loadingPlans && <Flex justify="center" py={4}><Spinner color="brand.500" size="sm" /></Flex>}
-
-        {plans.length > 0 && (
+    <Box bg="white" borderRadius="2xl" border="1px solid" borderColor="ink.100" overflow="hidden">
+      <Box
+        style={{ background: "linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)" }}
+        px={{ base: 5, md: 7 }}
+        py={5}
+        color="white"
+      >
+        <HStack gap={3}>
+          <Flex w="44px" h="44px" bg="rgba(255,255,255,0.2)" borderRadius="xl" align="center" justify="center" backdropFilter="blur(8px)">
+            <Icon fontSize="xl"><FaWifi /></Icon>
+          </Flex>
           <Box>
-            <Text fontSize="sm" fontWeight="600" color="ink.600" mb={2}>Select plan</Text>
-            <VStack align="stretch" gap={2} maxH="240px" overflowY="auto">
-              {plans.map((p) => (
-                <Box
-                  key={p.code}
-                  as="button"
-                  w="100%"
-                  textAlign="left"
-                  onClick={() => setSelectedPlan(p)}
-                  bg={selectedPlan?.code === p.code ? "brand.50" : "ink.50"}
-                  border="1px solid"
-                  borderColor={selectedPlan?.code === p.code ? "brand.200" : "transparent"}
-                  borderRadius="lg"
-                  px={4}
-                  py={3}
-                  transition="all .15s"
-                  _hover={{ borderColor: "brand.200" }}
-                >
-                  <Flex justify="space-between" align="center">
-                    <Text fontSize="sm" fontWeight="600" color="ink.800">{p.name}</Text>
-                    <Text fontSize="sm" fontWeight="700" color="brand.600">{naira(p.amount)}</Text>
-                  </Flex>
+            <Text fontWeight="800" fontSize="lg">Buy Data</Text>
+            <Text fontSize="xs" color="rgba(255,255,255,0.8)">Get data bundles for any network</Text>
+          </Box>
+        </HStack>
+      </Box>
+
+      <Box px={{ base: 5, md: 7 }} py={6}>
+        <Text fontSize="xs" fontWeight="700" color="ink.400" letterSpacing="0.08em" mb={3}>SELECT NETWORK</Text>
+        <SimpleGrid columns={4} gap={3} mb={6}>
+          {TELCO_PROVIDERS.map((p) => (
+            <TelcoCard key={p.id} provider={p} selected={provider === p.id} onClick={() => pickProvider(p.id)} />
+          ))}
+        </SimpleGrid>
+
+        <VStack align="stretch" gap={5}>
+          <Field label="Phone number">
+            <Input
+              placeholder="08012345678"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              maxLength={11}
+              size="lg"
+              borderRadius="xl"
+              fontSize="md"
+              fontWeight="600"
+            />
+          </Field>
+
+          {loadingPlans && (
+            <Flex justify="center" py={6} gap={3} align="center">
+              <Spinner color="purple.500" size="sm" />
+              <Text fontSize="sm" color="ink.400">Loading plans...</Text>
+            </Flex>
+          )}
+
+          {plans.length > 0 && (
+            <Box>
+              <Text fontSize="xs" fontWeight="700" color="ink.400" letterSpacing="0.08em" mb={3}>CHOOSE PLAN</Text>
+              <VStack align="stretch" gap={2} maxH="280px" overflowY="auto" pr={1}>
+                {plans.map((p) => {
+                  const sel = selectedPlan?.code === p.code;
+                  return (
+                    <Box
+                      key={p.code}
+                      as="button"
+                      w="100%"
+                      textAlign="left"
+                      onClick={() => setSelectedPlan(p)}
+                      bg={sel ? "purple.50" : "white"}
+                      border="2px solid"
+                      borderColor={sel ? "purple.400" : "ink.100"}
+                      borderRadius="xl"
+                      px={4}
+                      py={3}
+                      transition="all .2s"
+                      _hover={{ borderColor: "purple.300", transform: "translateX(4px)" }}
+                      position="relative"
+                      overflow="hidden"
+                    >
+                      {sel && (
+                        <Flex position="absolute" top="50%" right="12px" transform="translateY(-50%)" w="22px" h="22px" bg="purple.500" borderRadius="full" align="center" justify="center">
+                          <Icon fontSize="10px" color="white"><FaCheck /></Icon>
+                        </Flex>
+                      )}
+                      <Flex justify="space-between" align="center" pr={sel ? "36px" : "0"}>
+                        <Text fontSize="sm" fontWeight="600" color="ink.800">{p.name}</Text>
+                        <Text fontSize="sm" fontWeight="800" color={sel ? "purple.600" : "ink.600"}>{naira(p.amount)}</Text>
+                      </Flex>
+                    </Box>
+                  );
+                })}
+              </VStack>
+            </Box>
+          )}
+
+          {selectedPlan && (
+            <Box
+              style={{ background: "linear-gradient(135deg, rgba(139,92,246,0.08), rgba(124,58,237,0.12))" }}
+              borderRadius="xl"
+              p={4}
+              border="1px solid"
+              borderColor="purple.200"
+            >
+              <HStack justify="space-between">
+                <Box>
+                  <Text fontSize="xs" color="purple.500" fontWeight="700">SELECTED PLAN</Text>
+                  <Text fontSize="sm" fontWeight="700" color="ink.900">{selectedPlan.name}</Text>
                 </Box>
-              ))}
-            </VStack>
-          </Box>
-        )}
+                <Text fontSize="lg" fontWeight="800" color="purple.600">{naira(selectedPlan.amount)}</Text>
+              </HStack>
+            </Box>
+          )}
 
-        {selectedPlan && (
-          <Box bg="brand.50" borderRadius="lg" p={3}>
-            <Text fontSize="sm" color="brand.700" fontWeight="600">
-              Selected: {selectedPlan.name} — {naira(selectedPlan.amount)}
-            </Text>
-          </Box>
-        )}
-
-        <Button colorPalette="brand" size="lg" borderRadius="xl" loading={busy} onClick={submit} disabled={!selectedPlan}>
-          Pay from balance
-        </Button>
-      </VStack>
+          <PayButton loading={busy} onClick={submit} amount={selectedPlan?.amount} disabled={!selectedPlan} />
+        </VStack>
+      </Box>
     </Box>
   );
 }
 
-/* ──────────── Electricity Tab ──────────── */
+/* ════════════════════════════════════════════════════════════════════
+   ELECTRICITY TAB
+   ════════════════════════════════════════════════════════════════════ */
 function ElectricityTab({ onDone }) {
   const [provider, setProvider] = useState("");
   const [meterNumber, setMeterNumber] = useState("");
@@ -370,153 +632,317 @@ function ElectricityTab({ onDone }) {
 
   if (done) {
     return (
-      <Box bg="white" borderRadius="xl" border="1px solid" borderColor="ink.100" p={{ base: 5, md: 7 }} textAlign="center">
-        <Flex w="64px" h="64px" bg="green.50" borderRadius="full" align="center" justify="center" mx="auto" mb={4}>
-          <Icon color="green.500" fontSize="2xl"><FaCheck /></Icon>
-        </Flex>
-        <Heading fontSize="lg" color="ink.900" mb={2}>Payment Successful!</Heading>
-        {token && (
-          <Box bg="cyan.50" border="1px solid" borderColor="cyan.200" borderRadius="xl" p={4} my={4}>
-            <Text fontSize="xs" color="cyan.600" fontWeight="600" mb={1}>YOUR ELECTRICITY TOKEN</Text>
-            <Text fontFamily="mono" fontSize="xl" fontWeight="800" color="cyan.800" letterSpacing="0.05em">{token}</Text>
-            <Button
-              size="xs"
-              variant="ghost"
-              colorPalette="cyan"
-              mt={2}
-              onClick={() => { navigator.clipboard.writeText(token); toast("success", "Token copied!", "Copied"); }}
+      <Box bg="white" borderRadius="2xl" border="1px solid" borderColor="ink.100" overflow="hidden" textAlign="center">
+        <Box style={{ background: "linear-gradient(135deg, #06b6d4, #0891b2)" }} py={8} px={6} color="white">
+          <Flex w="72px" h="72px" bg="rgba(255,255,255,0.2)" borderRadius="full" align="center" justify="center" mx="auto" mb={4} backdropFilter="blur(8px)">
+            <Icon fontSize="2xl"><FaCircleCheck /></Icon>
+          </Flex>
+          <Heading fontSize="xl" mb={1}>Payment Successful!</Heading>
+          <Text fontSize="sm" color="rgba(255,255,255,0.8)">{naira(amount)} electricity payment completed</Text>
+        </Box>
+        <Box px={6} py={6}>
+          {token && (
+            <Box
+              bg="ink.950"
+              borderRadius="2xl"
+              p={5}
+              my={2}
+              position="relative"
+              overflow="hidden"
             >
-              <FaCopy /> Copy token
-            </Button>
-          </Box>
-        )}
-        <Button colorPalette="brand" borderRadius="xl" onClick={() => { setDone(false); setProvider(""); setMeterNumber(""); setAmount(""); setVerified(false); setCustomerName(""); setToken(""); }}>
-          Pay another bill
-        </Button>
+              <Box position="absolute" top="-20px" right="-10px" w="80px" h="80px" bg="cyan.500" opacity={0.1} borderRadius="full" />
+              <Text fontSize="10px" color="cyan.400" fontWeight="700" letterSpacing="0.1em" mb={2}>ELECTRICITY TOKEN</Text>
+              <Text fontFamily="mono" fontSize={{ base: "xl", md: "2xl" }} fontWeight="800" color="white" letterSpacing="0.08em">{token}</Text>
+              <Button
+                size="sm"
+                mt={3}
+                bg="rgba(255,255,255,0.1)"
+                color="white"
+                borderRadius="lg"
+                _hover={{ bg: "rgba(255,255,255,0.2)" }}
+                onClick={() => { navigator.clipboard.writeText(token); toast("success", "Token copied!", "Copied"); }}
+                gap={2}
+              >
+                <FaCopy /> Copy token
+              </Button>
+            </Box>
+          )}
+          <Button
+            mt={4}
+            colorPalette="brand"
+            borderRadius="xl"
+            size="lg"
+            w="100%"
+            onClick={() => { setDone(false); setProvider(""); setMeterNumber(""); setAmount(""); setVerified(false); setCustomerName(""); setToken(""); }}
+          >
+            <FaRotate /> Pay another bill
+          </Button>
+        </Box>
       </Box>
     );
   }
 
   return (
-    <Box bg="white" borderRadius="xl" border="1px solid" borderColor="ink.100" p={{ base: 5, md: 7 }}>
-      <Text fontWeight="800" color="ink.900" mb={4}>Pay Electricity</Text>
-
-      <Text fontSize="sm" fontWeight="600" color="ink.600" mb={2}>Select distribution company</Text>
-      <SimpleGrid columns={{ base: 2, sm: 3, md: 5 }} gap={2} mb={5}>
-        {DISCO_PROVIDERS.map((p) => (
-          <Box
-            key={p.id}
-            as="button"
-            onClick={() => { setProvider(p.id); setVerified(false); setCustomerName(""); }}
-            bg={provider === p.id ? p.color : "ink.50"}
-            color={provider === p.id ? "white" : "ink.700"}
-            borderRadius="lg"
-            px={3}
-            py={2.5}
-            fontSize="xs"
-            fontWeight="700"
-            textAlign="center"
-            border="2px solid"
-            borderColor={provider === p.id ? p.color : "transparent"}
-            transition="all .15s"
-            _hover={{ borderColor: p.color }}
-          >
-            {p.name}
+    <Box bg="white" borderRadius="2xl" border="1px solid" borderColor="ink.100" overflow="hidden">
+      <Box
+        style={{ background: "linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)" }}
+        px={{ base: 5, md: 7 }}
+        py={5}
+        color="white"
+      >
+        <HStack gap={3}>
+          <Flex w="44px" h="44px" bg="rgba(255,255,255,0.2)" borderRadius="xl" align="center" justify="center" backdropFilter="blur(8px)">
+            <Icon fontSize="xl"><FaBolt /></Icon>
+          </Flex>
+          <Box>
+            <Text fontWeight="800" fontSize="lg">Pay Electricity</Text>
+            <Text fontSize="xs" color="rgba(255,255,255,0.8)">Buy power tokens instantly</Text>
           </Box>
-        ))}
-      </SimpleGrid>
+        </HStack>
+      </Box>
 
-      <VStack align="stretch" gap={4}>
-        <Field label="Meter number">
-          <Input placeholder="Enter meter number" value={meterNumber} onChange={(e) => { setMeterNumber(e.target.value); setVerified(false); }} />
-        </Field>
-
-        <Box>
-          <Text fontSize="sm" fontWeight="600" color="ink.600" mb={2}>Meter type</Text>
-          <HStack gap={2}>
-            {["prepaid", "postpaid"].map((t) => (
-              <Button
-                key={t}
-                size="sm"
-                variant={meterType === t ? "solid" : "outline"}
-                colorPalette={meterType === t ? "brand" : "gray"}
+      <Box px={{ base: 5, md: 7 }} py={6}>
+        <Text fontSize="xs" fontWeight="700" color="ink.400" letterSpacing="0.08em" mb={3}>SELECT DISCO</Text>
+        <SimpleGrid columns={{ base: 3, sm: 5 }} gap={2} mb={6}>
+          {DISCO_PROVIDERS.map((p) => (
+            <Box
+              key={p.id}
+              as="button"
+              onClick={() => { setProvider(p.id); setVerified(false); setCustomerName(""); }}
+              borderRadius="xl"
+              py={3}
+              px={2}
+              textAlign="center"
+              transition="all .2s"
+              border="2px solid"
+              borderColor={provider === p.id ? p.color : "ink.100"}
+              bg={provider === p.id ? p.color : "white"}
+              color={provider === p.id ? "white" : "ink.600"}
+              _hover={{ borderColor: p.color, transform: "scale(1.03)" }}
+              position="relative"
+              overflow="hidden"
+            >
+              {provider === p.id && (
+                <Box position="absolute" top="4px" right="4px">
+                  <Flex w="16px" h="16px" bg="rgba(255,255,255,0.3)" borderRadius="full" align="center" justify="center">
+                    <Icon fontSize="8px"><FaCheck /></Icon>
+                  </Flex>
+                </Box>
+              )}
+              <Flex
+                w="32px" h="32px"
+                bg={provider === p.id ? "rgba(255,255,255,0.2)" : `${p.color}15`}
                 borderRadius="lg"
-                onClick={() => { setMeterType(t); setVerified(false); }}
-                textTransform="capitalize"
+                align="center"
+                justify="center"
+                mx="auto"
+                mb={1}
               >
-                {t}
-              </Button>
-            ))}
-          </HStack>
-        </Box>
+                <Text fontSize="xs" fontWeight="900" color={provider === p.id ? "white" : p.color}>{p.letter}</Text>
+              </Flex>
+              <Text fontSize="xs" fontWeight="700">{p.name}</Text>
+            </Box>
+          ))}
+        </SimpleGrid>
 
-        <Button
-          variant="outline"
-          colorPalette="brand"
-          borderRadius="xl"
-          onClick={verify}
-          loading={verifying}
-          disabled={!provider || !meterNumber}
-        >
-          Verify meter
-        </Button>
+        <VStack align="stretch" gap={5}>
+          <Field label="Meter number">
+            <Input
+              placeholder="Enter meter number"
+              value={meterNumber}
+              onChange={(e) => { setMeterNumber(e.target.value); setVerified(false); }}
+              size="lg"
+              borderRadius="xl"
+              fontWeight="600"
+            />
+          </Field>
 
-        {verified && customerName && (
-          <Box bg="green.50" border="1px solid" borderColor="green.200" borderRadius="lg" p={3}>
+          <Box>
+            <Text fontSize="xs" fontWeight="700" color="ink.400" letterSpacing="0.08em" mb={3}>METER TYPE</Text>
             <HStack gap={2}>
-              <Icon color="green.500"><FaCheck /></Icon>
-              <Text fontSize="sm" fontWeight="600" color="green.700">{customerName}</Text>
+              {["prepaid", "postpaid"].map((t) => (
+                <Box
+                  key={t}
+                  as="button"
+                  flex="1"
+                  onClick={() => { setMeterType(t); setVerified(false); }}
+                  bg={meterType === t ? "ink.900" : "ink.50"}
+                  color={meterType === t ? "white" : "ink.600"}
+                  borderRadius="xl"
+                  py={3}
+                  fontWeight="700"
+                  fontSize="sm"
+                  textAlign="center"
+                  textTransform="capitalize"
+                  transition="all .2s"
+                  border="2px solid"
+                  borderColor={meterType === t ? "ink.900" : "transparent"}
+                >
+                  {t}
+                </Box>
+              ))}
             </HStack>
           </Box>
-        )}
 
-        {verified && (
-          <>
-            <Field label="Amount">
-              <Input type="number" placeholder="₦1,000" value={amount} onChange={(e) => setAmount(e.target.value)} />
-            </Field>
-            <Button colorPalette="brand" size="lg" borderRadius="xl" loading={busy} onClick={submit}>
-              Pay from balance
-            </Button>
-          </>
-        )}
-      </VStack>
+          <Button
+            variant="outline"
+            colorPalette="cyan"
+            borderRadius="xl"
+            size="lg"
+            onClick={verify}
+            loading={verifying}
+            disabled={!provider || !meterNumber}
+            fontWeight="700"
+            gap={2}
+          >
+            <FaBolt /> Verify meter
+          </Button>
+
+          {verified && customerName && (
+            <Box
+              style={{ background: "linear-gradient(135deg, rgba(16,185,129,0.08), rgba(5,150,105,0.12))" }}
+              border="1px solid"
+              borderColor="green.200"
+              borderRadius="xl"
+              p={4}
+            >
+              <HStack gap={3}>
+                <Flex w="36px" h="36px" bg="green.100" borderRadius="full" align="center" justify="center">
+                  <Icon color="green.600" fontSize="sm"><FaCircleCheck /></Icon>
+                </Flex>
+                <Box>
+                  <Text fontSize="xs" color="green.600" fontWeight="700">VERIFIED CUSTOMER</Text>
+                  <Text fontSize="sm" fontWeight="700" color="ink.900">{customerName}</Text>
+                </Box>
+              </HStack>
+            </Box>
+          )}
+
+          {verified && (
+            <>
+              <Field label="Amount">
+                <Input
+                  type="number"
+                  placeholder="₦1,000"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  size="lg"
+                  borderRadius="xl"
+                  fontSize="lg"
+                  fontWeight="700"
+                />
+              </Field>
+              <PayButton loading={busy} onClick={submit} amount={amount} />
+            </>
+          )}
+        </VStack>
+      </Box>
     </Box>
   );
 }
 
-/* ──────────── Shared Components ──────────── */
-function ProviderCard({ provider, selected, onClick }) {
+/* ════════════════════════════════════════════════════════════════════
+   SHARED COMPONENTS
+   ════════════════════════════════════════════════════════════════════ */
+
+function TelcoCard({ provider, selected, onClick }) {
   return (
     <Box
       as="button"
       onClick={onClick}
-      bg={selected ? provider.color : "ink.50"}
-      color={selected ? (provider.textColor || "white") : "ink.700"}
       borderRadius="xl"
       py={3}
       textAlign="center"
-      fontWeight="800"
-      fontSize="sm"
+      transition="all .2s cubic-bezier(.4,0,.2,1)"
       border="2px solid"
-      borderColor={selected ? provider.color : "transparent"}
-      transition="all .15s"
-      _hover={{ borderColor: provider.color }}
+      borderColor={selected ? provider.color : "ink.100"}
+      bg={selected ? "white" : "white"}
+      position="relative"
+      overflow="hidden"
+      _hover={{ borderColor: provider.color, transform: "scale(1.04)" }}
     >
-      {provider.name}
+      {/* Colored top bar */}
+      <Box
+        position="absolute"
+        top="0"
+        left="0"
+        right="0"
+        h={selected ? "4px" : "0px"}
+        style={{ background: provider.bg }}
+        transition="height .2s"
+      />
+      {/* Circle logo */}
+      <Flex
+        w="40px"
+        h="40px"
+        style={{ background: selected ? provider.bg : "none" }}
+        bg={selected ? undefined : "ink.50"}
+        borderRadius="full"
+        align="center"
+        justify="center"
+        mx="auto"
+        mb={1.5}
+        transition="all .2s"
+      >
+        <Text
+          fontSize="sm"
+          fontWeight="900"
+          color={selected ? (provider.textColor || "white") : provider.color}
+        >
+          {provider.letter}
+        </Text>
+      </Flex>
+      <Text fontWeight="700" fontSize="xs" color={selected ? "ink.900" : "ink.500"}>
+        {provider.name}
+      </Text>
+      {selected && (
+        <Flex position="absolute" bottom="6px" left="50%" transform="translateX(-50%)" w="18px" h="18px" style={{ background: provider.bg }} borderRadius="full" align="center" justify="center">
+          <Icon fontSize="8px" color={provider.textColor || "white"}><FaCheck /></Icon>
+        </Flex>
+      )}
     </Box>
   );
 }
 
-function SuccessCard({ message, onReset }) {
+function PayButton({ loading, onClick, amount, disabled }) {
+  const displayAmt = amount ? naira(amount) : "";
   return (
-    <Box bg="white" borderRadius="xl" border="1px solid" borderColor="ink.100" p={{ base: 5, md: 7 }} textAlign="center">
-      <Flex w="64px" h="64px" bg="green.50" borderRadius="full" align="center" justify="center" mx="auto" mb={4}>
-        <Icon color="green.500" fontSize="2xl"><FaCheck /></Icon>
-      </Flex>
-      <Heading fontSize="lg" color="ink.900" mb={2}>{message}</Heading>
-      <Text color="ink.500" fontSize="sm" mb={4}>Your balance has been updated.</Text>
-      <Button colorPalette="brand" borderRadius="xl" onClick={onReset}>Pay another bill</Button>
+    <Button
+      w="100%"
+      size="lg"
+      bg="ink.900"
+      color="white"
+      borderRadius="xl"
+      fontWeight="800"
+      fontSize="md"
+      _hover={{ bg: "ink.800", transform: "translateY(-2px)", boxShadow: "0 8px 24px rgba(0,0,0,0.15)" }}
+      transition="all .2s"
+      loading={loading}
+      onClick={onClick}
+      disabled={disabled}
+      gap={2}
+    >
+      <FaWallet /> Pay {displayAmt} from balance
+    </Button>
+  );
+}
+
+function SuccessCard({ title, subtitle, gradient, onReset }) {
+  return (
+    <Box bg="white" borderRadius="2xl" border="1px solid" borderColor="ink.100" overflow="hidden" textAlign="center">
+      <Box style={{ background: gradient }} py={8} px={6} color="white">
+        <Flex w="72px" h="72px" bg="rgba(255,255,255,0.2)" borderRadius="full" align="center" justify="center" mx="auto" mb={4} backdropFilter="blur(8px)">
+          <Icon fontSize="2xl"><FaCircleCheck /></Icon>
+        </Flex>
+        <Heading fontSize="xl" mb={1}>{title}</Heading>
+        <Text fontSize="sm" color="rgba(255,255,255,0.8)">{subtitle}</Text>
+      </Box>
+      <Box px={6} py={6}>
+        <Text color="ink.500" fontSize="sm" mb={4}>Your Powerpay balance has been updated.</Text>
+        <Button colorPalette="brand" borderRadius="xl" size="lg" w="100%" onClick={onReset} gap={2}>
+          <FaRotate /> Pay another bill
+        </Button>
+      </Box>
     </Box>
   );
 }
