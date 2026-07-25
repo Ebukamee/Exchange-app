@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <circle cx="100" cy="100" r="100" fill="#E8430C"/>
+  <path d="M110 40 L80 110 H105 L90 160 L130 90 H105 Z" fill="#FFF"/>
+  <text x="100" y="188" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="22" fill="#fff">IKEJA</text>
+</svg>

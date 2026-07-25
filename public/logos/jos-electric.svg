@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <circle cx="100" cy="100" r="100" fill="#D4AC0D"/>
+  <path d="M110 35 L78 108 H103 L88 165 L132 88 H107 Z" fill="#FFF" opacity="0.95"/>
+  <text x="100" y="195" text-anchor="middle" font-family="Arial,sans-serif" font-weight="800" font-size="20" fill="rgba(255,255,255,0.9)">JOS</text>
+</svg>
