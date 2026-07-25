@@ -49,23 +49,23 @@ const SERVICES = [
 ];
 
 const TELCO_PROVIDERS = [
-  { id: "mtn", name: "MTN", color: "#FFCB05", bg: "linear-gradient(135deg,#FFCB05,#E6B800)", textColor: "#1a1a1a", logo: "/logos/mtn.svg" },
-  { id: "glo", name: "GLO", color: "#50B651", bg: "linear-gradient(135deg,#50B651,#3D8E3E)", textColor: "#fff", logo: "/logos/glo.svg" },
-  { id: "airtel", name: "Airtel", color: "#ED1C24", bg: "linear-gradient(135deg,#ED1C24,#C4161D)", textColor: "#fff", logo: "/logos/airtel.svg" },
-  { id: "etisalat", name: "9mobile", color: "#006B3F", bg: "linear-gradient(135deg,#006B3F,#004D2D)", textColor: "#fff", logo: "/logos/9mobile.svg" },
+  { id: "mtn", name: "MTN", color: "#FFCB05", bg: "linear-gradient(135deg,#FFCB05,#E6B800)", textColor: "#1a1a1a", logo: "/logos/mtn.jpg" },
+  { id: "glo", name: "GLO", color: "#50B651", bg: "linear-gradient(135deg,#50B651,#3D8E3E)", textColor: "#fff", logo: "/logos/glo.jpg" },
+  { id: "airtel", name: "Airtel", color: "#ED1C24", bg: "linear-gradient(135deg,#ED1C24,#C4161D)", textColor: "#fff", logo: "/logos/airtel.jpg" },
+  { id: "etisalat", name: "9mobile", color: "#006B3F", bg: "linear-gradient(135deg,#006B3F,#004D2D)", textColor: "#fff", logo: "/logos/9mobile.jpg" },
 ];
 
 const DISCO_PROVIDERS = [
-  { id: "ikeja-electric", name: "Ikeja Electric", color: "#E8430C", logo: "/logos/ikeja-electric.svg" },
-  { id: "eko-electric", name: "Eko Electric", color: "#1B4F72", logo: "/logos/eko-electric.svg" },
-  { id: "abuja-electric", name: "Abuja Electric", color: "#2E86C1", logo: "/logos/abuja-electric.svg" },
-  { id: "kano-electric", name: "Kano Electric", color: "#27AE60", logo: "/logos/kano-electric.svg" },
-  { id: "portharcourt-electric", name: "PH Electric", color: "#8E44AD", logo: "/logos/portharcourt-electric.svg" },
-  { id: "jos-electric", name: "Jos Electric", color: "#D4AC0D", logo: "/logos/jos-electric.svg" },
-  { id: "kaduna-electric", name: "Kaduna Electric", color: "#CA6F1E", logo: "/logos/kaduna-electric.svg" },
-  { id: "ibadan-electric", name: "Ibadan Electric", color: "#1ABC9C", logo: "/logos/ibadan-electric.svg" },
-  { id: "enugu-electric", name: "Enugu Electric", color: "#2C3E50", logo: "/logos/enugu-electric.svg" },
-  { id: "benin-electric", name: "Benin Electric", color: "#C0392B", logo: "/logos/benin-electric.svg" },
+  { id: "ikeja-electric", name: "Ikeja Electric", color: "#E8430C", logo: "/logos/ikeja-electric.jpg" },
+  { id: "eko-electric", name: "Eko Electric", color: "#1B4F72", logo: "/logos/eko-electric.jpg" },
+  { id: "abuja-electric", name: "Abuja Electric", color: "#2E86C1", logo: "/logos/abuja-electric.jpg" },
+  { id: "kano-electric", name: "Kano Electric", color: "#27AE60", logo: "/logos/kano-electric.jpg" },
+  { id: "portharcourt-electric", name: "PH Electric", color: "#8E44AD", logo: "/logos/portharcourt-electric.jpg" },
+  { id: "jos-electric", name: "Jos Electric", color: "#D4AC0D", logo: "/logos/jos-electric.jpg" },
+  { id: "kaduna-electric", name: "Kaduna Electric", color: "#CA6F1E", logo: "/logos/kaduna-electric.jpg" },
+  { id: "ibadan-electric", name: "Ibadan Electric", color: "#1ABC9C", logo: "/logos/ibadan-electric.jpg" },
+  { id: "enugu-electric", name: "Enugu Electric", color: "#2C3E50", logo: "/logos/enugu-electric.jpg" },
+  { id: "benin-electric", name: "Benin Electric", color: "#C0392B", logo: "/logos/benin-electric.jpg" },
 ];
 
 const QUICK_AMOUNTS = [100, 200, 500, 1000, 2000, 5000];
