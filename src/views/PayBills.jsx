@@ -592,6 +592,8 @@ function ElectricityTab({ onDone }) {
   const [customerName, setCustomerName] = useState("");
   const [verifying, setVerifying] = useState(false);
   const [verified, setVerified] = useState(false);
+  const [productCode, setProductCode] = useState("");
+  const [validationRef, setValidationRef] = useState("");
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
   const [token, setToken] = useState("");
@@ -604,6 +606,8 @@ function ElectricityTab({ onDone }) {
     try {
       const res = await verifyMeterNumber({ provider, meterNumber, meterType });
       setCustomerName(res.customerName);
+      if (res.productCode) setProductCode(res.productCode);
+      if (res.validationReference) setValidationRef(res.validationReference);
       setVerified(true);
       toast("success", `Meter verified: ${res.customerName}`, "Verified");
     } catch (e) {
@@ -616,7 +620,7 @@ function ElectricityTab({ onDone }) {
   const submit = async () => {
     setBusy(true);
     try {
-      const res = await buyElectricity({ provider, meterNumber, meterType, amount });
+      const res = await buyElectricity({ provider, meterNumber, meterType, amount, productCode: productCode || undefined, validationReference: validationRef || undefined });
       if (res.token) setToken(res.token);
       toast("success", "Electricity payment successful!", "Success");
       setDone(true);
@@ -671,7 +675,7 @@ function ElectricityTab({ onDone }) {
             borderRadius="xl"
             size="lg"
             w="100%"
-            onClick={() => { setDone(false); setProvider(""); setMeterNumber(""); setAmount(""); setVerified(false); setCustomerName(""); setToken(""); }}
+            onClick={() => { setDone(false); setProvider(""); setMeterNumber(""); setAmount(""); setVerified(false); setCustomerName(""); setToken(""); setProductCode(""); setValidationRef(""); }}
           >
             <FaRotate /> Pay another bill
           </Button>

@@ -2,13 +2,45 @@
 
 import { q } from "@/lib/db";
 import { requireUser } from "@/lib/session";
-import { purchaseBill, getVariations as vtGetVariations, verifyMeter as vtVerifyMeter } from "@/lib/vtpass";
+import {
+  getBillerProducts,
+  validateCustomer,
+  vendBill,
+} from "@/lib/monnify-vas";
 
 const AIRTIME_PROVIDERS = ["mtn", "glo", "airtel", "etisalat"];
 const PHONE_RE = /^0[789][01]\d{8}$/;
 
-function generateRequestId() {
+function generateVendRef() {
   return `PP-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+// Map our provider IDs to Monnify biller codes
+// These may need adjustment once you see the actual biller codes from Monnify
+const AIRTIME_BILLER_MAP = {
+  mtn: "BIL100",
+  glo: "BIL101",
+  airtel: "BIL102",
+  etisalat: "BIL103",
+};
+
+const DATA_BILLER_MAP = {
+  mtn: "BIL108",
+  glo: "BIL109",
+  airtel: "BIL110",
+  etisalat: "BIL111",
+};
+
+async function resolveBillerCode(category, providerKeyword) {
+  // Try static map first for known providers
+  if (category === "AIRTIME" && AIRTIME_BILLER_MAP[providerKeyword]) {
+    return AIRTIME_BILLER_MAP[providerKeyword];
+  }
+  if (category === "DATA" && DATA_BILLER_MAP[providerKeyword]) {
+    return DATA_BILLER_MAP[providerKeyword];
+  }
+  // Fallback: for electricity or unknown, the provider id IS the billerCode
+  return providerKeyword;
 }
 
 // ── Airtime ─────────────────────────────────────────────────────────
@@ -19,7 +51,13 @@ export async function buyAirtime({ provider, phone, amount }) {
   const amt = Number(amount);
   if (!amt || amt < 50 || amt > 50000) throw new Error("Amount must be between ₦50 and ₦50,000");
 
-  const request_id = generateRequestId();
+  const vendReference = generateVendRef();
+  const billerCode = await resolveBillerCode("AIRTIME", provider);
+
+  // Get the airtime product for this biller
+  const products = await getBillerProducts(billerCode);
+  if (!products.length) throw new Error("No airtime products found for this provider");
+  const productCode = products[0].productCode;
 
   // Atomic balance deduction
   const rows = await q(
@@ -32,36 +70,47 @@ export async function buyAirtime({ provider, phone, amount }) {
   await q(
     `INSERT INTO bills (user_id, type, provider, phone_or_meter, amount, request_id)
      VALUES ($1, 'airtime', $2, $3, $4, $5)`,
-    [u.id, provider, phone, amt, request_id]
+    [u.id, provider, phone, amt, vendReference]
   );
 
   try {
-    const res = await purchaseBill({
-      serviceID: provider,
-      phone,
-      amount: amt,
-      request_id,
+    // Validate customer (phone number)
+    let validationReference = null;
+    try {
+      const validation = await validateCustomer({ productCode, customerId: phone });
+      if (validation?.vendInstruction?.requireValidationRef) {
+        validationReference = validation.validationReference;
+      }
+    } catch {
+      // Some airtime products may not require validation — proceed without
+    }
+
+    // Vend the airtime
+    const res = await vendBill({
+      productCode,
+      customerId: phone,
+      vendAmount: amt,
+      vendReference,
+      validationReference,
     });
 
-    const status = res?.content?.transactions?.status || "pending";
+    const status = res?.vendStatus || "PENDING";
     await q(
       `UPDATE bills SET vtpass_status = $1, vtpass_response = $2 WHERE request_id = $3`,
-      [status === "delivered" ? "delivered" : status, JSON.stringify(res), request_id]
+      [status === "SUCCESS" ? "delivered" : status.toLowerCase(), JSON.stringify(res), vendReference]
     );
 
-    if (status !== "delivered" && status !== "initiated") {
-      // Refund on failure
+    if (status === "FAILED") {
       await q('UPDATE "user" SET balance = balance + $1 WHERE id = $2', [amt, u.id]);
-      await q(`UPDATE bills SET vtpass_status = 'failed' WHERE request_id = $1`, [request_id]);
+      await q(`UPDATE bills SET vtpass_status = 'failed' WHERE request_id = $1`, [vendReference]);
       throw new Error("Airtime purchase failed. Your balance has been refunded.");
     }
 
-    return { success: true, status, request_id };
+    return { success: true, status: status === "SUCCESS" ? "delivered" : status.toLowerCase(), request_id: vendReference };
   } catch (err) {
     if (err.message.includes("refunded")) throw err;
-    // Network / unexpected error — refund
     await q('UPDATE "user" SET balance = balance + $1 WHERE id = $2', [amt, u.id]);
-    await q(`UPDATE bills SET vtpass_status = 'failed' WHERE request_id = $1`, [request_id]);
+    await q(`UPDATE bills SET vtpass_status = 'failed' WHERE request_id = $1`, [vendReference]);
     throw new Error("Airtime purchase failed. Your balance has been refunded.");
   }
 }
@@ -74,8 +123,12 @@ export async function buyData({ provider, phone, variation_code, amount }) {
   const amt = Number(amount);
   if (!amt || amt <= 0) throw new Error("Invalid amount");
 
-  const request_id = generateRequestId();
+  const vendReference = generateVendRef();
 
+  // variation_code here is the Monnify productCode for the selected data plan
+  const productCode = variation_code;
+
+  // Atomic balance deduction
   const rows = await q(
     'UPDATE "user" SET balance = balance - $1 WHERE id = $2 AND balance >= $1 RETURNING balance',
     [amt, u.id]
@@ -85,56 +138,102 @@ export async function buyData({ provider, phone, variation_code, amount }) {
   await q(
     `INSERT INTO bills (user_id, type, provider, phone_or_meter, variation_code, amount, request_id)
      VALUES ($1, 'data', $2, $3, $4, $5, $6)`,
-    [u.id, provider, phone, variation_code, amt, request_id]
+    [u.id, provider, phone, variation_code, amt, vendReference]
   );
 
   try {
-    const res = await purchaseBill({
-      serviceID: provider + "-data",
-      phone,
-      variation_code,
-      amount: amt,
-      request_id,
+    let validationReference = null;
+    try {
+      const validation = await validateCustomer({ productCode, customerId: phone });
+      if (validation?.vendInstruction?.requireValidationRef) {
+        validationReference = validation.validationReference;
+      }
+    } catch {
+      // Proceed without validation if not required
+    }
+
+    const res = await vendBill({
+      productCode,
+      customerId: phone,
+      vendAmount: amt,
+      vendReference,
+      validationReference,
     });
 
-    const status = res?.content?.transactions?.status || "pending";
+    const status = res?.vendStatus || "PENDING";
     await q(
       `UPDATE bills SET vtpass_status = $1, vtpass_response = $2 WHERE request_id = $3`,
-      [status === "delivered" ? "delivered" : status, JSON.stringify(res), request_id]
+      [status === "SUCCESS" ? "delivered" : status.toLowerCase(), JSON.stringify(res), vendReference]
     );
 
-    if (status !== "delivered" && status !== "initiated") {
+    if (status === "FAILED") {
       await q('UPDATE "user" SET balance = balance + $1 WHERE id = $2', [amt, u.id]);
-      await q(`UPDATE bills SET vtpass_status = 'failed' WHERE request_id = $1`, [request_id]);
+      await q(`UPDATE bills SET vtpass_status = 'failed' WHERE request_id = $1`, [vendReference]);
       throw new Error("Data purchase failed. Your balance has been refunded.");
     }
 
-    return { success: true, status, request_id };
+    return { success: true, status: status === "SUCCESS" ? "delivered" : status.toLowerCase(), request_id: vendReference };
   } catch (err) {
     if (err.message.includes("refunded")) throw err;
     await q('UPDATE "user" SET balance = balance + $1 WHERE id = $2', [amt, u.id]);
-    await q(`UPDATE bills SET vtpass_status = 'failed' WHERE request_id = $1`, [request_id]);
+    await q(`UPDATE bills SET vtpass_status = 'failed' WHERE request_id = $1`, [vendReference]);
     throw new Error("Data purchase failed. Your balance has been refunded.");
   }
 }
 
-// ── Electricity ─────────────────────────────────────────────────────
+// ── Electricity — Verify meter ──────────────────────────────────────
 export async function verifyMeterNumber({ provider, meterNumber, meterType }) {
   await requireUser();
   if (!meterNumber || meterNumber.length < 6) throw new Error("Enter a valid meter number");
-  const result = await vtVerifyMeter(provider, meterNumber, meterType);
-  if (!result?.Customer_Name) throw new Error("Could not verify meter. Check the number and try again.");
-  return { customerName: result.Customer_Name, address: result.Address || "" };
+
+  // Get electricity products for this disco
+  const products = await getBillerProducts(provider);
+  // Find the product matching meter type (prepaid/postpaid)
+  const product = products.find(
+    (p) =>
+      p.productCode?.toLowerCase().includes(meterType) ||
+      p.productName?.toLowerCase().includes(meterType)
+  ) || products[0];
+
+  if (!product) throw new Error("No electricity products found for this provider");
+
+  const result = await validateCustomer({
+    productCode: product.productCode,
+    customerId: meterNumber,
+  });
+
+  if (!result?.customerName && !result?.name) {
+    throw new Error("Could not verify meter. Check the number and try again.");
+  }
+
+  return {
+    customerName: result.customerName || result.name || "",
+    address: result.address || result.Address || "",
+    productCode: product.productCode,
+    validationReference: result.validationReference || null,
+    requireValidationRef: result?.vendInstruction?.requireValidationRef || false,
+  };
 }
 
-export async function buyElectricity({ provider, meterNumber, meterType, amount }) {
+export async function buyElectricity({ provider, meterNumber, meterType, amount, productCode, validationReference }) {
   const u = await requireUser();
   if (!meterNumber || meterNumber.length < 6) throw new Error("Enter a valid meter number");
   const amt = Number(amount);
   if (!amt || amt < 500) throw new Error("Minimum amount is ₦500");
 
-  const variation_code = meterType || "prepaid";
-  const request_id = generateRequestId();
+  const vendReference = generateVendRef();
+
+  // If productCode not passed, look it up
+  if (!productCode) {
+    const products = await getBillerProducts(provider);
+    const product = products.find(
+      (p) =>
+        p.productCode?.toLowerCase().includes(meterType || "prepaid") ||
+        p.productName?.toLowerCase().includes(meterType || "prepaid")
+    ) || products[0];
+    if (!product) throw new Error("No electricity products found");
+    productCode = product.productCode;
+  }
 
   const rows = await q(
     'UPDATE "user" SET balance = balance - $1 WHERE id = $2 AND balance >= $1 RETURNING balance',
@@ -145,38 +244,38 @@ export async function buyElectricity({ provider, meterNumber, meterType, amount 
   await q(
     `INSERT INTO bills (user_id, type, provider, phone_or_meter, variation_code, amount, request_id)
      VALUES ($1, 'electricity', $2, $3, $4, $5, $6)`,
-    [u.id, provider, meterNumber, variation_code, amt, request_id]
+    [u.id, provider, meterNumber, meterType || "prepaid", amt, vendReference]
   );
 
   try {
-    const res = await purchaseBill({
-      serviceID: provider,
-      billersCode: meterNumber,
-      variation_code,
-      amount: amt,
-      phone: meterNumber,
-      request_id,
+    const res = await vendBill({
+      productCode,
+      customerId: meterNumber,
+      vendAmount: amt,
+      vendReference,
+      validationReference: validationReference || undefined,
     });
 
-    const status = res?.content?.transactions?.status || "pending";
-    const token = res?.purchased_code || res?.token || res?.content?.transactions?.unique_element || null;
+    const status = res?.vendStatus || "PENDING";
+    // Monnify may return token in the response for prepaid meters
+    const token = res?.token || res?.creditToken || res?.tokenCode || null;
 
     await q(
       `UPDATE bills SET vtpass_status = $1, vtpass_response = $2, token = $3 WHERE request_id = $4`,
-      [status === "delivered" ? "delivered" : status, JSON.stringify(res), token, request_id]
+      [status === "SUCCESS" ? "delivered" : status.toLowerCase(), JSON.stringify(res), token, vendReference]
     );
 
-    if (status !== "delivered" && status !== "initiated") {
+    if (status === "FAILED") {
       await q('UPDATE "user" SET balance = balance + $1 WHERE id = $2', [amt, u.id]);
-      await q(`UPDATE bills SET vtpass_status = 'failed' WHERE request_id = $1`, [request_id]);
+      await q(`UPDATE bills SET vtpass_status = 'failed' WHERE request_id = $1`, [vendReference]);
       throw new Error("Electricity purchase failed. Your balance has been refunded.");
     }
 
-    return { success: true, status, token, request_id };
+    return { success: true, status: status === "SUCCESS" ? "delivered" : status.toLowerCase(), token, request_id: vendReference };
   } catch (err) {
     if (err.message.includes("refunded")) throw err;
     await q('UPDATE "user" SET balance = balance + $1 WHERE id = $2', [amt, u.id]);
-    await q(`UPDATE bills SET vtpass_status = 'failed' WHERE request_id = $1`, [request_id]);
+    await q(`UPDATE bills SET vtpass_status = 'failed' WHERE request_id = $1`, [vendReference]);
     throw new Error("Electricity purchase failed. Your balance has been refunded.");
   }
 }
@@ -184,21 +283,22 @@ export async function buyElectricity({ provider, meterNumber, meterType, amount 
 // ── Data plans lookup ───────────────────────────────────────────────
 export async function getDataPlans(provider) {
   if (!AIRTIME_PROVIDERS.includes(provider)) throw new Error("Invalid provider");
-  const variations = await vtGetVariations(provider + "-data");
-  return variations.map((v) => ({
-    code: v.variation_code,
-    name: v.name,
-    amount: Number(v.variation_amount),
+  const billerCode = await resolveBillerCode("DATA", provider);
+  const products = await getBillerProducts(billerCode);
+  return products.map((p) => ({
+    code: p.productCode,
+    name: p.productName || p.name || p.productCode,
+    amount: Number(p.amount || p.price || 0),
   }));
 }
 
 // ── Electricity variations lookup ───────────────────────────────────
 export async function getElectricityVariations(provider) {
-  const variations = await vtGetVariations(provider);
-  return variations.map((v) => ({
-    code: v.variation_code,
-    name: v.name,
-    amount: v.variation_amount === "0" ? null : Number(v.variation_amount),
+  const products = await getBillerProducts(provider);
+  return products.map((p) => ({
+    code: p.productCode,
+    name: p.productName || p.name || p.productCode,
+    amount: p.amount ? Number(p.amount) : null,
   }));
 }
 
