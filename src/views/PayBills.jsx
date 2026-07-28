@@ -15,6 +15,7 @@ import { toast, err, naira, formatDate } from "../Helper";
 import {
   buyAirtime, buyData, buyElectricity,
   getDataPlans, verifyMeterNumber, getBillHistory,
+  getAirtimeProviders, getDataProviders, getElectricityProviders,
 } from "@/app/actions/bills";
 
 /* ─── Service categories shown as hero cards ─── */
@@ -48,25 +49,56 @@ const SERVICES = [
   },
 ];
 
-const TELCO_PROVIDERS = [
-  { id: "mtn", name: "MTN", color: "#FFCB05", bg: "linear-gradient(135deg,#FFCB05,#E6B800)", textColor: "#1a1a1a", logo: "/logos/mtn.jpg" },
-  { id: "glo", name: "GLO", color: "#50B651", bg: "linear-gradient(135deg,#50B651,#3D8E3E)", textColor: "#fff", logo: "/logos/glo.jpg" },
-  { id: "airtel", name: "Airtel", color: "#ED1C24", bg: "linear-gradient(135deg,#ED1C24,#C4161D)", textColor: "#fff", logo: "/logos/airtel.jpg" },
-  { id: "etisalat", name: "9mobile", color: "#006B3F", bg: "linear-gradient(135deg,#006B3F,#004D2D)", textColor: "#fff", logo: "/logos/9mobile.jpg" },
-];
+/* Styling maps — matched to Monnify billers by name keywords */
+const TELCO_STYLES = {
+  mtn: { color: "#FFCB05", bg: "linear-gradient(135deg,#FFCB05,#E6B800)", textColor: "#1a1a1a", logo: "/logos/mtn.jpg" },
+  glo: { color: "#50B651", bg: "linear-gradient(135deg,#50B651,#3D8E3E)", textColor: "#fff", logo: "/logos/glo.jpg" },
+  airtel: { color: "#ED1C24", bg: "linear-gradient(135deg,#ED1C24,#C4161D)", textColor: "#fff", logo: "/logos/airtel.jpg" },
+  "9mobile": { color: "#006B3F", bg: "linear-gradient(135deg,#006B3F,#004D2D)", textColor: "#fff", logo: "/logos/9mobile.jpg" },
+  etisalat: { color: "#006B3F", bg: "linear-gradient(135deg,#006B3F,#004D2D)", textColor: "#fff", logo: "/logos/9mobile.jpg" },
+};
 
-const DISCO_PROVIDERS = [
-  { id: "ikeja-electric", name: "Ikeja Electric", color: "#E8430C", logo: "/logos/ikeja-electric.jpg" },
-  { id: "eko-electric", name: "Eko Electric", color: "#1B4F72", logo: "/logos/eko-electric.jpg" },
-  { id: "abuja-electric", name: "Abuja Electric", color: "#2E86C1", logo: "/logos/abuja-electric.jpg" },
-  { id: "kano-electric", name: "Kano Electric", color: "#27AE60", logo: "/logos/kano-electric.jpg" },
-  { id: "portharcourt-electric", name: "PH Electric", color: "#8E44AD", logo: "/logos/portharcourt-electric.jpg" },
-  { id: "jos-electric", name: "Jos Electric", color: "#D4AC0D", logo: "/logos/jos-electric.jpg" },
-  { id: "kaduna-electric", name: "Kaduna Electric", color: "#CA6F1E", logo: "/logos/kaduna-electric.jpg" },
-  { id: "ibadan-electric", name: "Ibadan Electric", color: "#1ABC9C", logo: "/logos/ibadan-electric.jpg" },
-  { id: "enugu-electric", name: "Enugu Electric", color: "#2C3E50", logo: "/logos/enugu-electric.jpg" },
-  { id: "benin-electric", name: "Benin Electric", color: "#C0392B", logo: "/logos/benin-electric.jpg" },
-];
+const DISCO_STYLES = {
+  ikeja: { color: "#E8430C", logo: "/logos/ikeja-electric.jpg" },
+  eko: { color: "#1B4F72", logo: "/logos/eko-electric.jpg" },
+  abuja: { color: "#2E86C1", logo: "/logos/abuja-electric.jpg" },
+  aedc: { color: "#2E86C1", logo: "/logos/abuja-electric.jpg" },
+  kano: { color: "#27AE60", logo: "/logos/kano-electric.jpg" },
+  kedco: { color: "#27AE60", logo: "/logos/kano-electric.jpg" },
+  portharcourt: { color: "#8E44AD", logo: "/logos/portharcourt-electric.jpg" },
+  phed: { color: "#8E44AD", logo: "/logos/portharcourt-electric.jpg" },
+  jos: { color: "#D4AC0D", logo: "/logos/jos-electric.jpg" },
+  jed: { color: "#D4AC0D", logo: "/logos/jos-electric.jpg" },
+  kaduna: { color: "#CA6F1E", logo: "/logos/kaduna-electric.jpg" },
+  kaedco: { color: "#CA6F1E", logo: "/logos/kaduna-electric.jpg" },
+  ibadan: { color: "#1ABC9C", logo: "/logos/ibadan-electric.jpg" },
+  ibedc: { color: "#1ABC9C", logo: "/logos/ibadan-electric.jpg" },
+  enugu: { color: "#2C3E50", logo: "/logos/enugu-electric.jpg" },
+  eedc: { color: "#2C3E50", logo: "/logos/enugu-electric.jpg" },
+  benin: { color: "#C0392B", logo: "/logos/benin-electric.jpg" },
+  bedc: { color: "#C0392B", logo: "/logos/benin-electric.jpg" },
+  aba: { color: "#E67E22", logo: "/logos/abuja-electric.jpg" },
+  yola: { color: "#3498DB", logo: "/logos/jos-electric.jpg" },
+};
+
+const DEFAULT_TELCO_STYLE = { color: "#6B7280", bg: "linear-gradient(135deg,#6B7280,#4B5563)", textColor: "#fff", logo: "" };
+const DEFAULT_DISCO_STYLE = { color: "#6B7280", logo: "" };
+
+function matchTelcoStyle(name) {
+  const lower = (name || "").toLowerCase();
+  for (const [key, style] of Object.entries(TELCO_STYLES)) {
+    if (lower.includes(key)) return style;
+  }
+  return DEFAULT_TELCO_STYLE;
+}
+
+function matchDiscoStyle(name) {
+  const lower = (name || "").toLowerCase();
+  for (const [key, style] of Object.entries(DISCO_STYLES)) {
+    if (lower.includes(key)) return style;
+  }
+  return DEFAULT_DISCO_STYLE;
+}
 
 const QUICK_AMOUNTS = [100, 200, 500, 1000, 2000, 5000];
 
@@ -294,17 +326,26 @@ function billMeta(type) {
    AIRTIME TAB
    ════════════════════════════════════════════════════════════════════ */
 function AirtimeTab({ onDone }) {
-  const [provider, setProvider] = useState("");
+  const [providers, setProviders] = useState([]);
+  const [loadingProviders, setLoadingProviders] = useState(true);
+  const [provider, setProvider] = useState(null); // { billerCode, name, ...style }
   const [phone, setPhone] = useState("");
   const [amount, setAmount] = useState("");
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
 
+  useEffect(() => {
+    getAirtimeProviders()
+      .then((list) => setProviders(list.map((b) => ({ ...b, ...matchTelcoStyle(b.name) }))))
+      .catch(() => toast("error", "Failed to load providers", "Error"))
+      .finally(() => setLoadingProviders(false));
+  }, []);
+
   const submit = async () => {
     if (!provider) return toast("error", "Select a network provider", "Error");
     setBusy(true);
     try {
-      await buyAirtime({ provider, phone, amount });
+      await buyAirtime({ billerCode: provider.billerCode, phone, amount });
       toast("success", `₦${Number(amount).toLocaleString()} airtime sent to ${phone}`, "Airtime Purchased!");
       setDone(true);
       onDone();
@@ -321,7 +362,7 @@ function AirtimeTab({ onDone }) {
         title="Airtime Delivered!"
         subtitle={`₦${Number(amount).toLocaleString()} sent to ${phone}`}
         gradient="linear-gradient(135deg,#f59e0b,#d97706)"
-        onReset={() => { setDone(false); setPhone(""); setAmount(""); setProvider(""); }}
+        onReset={() => { setDone(false); setPhone(""); setAmount(""); setProvider(null); }}
       />
     );
   }
@@ -349,11 +390,15 @@ function AirtimeTab({ onDone }) {
       <Box px={{ base: 5, md: 7 }} py={6}>
         {/* Network selector */}
         <Text fontSize="xs" fontWeight="700" color="ink.400" letterSpacing="0.08em" mb={3}>SELECT NETWORK</Text>
-        <SimpleGrid columns={4} gap={3} mb={6}>
-          {TELCO_PROVIDERS.map((p) => (
-            <TelcoCard key={p.id} provider={p} selected={provider === p.id} onClick={() => setProvider(p.id)} />
+        {loadingProviders ? (
+          <Flex justify="center" py={6}><Spinner color="orange.500" size="sm" /><Text ml={2} fontSize="sm" color="ink.400">Loading providers...</Text></Flex>
+        ) : (
+        <SimpleGrid columns={{ base: 2, sm: 4 }} gap={3} mb={6}>
+          {providers.map((p) => (
+            <TelcoCard key={p.billerCode} provider={p} selected={provider?.billerCode === p.billerCode} onClick={() => setProvider(p)} />
           ))}
         </SimpleGrid>
+        )}
 
         <VStack align="stretch" gap={5}>
           <Field label="Phone number">
@@ -420,7 +465,9 @@ function AirtimeTab({ onDone }) {
    DATA TAB
    ════════════════════════════════════════════════════════════════════ */
 function DataTab({ onDone }) {
-  const [provider, setProvider] = useState("");
+  const [providers, setProviders] = useState([]);
+  const [loadingProviders, setLoadingProviders] = useState(true);
+  const [provider, setProvider] = useState(null);
   const [phone, setPhone] = useState("");
   const [plans, setPlans] = useState([]);
   const [selectedPlan, setSelectedPlan] = useState(null);
@@ -428,14 +475,21 @@ function DataTab({ onDone }) {
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
 
-  const pickProvider = async (id) => {
-    setProvider(id);
+  useEffect(() => {
+    getDataProviders()
+      .then((list) => setProviders(list.map((b) => ({ ...b, ...matchTelcoStyle(b.name) }))))
+      .catch(() => toast("error", "Failed to load providers", "Error"))
+      .finally(() => setLoadingProviders(false));
+  }, []);
+
+  const pickProvider = async (p) => {
+    setProvider(p);
     setSelectedPlan(null);
     setPlans([]);
     setLoadingPlans(true);
     try {
-      const p = await getDataPlans(id);
-      setPlans(p);
+      const plans = await getDataPlans(p.billerCode);
+      setPlans(plans);
     } catch (e) {
       toast("error", err(e.message), "Failed");
     } finally {
@@ -448,7 +502,7 @@ function DataTab({ onDone }) {
     if (!selectedPlan) return toast("error", "Select a data plan", "Error");
     setBusy(true);
     try {
-      await buyData({ provider, phone, variation_code: selectedPlan.code, amount: selectedPlan.amount });
+      await buyData({ billerCode: provider.billerCode, phone, productCode: selectedPlan.code, amount: selectedPlan.amount });
       toast("success", `${selectedPlan.name} sent to ${phone}`, "Data Purchased!");
       setDone(true);
       onDone();
@@ -465,7 +519,7 @@ function DataTab({ onDone }) {
         title="Data Bundle Activated!"
         subtitle={`${selectedPlan?.name} sent to ${phone}`}
         gradient="linear-gradient(135deg,#8b5cf6,#7c3aed)"
-        onReset={() => { setDone(false); setPhone(""); setProvider(""); setSelectedPlan(null); setPlans([]); }}
+        onReset={() => { setDone(false); setPhone(""); setProvider(null); setSelectedPlan(null); setPlans([]); }}
       />
     );
   }
@@ -491,11 +545,15 @@ function DataTab({ onDone }) {
 
       <Box px={{ base: 5, md: 7 }} py={6}>
         <Text fontSize="xs" fontWeight="700" color="ink.400" letterSpacing="0.08em" mb={3}>SELECT NETWORK</Text>
-        <SimpleGrid columns={4} gap={3} mb={6}>
-          {TELCO_PROVIDERS.map((p) => (
-            <TelcoCard key={p.id} provider={p} selected={provider === p.id} onClick={() => pickProvider(p.id)} />
+        {loadingProviders ? (
+          <Flex justify="center" py={6}><Spinner color="purple.500" size="sm" /><Text ml={2} fontSize="sm" color="ink.400">Loading providers...</Text></Flex>
+        ) : (
+        <SimpleGrid columns={{ base: 2, sm: 4 }} gap={3} mb={6}>
+          {providers.map((p) => (
+            <TelcoCard key={p.billerCode} provider={p} selected={provider?.billerCode === p.billerCode} onClick={() => pickProvider(p)} />
           ))}
         </SimpleGrid>
+        )}
 
         <VStack align="stretch" gap={5}>
           <Field label="Phone number">
@@ -585,7 +643,9 @@ function DataTab({ onDone }) {
    ELECTRICITY TAB
    ════════════════════════════════════════════════════════════════════ */
 function ElectricityTab({ onDone }) {
-  const [provider, setProvider] = useState("");
+  const [discos, setDiscos] = useState([]);
+  const [loadingDiscos, setLoadingDiscos] = useState(true);
+  const [provider, setProvider] = useState(null); // { billerCode, name, ...style }
   const [meterNumber, setMeterNumber] = useState("");
   const [meterType, setMeterType] = useState("prepaid");
   const [amount, setAmount] = useState("");
@@ -598,13 +658,20 @@ function ElectricityTab({ onDone }) {
   const [done, setDone] = useState(false);
   const [token, setToken] = useState("");
 
+  useEffect(() => {
+    getElectricityProviders()
+      .then((list) => setDiscos(list.map((b) => ({ ...b, ...matchDiscoStyle(b.name) }))))
+      .catch(() => toast("error", "Failed to load providers", "Error"))
+      .finally(() => setLoadingDiscos(false));
+  }, []);
+
   const verify = async () => {
     if (!provider) return toast("error", "Select a distribution company", "Error");
     setVerifying(true);
     setVerified(false);
     setCustomerName("");
     try {
-      const res = await verifyMeterNumber({ provider, meterNumber, meterType });
+      const res = await verifyMeterNumber({ billerCode: provider.billerCode, meterNumber, meterType });
       setCustomerName(res.customerName);
       if (res.productCode) setProductCode(res.productCode);
       if (res.validationReference) setValidationRef(res.validationReference);
@@ -620,7 +687,7 @@ function ElectricityTab({ onDone }) {
   const submit = async () => {
     setBusy(true);
     try {
-      const res = await buyElectricity({ provider, meterNumber, meterType, amount, productCode: productCode || undefined, validationReference: validationRef || undefined });
+      const res = await buyElectricity({ billerCode: provider.billerCode, meterNumber, meterType, amount, productCode: productCode || undefined, validationReference: validationRef || undefined });
       if (res.token) setToken(res.token);
       toast("success", "Electricity payment successful!", "Success");
       setDone(true);
@@ -675,7 +742,7 @@ function ElectricityTab({ onDone }) {
             borderRadius="xl"
             size="lg"
             w="100%"
-            onClick={() => { setDone(false); setProvider(""); setMeterNumber(""); setAmount(""); setVerified(false); setCustomerName(""); setToken(""); setProductCode(""); setValidationRef(""); }}
+            onClick={() => { setDone(false); setProvider(null); setMeterNumber(""); setAmount(""); setVerified(false); setCustomerName(""); setToken(""); setProductCode(""); setValidationRef(""); }}
           >
             <FaRotate /> Pay another bill
           </Button>
@@ -705,14 +772,17 @@ function ElectricityTab({ onDone }) {
 
       <Box px={{ base: 5, md: 7 }} py={6}>
         <Text fontSize="xs" fontWeight="700" color="ink.400" letterSpacing="0.08em" mb={3}>SELECT DISCO</Text>
+        {loadingDiscos ? (
+          <Flex justify="center" py={6}><Spinner color="cyan.500" size="sm" /><Text ml={2} fontSize="sm" color="ink.400">Loading providers...</Text></Flex>
+        ) : (
         <SimpleGrid columns={{ base: 2, sm: 3, md: 5 }} gap={3} mb={6}>
-          {DISCO_PROVIDERS.map((p) => {
-            const sel = provider === p.id;
+          {discos.map((p) => {
+            const sel = provider?.billerCode === p.billerCode;
             return (
               <Box
-                key={p.id}
+                key={p.billerCode}
                 as="button"
-                onClick={() => { setProvider(p.id); setVerified(false); setCustomerName(""); }}
+                onClick={() => { setProvider(p); setVerified(false); setCustomerName(""); }}
                 borderRadius="xl"
                 py={3}
                 px={2}
@@ -728,22 +798,28 @@ function ElectricityTab({ onDone }) {
                 {sel && (
                   <Box position="absolute" top="0" left="0" right="0" h="3px" bg={p.color} />
                 )}
-                <Box
-                  w="40px"
-                  h="40px"
-                  borderRadius="lg"
-                  overflow="hidden"
-                  mx="auto"
-                  mb={1.5}
-                  border="1px solid"
-                  borderColor={sel ? p.color : "ink.100"}
-                >
-                  <img
-                    src={p.logo}
-                    alt={p.name}
-                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                  />
-                </Box>
+                {p.logo ? (
+                  <Box
+                    w="40px"
+                    h="40px"
+                    borderRadius="lg"
+                    overflow="hidden"
+                    mx="auto"
+                    mb={1.5}
+                    border="1px solid"
+                    borderColor={sel ? p.color : "ink.100"}
+                  >
+                    <img
+                      src={p.logo}
+                      alt={p.name}
+                      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                    />
+                  </Box>
+                ) : (
+                  <Flex w="40px" h="40px" borderRadius="lg" mx="auto" mb={1.5} bg={p.color} align="center" justify="center">
+                    <Icon color="white" fontSize="sm"><FaBolt /></Icon>
+                  </Flex>
+                )}
                 <Text fontSize="xs" fontWeight="700" color={sel ? "ink.900" : "ink.500"}>{p.name}</Text>
                 {sel && (
                   <Flex position="absolute" top="6px" right="6px" w="16px" h="16px" bg={p.color} borderRadius="full" align="center" justify="center">
@@ -754,6 +830,7 @@ function ElectricityTab({ onDone }) {
             );
           })}
         </SimpleGrid>
+        )}
 
         <VStack align="stretch" gap={5}>
           <Field label="Meter number">

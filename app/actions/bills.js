@@ -3,56 +3,52 @@
 import { q } from "@/lib/db";
 import { requireUser } from "@/lib/session";
 import {
+  getBillers,
   getBillerProducts,
   validateCustomer,
   vendBill,
 } from "@/lib/monnify-vas";
 
-const AIRTIME_PROVIDERS = ["mtn", "glo", "airtel", "etisalat"];
 const PHONE_RE = /^0[789][01]\d{8}$/;
 
 function generateVendRef() {
   return `PP-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
-// Map our provider IDs to Monnify biller codes
-// These may need adjustment once you see the actual biller codes from Monnify
-const AIRTIME_BILLER_MAP = {
-  mtn: "BIL100",
-  glo: "BIL101",
-  airtel: "BIL102",
-  etisalat: "BIL103",
-};
+// ── Fetch available providers from Monnify ──────────────────────────
+export async function getAirtimeProviders() {
+  const billers = await getBillers("AIRTIME");
+  return billers.map((b) => ({
+    billerCode: b.billerCode,
+    name: b.name || b.billerName,
+  }));
+}
 
-const DATA_BILLER_MAP = {
-  mtn: "BIL108",
-  glo: "BIL109",
-  airtel: "BIL110",
-  etisalat: "BIL111",
-};
+export async function getDataProviders() {
+  const billers = await getBillers("DATA");
+  return billers.map((b) => ({
+    billerCode: b.billerCode,
+    name: b.name || b.billerName,
+  }));
+}
 
-async function resolveBillerCode(category, providerKeyword) {
-  // Try static map first for known providers
-  if (category === "AIRTIME" && AIRTIME_BILLER_MAP[providerKeyword]) {
-    return AIRTIME_BILLER_MAP[providerKeyword];
-  }
-  if (category === "DATA" && DATA_BILLER_MAP[providerKeyword]) {
-    return DATA_BILLER_MAP[providerKeyword];
-  }
-  // Fallback: for electricity or unknown, the provider id IS the billerCode
-  return providerKeyword;
+export async function getElectricityProviders() {
+  const billers = await getBillers("ELECTRICITY");
+  return billers.map((b) => ({
+    billerCode: b.billerCode,
+    name: b.name || b.billerName,
+  }));
 }
 
 // ── Airtime ─────────────────────────────────────────────────────────
-export async function buyAirtime({ provider, phone, amount }) {
+export async function buyAirtime({ billerCode, phone, amount }) {
   const u = await requireUser();
-  if (!AIRTIME_PROVIDERS.includes(provider)) throw new Error("Invalid provider");
+  if (!billerCode) throw new Error("Select a network provider");
   if (!PHONE_RE.test(phone)) throw new Error("Enter a valid 11-digit phone number");
   const amt = Number(amount);
   if (!amt || amt < 50 || amt > 50000) throw new Error("Amount must be between ₦50 and ₦50,000");
 
   const vendReference = generateVendRef();
-  const billerCode = await resolveBillerCode("AIRTIME", provider);
 
   // Get the airtime product for this biller
   const products = await getBillerProducts(billerCode);
@@ -70,7 +66,7 @@ export async function buyAirtime({ provider, phone, amount }) {
   await q(
     `INSERT INTO bills (user_id, type, provider, phone_or_meter, amount, request_id)
      VALUES ($1, 'airtime', $2, $3, $4, $5)`,
-    [u.id, provider, phone, amt, vendReference]
+    [u.id, billerCode, phone, amt, vendReference]
   );
 
   try {
@@ -82,7 +78,7 @@ export async function buyAirtime({ provider, phone, amount }) {
         validationReference = validation.validationReference;
       }
     } catch {
-      // Some airtime products may not require validation — proceed without
+      // Some airtime products may not require validation
     }
 
     // Vend the airtime
@@ -116,17 +112,14 @@ export async function buyAirtime({ provider, phone, amount }) {
 }
 
 // ── Data ────────────────────────────────────────────────────────────
-export async function buyData({ provider, phone, variation_code, amount }) {
+export async function buyData({ billerCode, phone, productCode, amount }) {
   const u = await requireUser();
-  if (!AIRTIME_PROVIDERS.includes(provider)) throw new Error("Invalid provider");
+  if (!billerCode) throw new Error("Select a network provider");
   if (!PHONE_RE.test(phone)) throw new Error("Enter a valid 11-digit phone number");
   const amt = Number(amount);
   if (!amt || amt <= 0) throw new Error("Invalid amount");
 
   const vendReference = generateVendRef();
-
-  // variation_code here is the Monnify productCode for the selected data plan
-  const productCode = variation_code;
 
   // Atomic balance deduction
   const rows = await q(
@@ -138,7 +131,7 @@ export async function buyData({ provider, phone, variation_code, amount }) {
   await q(
     `INSERT INTO bills (user_id, type, provider, phone_or_meter, variation_code, amount, request_id)
      VALUES ($1, 'data', $2, $3, $4, $5, $6)`,
-    [u.id, provider, phone, variation_code, amt, vendReference]
+    [u.id, billerCode, phone, productCode, amt, vendReference]
   );
 
   try {
@@ -182,12 +175,12 @@ export async function buyData({ provider, phone, variation_code, amount }) {
 }
 
 // ── Electricity — Verify meter ──────────────────────────────────────
-export async function verifyMeterNumber({ provider, meterNumber, meterType }) {
+export async function verifyMeterNumber({ billerCode, meterNumber, meterType }) {
   await requireUser();
   if (!meterNumber || meterNumber.length < 6) throw new Error("Enter a valid meter number");
 
   // Get electricity products for this disco
-  const products = await getBillerProducts(provider);
+  const products = await getBillerProducts(billerCode);
   // Find the product matching meter type (prepaid/postpaid)
   const product = products.find(
     (p) =>
@@ -215,7 +208,7 @@ export async function verifyMeterNumber({ provider, meterNumber, meterType }) {
   };
 }
 
-export async function buyElectricity({ provider, meterNumber, meterType, amount, productCode, validationReference }) {
+export async function buyElectricity({ billerCode, meterNumber, meterType, amount, productCode, validationReference }) {
   const u = await requireUser();
   if (!meterNumber || meterNumber.length < 6) throw new Error("Enter a valid meter number");
   const amt = Number(amount);
@@ -225,7 +218,7 @@ export async function buyElectricity({ provider, meterNumber, meterType, amount,
 
   // If productCode not passed, look it up
   if (!productCode) {
-    const products = await getBillerProducts(provider);
+    const products = await getBillerProducts(billerCode);
     const product = products.find(
       (p) =>
         p.productCode?.toLowerCase().includes(meterType || "prepaid") ||
@@ -244,7 +237,7 @@ export async function buyElectricity({ provider, meterNumber, meterType, amount,
   await q(
     `INSERT INTO bills (user_id, type, provider, phone_or_meter, variation_code, amount, request_id)
      VALUES ($1, 'electricity', $2, $3, $4, $5, $6)`,
-    [u.id, provider, meterNumber, meterType || "prepaid", amt, vendReference]
+    [u.id, billerCode, meterNumber, meterType || "prepaid", amt, vendReference]
   );
 
   try {
@@ -257,7 +250,6 @@ export async function buyElectricity({ provider, meterNumber, meterType, amount,
     });
 
     const status = res?.vendStatus || "PENDING";
-    // Monnify may return token in the response for prepaid meters
     const token = res?.token || res?.creditToken || res?.tokenCode || null;
 
     await q(
@@ -281,9 +273,8 @@ export async function buyElectricity({ provider, meterNumber, meterType, amount,
 }
 
 // ── Data plans lookup ───────────────────────────────────────────────
-export async function getDataPlans(provider) {
-  if (!AIRTIME_PROVIDERS.includes(provider)) throw new Error("Invalid provider");
-  const billerCode = await resolveBillerCode("DATA", provider);
+export async function getDataPlans(billerCode) {
+  if (!billerCode) throw new Error("Select a provider first");
   const products = await getBillerProducts(billerCode);
   return products.map((p) => ({
     code: p.productCode,
@@ -293,8 +284,8 @@ export async function getDataPlans(provider) {
 }
 
 // ── Electricity variations lookup ───────────────────────────────────
-export async function getElectricityVariations(provider) {
-  const products = await getBillerProducts(provider);
+export async function getElectricityVariations(billerCode) {
+  const products = await getBillerProducts(billerCode);
   return products.map((p) => ({
     code: p.productCode,
     name: p.productName || p.name || p.productCode,
