@@ -17,10 +17,28 @@ function toArray(value) {
   if (Array.isArray(value?.products)) return value.products;
   if (Array.isArray(value?.data)) return value.data;
   if (Array.isArray(value?.result)) return value.result;
-  if (value && typeof value === "object") {
-    const nested = Object.values(value).find(Array.isArray);
-    if (nested) return nested;
+  // Support Monnify paginated shapes
+  if (Array.isArray(value?.responseBody)) return value.responseBody;
+  if (Array.isArray(value?.responseBody?.content)) return value.responseBody.content;
+
+  const shallow = Object.values(value || {}).find(Array.isArray) || Object.values(value?.responseBody || {}).find(Array.isArray);
+  if (shallow) return shallow;
+
+  function findArray(obj, depth = 0) {
+    if (depth > 2 || !obj || typeof obj !== "object") return null;
+    for (const v of Object.values(obj)) {
+      if (Array.isArray(v)) return v;
+      if (typeof v === "object") {
+        const res = findArray(v, depth + 1);
+        if (res) return res;
+      }
+    }
+    return null;
   }
+
+  const rec = findArray(value);
+  if (rec) return rec;
+
   return [];
 }
 
