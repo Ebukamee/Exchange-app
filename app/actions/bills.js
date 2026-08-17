@@ -11,13 +11,54 @@ import {
 
 const PHONE_RE = /^0[789][01]\d{8}$/;
 
+function normalizeCompanyKey(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/biller[-_]?/g, "")
+    .replace(/[-_](pre|post)$/g, "")
+    .replace(/(prepaid|postpaid)/g, "")
+    .replace(/electricity/g, "")
+    .replace(/distribution/g, "")
+    .replace(/[^a-z0-9]/g, "");
+}
+
+function dedupeByCompany(items) {
+  const map = new Map();
+  for (const item of items) {
+    const normalized = normalizeCompanyKey(item?.code || item?.billerCode || item?.name || item?.billerName);
+    if (!normalized) continue;
+    if (!map.has(normalized)) {
+      map.set(normalized, item);
+    }
+  }
+  return [...map.values()];
+}
+
+function normalizeBiller(b) {
+  if (!b || typeof b !== "object") return null;
+  return {
+    ...b,
+    billerCode: b.billerCode || b.code || b.biller_id || b.billerId || "",
+    name: b.name || b.billerName || b.biller_name || "",
+  };
+}
+
+function normalizeProduct(p) {
+  if (!p || typeof p !== "object") return null;
+  return {
+    ...p,
+    productCode: p.productCode || p.code || p.product_id || p.productId || "",
+    productName: p.productName || p.name || p.product_name || "",
+    amount: p.amount ?? p.price ?? p.value ?? 0,
+  };
+}
+
 function toArray(value) {
   if (Array.isArray(value)) return value;
   if (Array.isArray(value?.billers)) return value.billers;
   if (Array.isArray(value?.products)) return value.products;
   if (Array.isArray(value?.data)) return value.data;
   if (Array.isArray(value?.result)) return value.result;
-  // Support Monnify paginated shapes
   if (Array.isArray(value?.responseBody)) return value.responseBody;
   if (Array.isArray(value?.responseBody?.content)) return value.responseBody.content;
 
@@ -48,26 +89,26 @@ function generateVendRef() {
 
 // ── Fetch available providers from Monnify ──────────────────────────
 export async function getAirtimeProviders() {
-  const billers = toArray(await getBillers("AIRTIME"));
+  const billers = toArray(await getBillers("AIRTIME")).map(normalizeBiller).filter(Boolean);
   return billers.map((b) => ({
     billerCode: b.billerCode,
-    name: b.name || b.billerName,
+    name: b.name,
   }));
 }
 
 export async function getDataProviders() {
-  const billers = toArray(await getBillers("DATA"));
+  const billers = toArray(await getBillers("DATA")).map(normalizeBiller).filter(Boolean);
   return billers.map((b) => ({
     billerCode: b.billerCode,
-    name: b.name || b.billerName,
+    name: b.name,
   }));
 }
 
 export async function getElectricityProviders() {
-  const billers = toArray(await getBillers("ELECTRICITY"));
+  const billers = dedupeByCompany(toArray(await getBillers("ELECTRICITY")).map(normalizeBiller).filter(Boolean));
   return billers.map((b) => ({
     billerCode: b.billerCode,
-    name: b.name || b.billerName,
+    name: b.name,
   }));
 }
 
@@ -82,7 +123,7 @@ export async function buyAirtime({ billerCode, phone, amount }) {
   const vendReference = generateVendRef();
 
   // Get the airtime product for this biller
-  const products = toArray(await getBillerProducts(billerCode));
+  const products = toArray(await getBillerProducts(billerCode)).map(normalizeProduct).filter(Boolean);
   if (!products.length) throw new Error("No airtime products found for this provider");
   const productCode = products[0].productCode;
 
@@ -212,7 +253,7 @@ export async function verifyMeterNumber({ billerCode, meterNumber, meterType }) 
   if (!billerCode) throw new Error("Select a distribution company");
 
   // Get electricity products for this disco
-  const products = toArray(await getBillerProducts(billerCode));
+  const products = toArray(await getBillerProducts(billerCode)).map(normalizeProduct).filter(Boolean);
   // Find the product matching meter type (prepaid/postpaid)
   const product = products.find(
     (p) =>
@@ -251,7 +292,7 @@ export async function buyElectricity({ billerCode, meterNumber, meterType, amoun
 
   // If productCode not passed, look it up
   if (!productCode) {
-    const products = toArray(await getBillerProducts(billerCode));
+    const products = toArray(await getBillerProducts(billerCode)).map(normalizeProduct).filter(Boolean);
     const product = products.find(
       (p) =>
         p.productCode?.toLowerCase().includes(meterType || "prepaid") ||
@@ -308,7 +349,7 @@ export async function buyElectricity({ billerCode, meterNumber, meterType, amoun
 // ── Data plans lookup ───────────────────────────────────────────────
 export async function getDataPlans(billerCode) {
   if (!billerCode) throw new Error("Select a provider first");
-  const products = toArray(await getBillerProducts(billerCode));
+  const products = toArray(await getBillerProducts(billerCode)).map(normalizeProduct).filter(Boolean);
   return products.map((p) => ({
     code: p.productCode,
     name: p.productName || p.name || p.productCode,
@@ -318,7 +359,7 @@ export async function getDataPlans(billerCode) {
 
 // ── Electricity variations lookup ───────────────────────────────────
 export async function getElectricityVariations(billerCode) {
-  const products = toArray(await getBillerProducts(billerCode));
+  const products = toArray(await getBillerProducts(billerCode)).map(normalizeProduct).filter(Boolean);
   return products.map((p) => ({
     code: p.productCode,
     name: p.productName || p.name || p.productCode,
