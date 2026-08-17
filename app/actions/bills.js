@@ -11,6 +11,22 @@ import {
 
 const PHONE_RE = /^0[789][01]\d{8}$/;
 
+function normalizePhone(value) {
+  return String(value || "").trim();
+}
+
+function normalizeMeter(value) {
+  return String(value || "").trim();
+}
+
+function validateMeterInput(meterNumber) {
+  const meter = normalizeMeter(meterNumber);
+  if (!meter) throw new Error("Enter a valid meter number");
+  if (!/^\d+$/.test(meter)) throw new Error("Meter number must contain only digits");
+  if (meter.length < 6 || meter.length > 20) throw new Error("Meter number length is invalid for this distributor");
+  return meter;
+}
+
 function normalizeCompanyKey(value) {
   return String(value || "")
     .toLowerCase()
@@ -126,14 +142,14 @@ export async function getElectricityProviders() {
 // ── Airtime ─────────────────────────────────────────────────────────
 export async function buyAirtime({ billerCode, phone, amount }) {
   const u = await requireUser();
+  const cleanPhone = normalizePhone(phone);
   if (!billerCode) throw new Error("Select a network provider");
-  if (!PHONE_RE.test(phone)) throw new Error("Enter a valid 11-digit phone number");
+  if (!PHONE_RE.test(cleanPhone)) throw new Error("Enter a valid 11-digit phone number");
   const amt = Number(amount);
   if (!amt || amt < 50 || amt > 50000) throw new Error("Amount must be between ₦50 and ₦50,000");
 
   const vendReference = generateVendRef();
 
-  // Get the airtime product for this biller
   const products = toArray(await getBillerProducts(billerCode)).map(normalizeProduct).filter(Boolean);
   if (!products.length) throw new Error("No airtime products found for this provider");
   const productCode = products[0].productCode;
@@ -145,18 +161,16 @@ export async function buyAirtime({ billerCode, phone, amount }) {
   );
   if (!rows.length) throw new Error("Insufficient balance");
 
-  // Insert pending bill
   await q(
     `INSERT INTO bills (user_id, type, provider, phone_or_meter, amount, request_id)
      VALUES ($1, 'airtime', $2, $3, $4, $5)`,
-    [u.id, billerCode, phone, amt, vendReference]
+    [u.id, billerCode, cleanPhone, amt, vendReference]
   );
 
   try {
-    // Validate customer (phone number)
     let validationReference = null;
     try {
-      const validation = await validateCustomer({ productCode, customerId: phone });
+      const validation = await validateCustomer({ productCode, customerId: cleanPhone });
       if (validation?.vendInstruction?.requireValidationRef) {
         validationReference = validation.validationReference;
       }
@@ -164,10 +178,9 @@ export async function buyAirtime({ billerCode, phone, amount }) {
       // Some airtime products may not require validation
     }
 
-    // Vend the airtime
     const res = await vendBill({
       productCode,
-      customerId: phone,
+      customerId: cleanPhone,
       vendAmount: amt,
       vendReference,
       validationReference,
@@ -260,12 +273,10 @@ export async function buyData({ billerCode, phone, productCode, amount }) {
 // ── Electricity — Verify meter ──────────────────────────────────────
 export async function verifyMeterNumber({ billerCode, meterNumber, meterType }) {
   await requireUser();
-  if (!meterNumber || meterNumber.length < 6) throw new Error("Enter a valid meter number");
+  const meter = validateMeterInput(meterNumber);
   if (!billerCode) throw new Error("Select a distribution company");
 
-  // Get electricity products for this disco
   const products = toArray(await getBillerProducts(billerCode)).map(normalizeProduct).filter(Boolean);
-  // Find the product matching meter type (prepaid/postpaid)
   const product = products.find(
     (p) =>
       p.productCode?.toLowerCase().includes(meterType) ||
@@ -276,7 +287,7 @@ export async function verifyMeterNumber({ billerCode, meterNumber, meterType }) 
 
   const result = await validateCustomer({
     productCode: product.productCode,
-    customerId: meterNumber,
+    customerId: meter,
   });
 
   if (!result?.customerName && !result?.name) {
@@ -294,14 +305,13 @@ export async function verifyMeterNumber({ billerCode, meterNumber, meterType }) 
 
 export async function buyElectricity({ billerCode, meterNumber, meterType, amount, productCode, validationReference }) {
   const u = await requireUser();
-  if (!meterNumber || meterNumber.length < 6) throw new Error("Enter a valid meter number");
+  const meter = validateMeterInput(meterNumber);
   if (!billerCode) throw new Error("Select a distribution company");
   const amt = Number(amount);
   if (!amt || amt < 500) throw new Error("Minimum amount is ₦500");
 
   const vendReference = generateVendRef();
 
-  // If productCode not passed, look it up
   if (!productCode) {
     const products = toArray(await getBillerProducts(billerCode)).map(normalizeProduct).filter(Boolean);
     const product = products.find(
@@ -322,13 +332,13 @@ export async function buyElectricity({ billerCode, meterNumber, meterType, amoun
   await q(
     `INSERT INTO bills (user_id, type, provider, phone_or_meter, variation_code, amount, request_id)
      VALUES ($1, 'electricity', $2, $3, $4, $5, $6)`,
-    [u.id, billerCode, meterNumber, meterType || "prepaid", amt, vendReference]
+    [u.id, billerCode, meter, meterType || "prepaid", amt, vendReference]
   );
 
   try {
     const res = await vendBill({
       productCode,
-      customerId: meterNumber,
+      customerId: meter,
       vendAmount: amt,
       vendReference,
       validationReference: validationReference || undefined,
