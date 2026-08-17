@@ -209,6 +209,7 @@ export async function buyData({ billerCode, phone, productCode, amount }) {
 export async function verifyMeterNumber({ billerCode, meterNumber, meterType }) {
   await requireUser();
   if (!meterNumber || meterNumber.length < 6) throw new Error("Enter a valid meter number");
+  if (!billerCode) throw new Error("Select a distribution company");
 
   // Get electricity products for this disco
   const products = toArray(await getBillerProducts(billerCode));
@@ -242,6 +243,7 @@ export async function verifyMeterNumber({ billerCode, meterNumber, meterType }) 
 export async function buyElectricity({ billerCode, meterNumber, meterType, amount, productCode, validationReference }) {
   const u = await requireUser();
   if (!meterNumber || meterNumber.length < 6) throw new Error("Enter a valid meter number");
+  if (!billerCode) throw new Error("Select a distribution company");
   const amt = Number(amount);
   if (!amt || amt < 500) throw new Error("Minimum amount is ₦500");
 
