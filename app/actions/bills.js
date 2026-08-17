@@ -11,13 +11,26 @@ import {
 
 const PHONE_RE = /^0[789][01]\d{8}$/;
 
+function toArray(value) {
+  if (Array.isArray(value)) return value;
+  if (Array.isArray(value?.billers)) return value.billers;
+  if (Array.isArray(value?.products)) return value.products;
+  if (Array.isArray(value?.data)) return value.data;
+  if (Array.isArray(value?.result)) return value.result;
+  if (value && typeof value === "object") {
+    const nested = Object.values(value).find(Array.isArray);
+    if (nested) return nested;
+  }
+  return [];
+}
+
 function generateVendRef() {
   return `PP-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
 // ── Fetch available providers from Monnify ──────────────────────────
 export async function getAirtimeProviders() {
-  const billers = await getBillers("AIRTIME");
+  const billers = toArray(await getBillers("AIRTIME"));
   return billers.map((b) => ({
     billerCode: b.billerCode,
     name: b.name || b.billerName,
@@ -25,7 +38,7 @@ export async function getAirtimeProviders() {
 }
 
 export async function getDataProviders() {
-  const billers = await getBillers("DATA");
+  const billers = toArray(await getBillers("DATA"));
   return billers.map((b) => ({
     billerCode: b.billerCode,
     name: b.name || b.billerName,
@@ -33,7 +46,7 @@ export async function getDataProviders() {
 }
 
 export async function getElectricityProviders() {
-  const billers = await getBillers("ELECTRICITY");
+  const billers = toArray(await getBillers("ELECTRICITY"));
   return billers.map((b) => ({
     billerCode: b.billerCode,
     name: b.name || b.billerName,
@@ -51,7 +64,7 @@ export async function buyAirtime({ billerCode, phone, amount }) {
   const vendReference = generateVendRef();
 
   // Get the airtime product for this biller
-  const products = await getBillerProducts(billerCode);
+  const products = toArray(await getBillerProducts(billerCode));
   if (!products.length) throw new Error("No airtime products found for this provider");
   const productCode = products[0].productCode;
 
@@ -180,7 +193,7 @@ export async function verifyMeterNumber({ billerCode, meterNumber, meterType }) 
   if (!meterNumber || meterNumber.length < 6) throw new Error("Enter a valid meter number");
 
   // Get electricity products for this disco
-  const products = await getBillerProducts(billerCode);
+  const products = toArray(await getBillerProducts(billerCode));
   // Find the product matching meter type (prepaid/postpaid)
   const product = products.find(
     (p) =>
@@ -218,7 +231,7 @@ export async function buyElectricity({ billerCode, meterNumber, meterType, amoun
 
   // If productCode not passed, look it up
   if (!productCode) {
-    const products = await getBillerProducts(billerCode);
+    const products = toArray(await getBillerProducts(billerCode));
     const product = products.find(
       (p) =>
         p.productCode?.toLowerCase().includes(meterType || "prepaid") ||
@@ -275,7 +288,7 @@ export async function buyElectricity({ billerCode, meterNumber, meterType, amoun
 // ── Data plans lookup ───────────────────────────────────────────────
 export async function getDataPlans(billerCode) {
   if (!billerCode) throw new Error("Select a provider first");
-  const products = await getBillerProducts(billerCode);
+  const products = toArray(await getBillerProducts(billerCode));
   return products.map((p) => ({
     code: p.productCode,
     name: p.productName || p.name || p.productCode,
@@ -285,7 +298,7 @@ export async function getDataPlans(billerCode) {
 
 // ── Electricity variations lookup ───────────────────────────────────
 export async function getElectricityVariations(billerCode) {
-  const products = await getBillerProducts(billerCode);
+  const products = toArray(await getBillerProducts(billerCode));
   return products.map((p) => ({
     code: p.productCode,
     name: p.productName || p.name || p.productCode,
