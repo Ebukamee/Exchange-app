@@ -684,6 +684,8 @@ function ElectricityTab({ onDone }) {
     }
   };
 
+  const providerHasProducts = !!provider?.billerCode;
+
   const submit = async () => {
     setBusy(true);
     try {

@@ -106,7 +106,18 @@ export async function getDataProviders() {
 
 export async function getElectricityProviders() {
   const billers = dedupeByCompany(toArray(await getBillers("ELECTRICITY")).map(normalizeBiller).filter(Boolean));
-  return billers.map((b) => ({
+  const supported = [];
+
+  for (const b of billers) {
+    try {
+      const products = toArray(await getBillerProducts(b.billerCode)).map(normalizeProduct).filter(Boolean);
+      if (products.length > 0) supported.push(b);
+    } catch {
+      // Ignore unsupported billers that cannot resolve products
+    }
+  }
+
+  return supported.map((b) => ({
     billerCode: b.billerCode,
     name: b.name,
   }));
